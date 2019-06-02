@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Field} from "formik";
+import {Field, FieldProps} from "formik";
 
 interface IProps {
   name: string;
@@ -12,7 +12,7 @@ interface IState {
 export class TextField extends Component<IProps, IState> {
   render(): JSX.Element {
     const {name, placeholder} = this.props;
-    const customInputComponent = ({field, form: {touched, errors}, ...props}: any): JSX.Element => (
+    const customInputComponent = ({field, form: {touched, errors}, ...props}: FieldProps): JSX.Element => (
       <div>
         <input type="text" {...field} {...props} placeholder={placeholder} />
         {touched[field.name] && errors[field.name] && <div className="error">{errors[field.name]}</div>}

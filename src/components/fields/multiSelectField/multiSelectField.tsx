@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {FieldArray} from "formik";
+import {FieldArray, FieldArrayRenderProps} from "formik";
 import {IItem, MultiSelect} from "../../multiSelect/multiSelect";
 
 interface IProps {
@@ -13,7 +13,7 @@ interface IState {
 export class MultiSelectField extends Component<IProps, IState> {
   render(): JSX.Element {
     const {name, options} = this.props;
-    const customMultiSelectComponent = (arrayHelpers: any): JSX.Element => (
+    const customMultiSelectComponent = (arrayHelpers: FieldArrayRenderProps): JSX.Element => (
       <div>
         <MultiSelect
           name={name}
@@ -33,7 +33,7 @@ export class MultiSelectField extends Component<IProps, IState> {
     );
   }
 
-  private setSelected = (arrayHelpers: any): (items: string[]) => void => (items: string[]): void => {
+  private setSelected = (arrayHelpers: FieldArrayRenderProps): (items: string[]) => void => (items: string[]): void => {
     const {form: {values}, push, remove} = arrayHelpers;
     const {name} = this.props;
     values[name].filter((item: string) => {

@@ -1,0 +1,51 @@
+.popup {
+  font-family: Roboto, sans-serif;
+  max-width: 500px;
+  padding: 20px 75px;
+
+  &__icon {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    padding: 20px 0 0;
+  }
+
+  &__icon-error {
+    height: 90px;
+    width: 90px;
+    background: url("../../static/images/error.svg") no-repeat;
+  }
+
+  &__icon-warning {
+    height: 90px;
+    width: 90px;
+    background: url("../../static/images/warning.svg") no-repeat;
+  }
+
+  &__icon-success {
+    height: 90px;
+    width: 90px;
+    background: url("../../static/images/checked.svg") no-repeat;
+  }
+
+  &__title {
+    font-size: 36px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #303551;
+    padding: 15px 0;
+  }
+
+  &__subtitle {
+    font-size: 18px;
+    text-align: center;
+    color: #858484;
+    padding: 15px 0 25px;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+  }
+}

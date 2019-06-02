@@ -1,0 +1,31 @@
+@import "./global";
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input,
+button {
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+p,
+span,
+a,
+input, button {
+  font-family: "Raleway", sans-serif;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+}

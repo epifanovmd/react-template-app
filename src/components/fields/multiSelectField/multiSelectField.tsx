@@ -36,9 +36,10 @@ export class MultiSelectField extends Component<IProps, IState> {
   private setSelected = (arrayHelpers: FieldArrayRenderProps): (items: string[]) => void => (items: string[]): void => {
     const {form: {values}, push, remove} = arrayHelpers;
     const {name} = this.props;
-    values[name].filter((item: string) => {
-      return !items.some((someItem: string) => someItem === item);
-    }).map((removeElement: string) => remove(values[name].indexOf(removeElement)));
+
+    values[name].filter((item: string) => !items.some(
+      (someItem: string) => someItem === item))
+      .map((removeElement: string) => remove(values[name].indexOf(removeElement)));
 
     items.filter(item =>
       !values[name].some((someItem: string) => someItem === item))

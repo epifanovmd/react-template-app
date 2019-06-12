@@ -5,6 +5,7 @@ import {LoadState} from "../../common/loadState";
 import {UserList} from "../../components/userList/userList";
 // import "../../assets/clearfix.scss";
 import {IUsers} from "../../api/dto/Users.g";
+import {ICallback} from "../../common/ICallback";
 
 export interface IUsersStateProps {
   users: IUsers[];
@@ -12,14 +13,18 @@ export interface IUsersStateProps {
 }
 
 export interface IUsersDispatchProps {
-  getUsers: () => void;
+  getUsers: (callback?: ICallback<IUsers[], void>) => void;
 }
 
 type TProps = IUsersStateProps & IUsersDispatchProps;
 
 class UsersStatic extends Component<TProps> {
   componentDidMount(): void {
-    this.props.getUsers();
+    this.props.getUsers((result) => {
+      console.log("-------", result);
+    });
+
+    console.log("+++++++++");
   }
 
   public render(): JSX.Element {

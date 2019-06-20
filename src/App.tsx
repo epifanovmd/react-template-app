@@ -21,6 +21,7 @@ export const Routes = (): JSX.Element => (
     <br />
 
     <Route exact={true} path="/" component={Users}/>
+    <Route exact={true} path="/userlist/:id" component={Users}/>
     <Route exact={true} path="/form" component={TestForm}/>
   </>
 );

@@ -7,7 +7,7 @@ import {IUsers} from "../../api/dto/Users.g";
 import {ICallback} from "../../common/ICallback";
 import {compose} from "redux";
 import {RouteComponentProps, withRouter} from "react-router";
-import {pushNewURL} from "../../common/query";
+import {pushNewURL, queryStringToObject} from "../../common/query";
 
 export interface IUsersStateProps {
   users: IUsers[];
@@ -18,7 +18,11 @@ export interface IUsersDispatchProps {
   getUsers: (callback?: ICallback<IUsers[], void>) => void;
 }
 
-type TProps = IUsersStateProps & IUsersDispatchProps & RouteComponentProps;
+interface IRouteParams {
+  id: string;
+}
+
+type TProps = IUsersStateProps & IUsersDispatchProps & RouteComponentProps<IRouteParams>;
 
 class UsersStatic extends Component<TProps> {
   componentDidMount(): void {
@@ -30,6 +34,12 @@ class UsersStatic extends Component<TProps> {
   }
 
   public render(): JSX.Element {
+    const {location: {search}, match} = this.props;
+    const query = queryStringToObject<"users">(search);
+
+    console.log("query", query.search);
+    console.log("match", match.params.id);
+
     return (
       <>
         <UserList users={this.props.users} />
@@ -39,7 +49,7 @@ class UsersStatic extends Component<TProps> {
   }
 
   private setQuery = (): void => {
-    pushNewURL({pathname: "search", name: "search", value: "form"}, {...this.props});
+    pushNewURL<"users">({queryParams: {search: "22"}}, {...this.props});
   };
 }
 

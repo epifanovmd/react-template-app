@@ -1,4 +1,5 @@
 import {RouteComponentProps} from "react-router";
+import {IQueries} from "./IQueryies";
 
 export const queryObjectToString = (queryObject: any): string => {
   if (queryObject && Object.keys(queryObject).length > 0) {
@@ -17,7 +18,7 @@ export const queryObjectToString = (queryObject: any): string => {
   return "";
 };
 
-export const queryStringToObject = (queryString: string): any => {
+export const queryStringToObject = <T extends keyof IQueries>(queryString: string): IQueries[T] => {
   const searchQuery: any = {};
 
   (queryString || "")
@@ -34,28 +35,30 @@ export const queryStringToObject = (queryString: string): any => {
   return searchQuery;
 };
 
-interface IUrlProps {
-  name?: string;
-  value?: string;
+interface IUrlProps<T extends keyof IQueries> {
+  queryParams: IQueries[T];
   pathname?: string;
 }
 
-export const pushNewURL = ({name, value, pathname}: IUrlProps, RouteProps: RouteComponentProps): void => {
+export const pushNewURL = <T extends keyof IQueries>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
   const {
     location: {search},
     history: {push},
   } = RouteProps;
 
-  const query = queryStringToObject(search);
-  if (name) {
-    if (!value && {}.hasOwnProperty.call(query, name)) {
-      delete query[name];
-    } else if (value) {
-      query[name] = value;
-    }
-  }
+  const query: IQueries[T] = queryStringToObject(search);
 
-  delete query["page"];
+  const names = Object.keys(queryParams);
+
+  names.map((name): void => {
+    if (name) {
+      if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
+        delete (query as any)[name];
+      } else if ((queryParams as any)[name]) {
+        (query as any)[name] = (queryParams as any)[name];
+      }
+    }
+  });
 
   push({search: queryObjectToString(query), pathname});
 };

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Field, FieldProps} from "formik";
-import {IInterval, IRangeProps, Range} from "../range/range";
+import {IInterval, IRangeProps, Range} from "../../controls/range/range";
 
 interface IProps extends IRangeProps {
   name: string;

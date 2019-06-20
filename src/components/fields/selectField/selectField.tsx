@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Field, FieldProps} from "formik";
-import {ISelectProps, Select} from "../../select/select";
+import {ISelectProps, Select} from "../../controls/select/select";
 
 interface IProps extends ISelectProps {
   name: string;

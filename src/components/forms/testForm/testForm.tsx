@@ -5,7 +5,7 @@ import {FormikActions} from "formik";
 import {testFormValidationSchema} from "./testFormValidationScema";
 import {TextField} from "../../fields/textField/textField";
 import {SelectField} from "../../fields/selectField/selectField";
-import {RangeField} from "../../multiRangeField/rangeField";
+import {RangeField} from "../../fields/multiRangeField/rangeField";
 
 export interface IMyFormValues {
   firstName: string;

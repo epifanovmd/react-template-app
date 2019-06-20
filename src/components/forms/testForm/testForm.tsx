@@ -4,7 +4,7 @@ import {FormikForm} from "../formikForm/formikForm";
 import {FormikActions} from "formik";
 import {testFormValidationSchema} from "./testFormValidationScema";
 import {TextField} from "../../fields/textField/textField";
-import {MultiSelectField} from "../../fields/multiSelectField/multiSelectField";
+import {SelectField} from "../../fields/selectField/selectField";
 import {RangeField} from "../../multiRangeField/rangeField";
 
 export interface IMyFormValues {
@@ -24,8 +24,9 @@ export class TestForm extends React.Component {
             firstName: "",
             lastName: "",
             email: "",
-            items: [],
+            multiply_items: [],
             range: {},
+            items: [],
           }}
           validationSchema={testFormValidationSchema}
           onSubmit={this.submit}
@@ -33,9 +34,11 @@ export class TestForm extends React.Component {
           <TextField name={"firstName"} placeholder={"Имя"} />
           <TextField name={"lastName"} placeholder={"Фамилия"} />
           <TextField name={"email"} placeholder={"Email"} />
-          <MultiSelectField
-            name={"items"}
-            options={[{id: "1", name: "1"}, {id: "2", name: "2"}, {id: "3", name: "3"}]}
+          <SelectField
+            name={"multiply_items"}
+            options={[{id: 1, name: "1"}, {id: 2, name: "2"}, {id: 3, name: "3"}]}
+            multiply={true}
+            selected={[1, 3]}
           />
 
           <RangeField
@@ -47,6 +50,11 @@ export class TestForm extends React.Component {
             multiply={true}
           />
 
+          <SelectField
+            name={"items"}
+            options={[{id: 1, name: "1"}, {id: 2, name: "2"}, {id: 3, name: "3"}]}
+            selected={[3]}
+          />
           <button type="submit">Submit</button>
         </FormikForm>
       </div>

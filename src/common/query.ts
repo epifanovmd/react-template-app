@@ -36,29 +36,35 @@ export const queryStringToObject = <T extends keyof IQueries>(queryString: strin
 };
 
 interface IUrlProps<T extends keyof IQueries> {
-  queryParams: IQueries[T];
+  queryParams?: IQueries[T];
   pathname?: string;
 }
 
 export const pushNewURL = <T extends keyof IQueries>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
   const {
-    location: {search},
+    location,
     history: {push},
   } = RouteProps;
+  let search = null;
 
-  const query: IQueries[T] = queryStringToObject(search);
+  if (queryParams) {
 
-  const names = Object.keys(queryParams);
+    const query: IQueries[T] = queryStringToObject(location.search);
+    const names = Object.keys(queryParams);
 
-  names.map((name): void => {
-    if (name) {
-      if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
-        delete (query as any)[name];
-      } else if ((queryParams as any)[name]) {
-        (query as any)[name] = (queryParams as any)[name];
+    names.map((name): void => {
+      if (name) {
+        if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
+          delete (query as any)[name];
+        } else if ((queryParams as any)[name]) {
+          (query as any)[name] = (queryParams as any)[name];
+        }
       }
-    }
-  });
+    });
+    search = queryObjectToString(query);
+  }
 
-  push({search: queryObjectToString(query), pathname});
+  search && pathname ? push({search, pathname}) :
+  pathname ? push({pathname}) :
+  search && push({search});
 };

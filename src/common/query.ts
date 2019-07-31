@@ -1,5 +1,4 @@
 import {RouteComponentProps} from "react-router";
-import {IQueries} from "./IQueryies";
 
 export const queryObjectToString = (queryObject: any): string => {
   if (queryObject && Object.keys(queryObject).length > 0) {
@@ -18,7 +17,7 @@ export const queryObjectToString = (queryObject: any): string => {
   return "";
 };
 
-export const queryStringToObject = <T extends keyof IQueries>(queryString: string): IQueries[T] => {
+export const queryStringToObject = <T>(queryString: string): T => {
   const searchQuery: any = {};
 
   (queryString || "")
@@ -35,12 +34,12 @@ export const queryStringToObject = <T extends keyof IQueries>(queryString: strin
   return searchQuery;
 };
 
-interface IUrlProps<T extends keyof IQueries> {
-  queryParams?: IQueries[T];
+interface IUrlProps<T> {
+  queryParams?: T;
   pathname?: string;
 }
 
-export const pushNewURL = <T extends keyof IQueries>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
+export const pushRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
   const {
     location,
     history: {push},
@@ -49,7 +48,7 @@ export const pushNewURL = <T extends keyof IQueries>({queryParams, pathname}: IU
 
   if (queryParams) {
 
-    const query: IQueries[T] = queryStringToObject(location.search);
+    const query: T = queryStringToObject(location.search);
     const names = Object.keys(queryParams);
 
     names.map((name): void => {
@@ -67,4 +66,33 @@ export const pushNewURL = <T extends keyof IQueries>({queryParams, pathname}: IU
   search && pathname ? push({search, pathname}) :
   pathname ? push({pathname}) :
   search && push({search});
+};
+
+export const replaceRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
+  const {
+    location,
+    history: {replace},
+  } = RouteProps;
+  let search = null;
+
+  if (queryParams) {
+
+    const query: T = queryStringToObject(location.search);
+    const names = Object.keys(queryParams);
+
+    names.map((name): void => {
+      if (name) {
+        if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
+          delete (query as any)[name];
+        } else if ((queryParams as any)[name]) {
+          (query as any)[name] = (queryParams as any)[name];
+        }
+      }
+    });
+    search = queryObjectToString(query);
+  }
+
+  search && pathname ? replace({search, pathname}) :
+    pathname ? replace({pathname}) :
+      search && replace({search});
 };

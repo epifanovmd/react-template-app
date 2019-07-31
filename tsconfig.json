@@ -32,7 +32,7 @@
     "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noImplicitReturns": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

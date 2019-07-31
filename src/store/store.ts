@@ -6,7 +6,6 @@ import {createMainReduce} from "./reducers";
 const Middleware =
   process.env.NODE_ENV === "development"
     ? applyMiddleware(thunkMiddleware)
-    // ? applyMiddleware(thunkMiddleware, logger)
     : applyMiddleware(thunkMiddleware);
 
 const reducers = createMainReduce();

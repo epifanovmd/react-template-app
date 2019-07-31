@@ -12,11 +12,11 @@ function getUsersStartedHandler(state: IUsersState): IUsersState {
 }
 
 function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUsers[]>): IUsersState {
-  return newState(state, newState(state, {usersLoadState: LoadState.idle, users}));
+  return newState(state, {usersLoadState: LoadState.idle, users});
 }
 
 function getUsersFailedHandler(state: IUsersState): IUsersState {
-  return newState(state, newState(state, {usersLoadState: LoadState.error}));
+  return newState(state, {usersLoadState: LoadState.error});
 }
 
 export const usersReducer = reducerWithInitialState(usersInitialState)

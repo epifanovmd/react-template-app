@@ -5,9 +5,12 @@ import {LoadState} from "../../common/loadState";
 import {UserList} from "../../components/userList/userList";
 import {IUsers} from "../../api/dto/Users.g";
 import {ICallback} from "../../common/ICallback";
-import {compose} from "redux";
 import {RouteComponentProps, withRouter} from "react-router";
-import {pushNewURL, queryStringToObject} from "../../common/query";
+import {pushRoute, queryStringToObject} from "../../common/query";
+
+export interface IUsersQuery {
+  search: string;
+}
 
 export interface IUsersStateProps {
   users: IUsers[];
@@ -35,7 +38,7 @@ class UsersStatic extends Component<TProps> {
 
   public render(): JSX.Element {
     const {location: {search}, match} = this.props;
-    const query = queryStringToObject<"users">(search);
+    const query = queryStringToObject<IUsersQuery>(search);
 
     console.log("query", query.search);
     console.log("match", match.params.id);
@@ -43,17 +46,16 @@ class UsersStatic extends Component<TProps> {
     return (
       <>
         <UserList users={this.props.users} />
+        <div>{`Search - ${query.search}`}</div>
         <div onClick={this.setQuery}>SetQuery</div>
       </>
     );
   }
 
   private setQuery = (): void => {
-    pushNewURL<"users">({queryParams: {search: "22"}}, {...this.props});
+    pushRoute<IUsersQuery>({queryParams: {search: "22"}}, {...this.props});
   };
 }
 
-export const Users = compose<any>(
-  withRouter,
-  connect(usersSelector.mapState, usersSelector.mapDispatch),
-)(UsersStatic);
+export const Users =
+  withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));

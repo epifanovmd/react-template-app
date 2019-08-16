@@ -4,7 +4,6 @@ import {connect} from "react-redux";
 import {LoadState} from "../../common/loadState";
 import {UserList} from "../../components/userList/userList";
 import {IUsers} from "../../api/dto/Users.g";
-import {ICallback} from "../../common/ICallback";
 import {RouteComponentProps, withRouter} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
 
@@ -18,7 +17,7 @@ export interface IUsersStateProps {
 }
 
 export interface IUsersDispatchProps {
-  getUsers: (callback?: ICallback<IUsers[], void>) => void;
+  getUsers: (callback?: (users: IUsers[]) => void) => void;
 }
 
 interface IRouteParams {

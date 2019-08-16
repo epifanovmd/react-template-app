@@ -1,16 +1,16 @@
 import {SimpleThunk} from "../../common/simpleThunk";
 import {UsersActions} from "./usersActions";
-import {Dispatch} from "react";
 import {requestRepository} from "../../api/RequestsRepository.g";
 import {EventNames, eventRegister} from "../../common/eventRegister";
 import {getExceptionText} from "../../common/exceptionType";
 import {INotificationPopupData} from "../../components/popupNotification/popupNotification";
-import {ICallback} from "../../common/ICallback";
 import {IUsers} from "../../api/dto/Users.g";
+import {Dispatch} from "react";
+import {Action} from "redux";
 
 export class UsersThunk {
-  static getUsers(callback?: ICallback<IUsers[], void>): SimpleThunk {
-    return async (dispatch: Dispatch<any>): Promise<void> => {
+  static getUsers(callback?: (users: IUsers[]) => void): SimpleThunk {
+    return async (dispatch: Dispatch<Action>): Promise<void> => {
       const params = {};
       dispatch(UsersActions.getUsers.started(params));
       try {

@@ -30,6 +30,7 @@
     "react-redux": "5.0.7",
     "react-responsive-modal": "^3.6.0",
     "react-router-dom": "^4.3.1",
+    "react-use-form-state": "^0.11.0",
     "redux": "4.0.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useForm} from "../../common/useForm";
 
 export const UseFormComponent = (): JSX.Element => {
@@ -15,7 +15,7 @@ export const UseFormComponent = (): JSX.Element => {
       name1: "",
     },
     onSubmit: (submitValues, e): void => {
-      alert(JSON.stringify({ values: submitValues, errors: e }, null, 2));
+      alert(JSON.stringify({values: submitValues, errors: e}, null, 2));
     },
     validate: (validateValues): Partial<typeof validateValues> => {
       const validateErrors: Partial<typeof validateValues> = {};
@@ -30,6 +30,10 @@ export const UseFormComponent = (): JSX.Element => {
       return validateErrors;
     },
   });
+
+  useEffect(() => {
+    console.log("Перерендер");
+  }, [values.name1]);
 
   return (
     <div>

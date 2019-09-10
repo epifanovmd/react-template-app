@@ -1,6 +1,7 @@
 /*tslint:disable*/
 import {BaseRequest} from "./BaseRequest";
 import {IUsers} from "./dto/Users.g";
+import {RequestType} from "../common/requestType";
 
 export class UsersApiRequest extends BaseRequest {
   constructor(protected baseurl: string) {
@@ -11,7 +12,7 @@ export class UsersApiRequest extends BaseRequest {
     return this.fetch(
       `/users`,
       Object.assign({
-        method : "GET"
+        method : RequestType.GET
       }, config))
       .then((response) => response.json())
       .catch(BaseRequest.handleError);

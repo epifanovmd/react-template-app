@@ -8,15 +8,30 @@ import {IEmpty} from "../../common/IEmpty";
 import {IUsers} from "../../api/dto/Users.g";
 
 function getUsersStartedHandler(state: IUsersState): IUsersState {
-  return newState(state, {usersLoadState: LoadState.refreshing});
+  return newState(state, {
+    users: {
+      loadState: LoadState.refreshing,
+      items: state.users.items,
+    },
+  });
 }
 
 function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUsers[]>): IUsersState {
-  return newState(state, {usersLoadState: LoadState.idle, users});
+  return newState(state, newState(state, {
+    users: {
+      loadState: LoadState.idle,
+      items: users,
+    },
+  }));
 }
 
 function getUsersFailedHandler(state: IUsersState): IUsersState {
-  return newState(state, {usersLoadState: LoadState.error});
+  return newState(state, newState(state, {
+    users: {
+      loadState: LoadState.error,
+      items: state.users.items,
+    },
+  }));
 }
 
 export const usersReducer = reducerWithInitialState(usersInitialState)

@@ -8,7 +8,7 @@ export type Reducers<T> = {
 
 export function createMainReduce(): Reducer<IAppState> {
   const _reducers: Reducers<IAppState> = {
-    users: usersReducer,
+    usersPage: usersReducer,
   };
 
   return combineReducers(_reducers);

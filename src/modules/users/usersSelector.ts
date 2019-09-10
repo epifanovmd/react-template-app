@@ -5,10 +5,9 @@ import {IUsers} from "../../api/dto/Users.g";
 import {SimpleDispatch} from "../../common/simpleThunk";
 
 class UsersSelector {
-  mapState = ({users}: IAppState): IUsersStateProps => (
+  mapState = ({usersPage}: IAppState): IUsersStateProps => (
     {
-      users: users.users,
-      usersLoadState: users.usersLoadState,
+      users: usersPage.users,
     }
   );
 

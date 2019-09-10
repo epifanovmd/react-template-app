@@ -1,19 +1,18 @@
 import React, {Component} from "react";
 import {usersSelector} from "./usersSelector";
 import {connect} from "react-redux";
-import {LoadState} from "../../common/loadState";
 import {UserList} from "../../components/userList/userList";
 import {IUsers} from "../../api/dto/Users.g";
 import {RouteComponentProps, withRouter} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
+import {IResponse} from "../../common/response";
 
 export interface IUsersQuery {
   search: string;
 }
 
 export interface IUsersStateProps {
-  users: IUsers[];
-  usersLoadState: LoadState;
+  users: IResponse<IUsers[]>;
 }
 
 export interface IUsersDispatchProps {
@@ -44,7 +43,7 @@ class UsersStatic extends Component<TProps> {
 
     return (
       <>
-        <UserList users={this.props.users} />
+        <UserList users={this.props.users.items} />
         <div>{`Search - ${query.search}`}</div>
         <div onClick={this.setQuery}>SetQuery</div>
       </>
@@ -56,5 +55,4 @@ class UsersStatic extends Component<TProps> {
   };
 }
 
-export const Users =
-  withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));
+export const Users = withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));

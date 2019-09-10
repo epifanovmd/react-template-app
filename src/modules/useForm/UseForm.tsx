@@ -1,5 +1,13 @@
 import React, {useEffect} from "react";
 import {useForm} from "../../common/useForm";
+import {useDispatch, useSelector} from "react-redux";
+import {IAppState} from "../../store/IAppState";
+import {IUsers} from "../../api/dto/Users.g";
+import {UsersThunk} from "../users/usersThunk";
+
+interface IUseFormMapStateToProps {
+  users: IUsers[];
+}
 
 export const UseFormComponent = (): JSX.Element => {
   const {
@@ -34,6 +42,15 @@ export const UseFormComponent = (): JSX.Element => {
   useEffect(() => {
     console.log("Перерендер");
   }, [values.name1]);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(UsersThunk.getUsers());
+  }, []);
+
+  const props = useSelector(((state: IAppState): IUseFormMapStateToProps => ({
+    users: state.usersPage.users.items,
+  })));
 
   return (
     <div>
@@ -70,6 +87,15 @@ export const UseFormComponent = (): JSX.Element => {
           <button type="submit">Submit</button>
         </div>
       </form>
+      <div>
+        <br />
+        <h5>Users:</h5>
+        {
+          (props.users || []).map((item: IUsers) => {
+            return (<div key={item.id}>{item.name}</div>);
+          })
+        }
+      </div>
     </div>
   );
 };

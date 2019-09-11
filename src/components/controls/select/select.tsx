@@ -1,8 +1,6 @@
 import React, {Component} from "react";
 import "./styles.scss";
 
-import _ from "lodash";
-
 export interface IItem {
   id: number;
   name: string;
@@ -45,7 +43,7 @@ export class Select extends Component<ISelectProps, IState> {
   }
 
   componentDidUpdate(prevProps: Readonly<ISelectProps>): void {
-    if (_.isEmpty(prevProps.options)) {
+    if (prevProps.options && prevProps.options.length === 0) {
       this.setSelectedId();
     }
 

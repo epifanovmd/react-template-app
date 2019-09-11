@@ -3,7 +3,6 @@ import {Route} from "react-router";
 import {Users} from "./modules/users/Users";
 import React from "react";
 import {NavLink} from "react-router-dom";
-import {TestForm} from "./components/forms/testForm/testForm";
 
 import "./assets/clearfix.scss";
 import {UseFormComponent} from "./modules/useForm/UseForm";
@@ -16,9 +15,6 @@ export const Routes = (): JSX.Element => (
         <NavLink to={"/"}>{"Users"}</NavLink>
       </li>
       <li>
-        <NavLink to={"/form"}>{"Form"}</NavLink>
-      </li>
-      <li>
         <NavLink to={"/useform"}>{"UseForm"}</NavLink>
       </li>
     </ul>
@@ -26,7 +22,6 @@ export const Routes = (): JSX.Element => (
 
     <Route exact={true} path="/" component={Users}/>
     <Route exact={true} path="/userlist/:id" component={Users}/>
-    <Route exact={true} path="/form" component={TestForm}/>
     <Route exact={true} path="/useform" component={UseFormComponent}/>
   </>
 );

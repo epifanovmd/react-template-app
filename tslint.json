@@ -31,15 +31,16 @@
     "promise-function-async": true,
     "typedef": [
       true,
-      "call-signature",
-      "arrow-call-signature",
-      "parameter",
-      // "arrow-parameter",
+      //      "call-signature",
+      //      "arrow-call-signature",
+      //      "parameter",
+      //      "arrow-parameter",
       "property-declaration"
-      //"variable-declaration"
-      // "member-variable-declaration",
-      // "object-destructuring",
-      // "array-destructuring"
+      //      "variable-declaration",
+      //      "variable-declaration-ignore-function",
+      //      "member-variable-declaration",
+      //      "object-destructuring",
+      //            "array-destructuring",
     ],
     "typedef-whitespace": [
       true,

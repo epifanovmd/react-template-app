@@ -2,31 +2,28 @@ import React, {Component} from "react";
 import {usersSelector} from "./usersSelector";
 import {connect} from "react-redux";
 import {UserList} from "../../components/userList/userList";
-import {IUsers} from "../../api/dto/Users.g";
 import {RouteComponentProps, withRouter} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
-import {IResponse} from "../../common/response";
 
 export interface IUsersQuery {
   search: string;
 }
 
-export interface IUsersStateProps {
-  users: IResponse<IUsers[]>;
+interface IProps {
 }
 
-export interface IUsersDispatchProps {
-  getUsers: (callback?: (users: IUsers[]) => void) => void;
-}
+type TProps =
+  IProps &
+  ReturnType<typeof usersSelector.mapState> &
+  ReturnType<typeof usersSelector.mapDispatch> &
+  RouteComponentProps<IRouteParams>;
 
 interface IRouteParams {
   id: string;
 }
 
-type TProps = IUsersStateProps & IUsersDispatchProps & RouteComponentProps<IRouteParams>;
-
 class UsersStatic extends Component<TProps> {
-  componentDidMount(): void {
+  componentDidMount() {
     this.props.getUsers((result) => {
       console.log("-------", result);
     });
@@ -34,7 +31,7 @@ class UsersStatic extends Component<TProps> {
     console.log("+++++++++");
   }
 
-  public render(): JSX.Element {
+  public render() {
     const {location: {search}, match} = this.props;
     const query = queryStringToObject<IUsersQuery>(search);
 

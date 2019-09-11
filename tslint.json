@@ -178,6 +178,7 @@
       "allow-leading-underscore",
       "allow-pascal-case"
     ],
+    "jsx-curly-spacing": false,
     "whitespace": [
       true,
       "check-branch",

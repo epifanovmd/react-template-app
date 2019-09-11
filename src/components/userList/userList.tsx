@@ -13,7 +13,9 @@ export class UserList extends React.Component<IProps> {
     return (
       <div className={"container"}>
         <h3>USERS</h3>
-        {users && users.map((item) => (<div key={item.id}>{item.name}</div>))}
+        {
+          users && users.map((item) => (<div key={item.id}>{item.name}</div>))
+        }
       </div>
     );
   }

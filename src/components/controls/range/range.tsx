@@ -26,7 +26,7 @@ export interface IRangeProps {
   outValue?: (value: number) => string;
 }
 
-export class Range extends React.Component<IRangeProps, IState> {
+export class Rangew extends React.Component<IRangeProps, IState> {
 
   public constructor(props: IRangeProps) {
     super(props);

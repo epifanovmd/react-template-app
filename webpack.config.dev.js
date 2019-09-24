@@ -23,7 +23,6 @@ const webpackConfigDev = {
   },
   plugins: [
     ...webpackConfig.basePlugins,
-    new webpack.HotModuleReplacementPlugin({}),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),

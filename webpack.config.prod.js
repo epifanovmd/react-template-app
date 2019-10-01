@@ -12,11 +12,13 @@ const webpackConfigProd = {
         test: /\.scss$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: "style-loader",
           },
           ...webpackConfig.baseLoaders.scss,
         ],
       },
+      ...webpackConfig.baseLoaders.font,
+      webpackConfig.baseLoaders.file,
     ],
   },
   plugins: [

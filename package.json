@@ -14,9 +14,10 @@
   "scripts": {
     "build:dev": "webpack --config webpack.config.dev.js",
     "build:prod": "webpack --config webpack.config.prod.js",
+    "build": "webpack --config webpack.config.dev.js",
     "dev": "webpack-dev-server --config webpack.config.dev.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build:dev",
+    "deploy": "gh-pages -d build",
     "lint": "tslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""
   },

@@ -2,7 +2,7 @@
   "name": "react-app",
   "version": "1.0.0",
   "description": "React Template App",
-  "homepage": "https://github.com/epifanovmd/react-template-app",
+  "homepage": "https://epifanovmd.github.io/react-template-app",
   "author": {
     "name": "Epifanov Andrew",
     "email": "epifanovmd@gmail.com"
@@ -15,6 +15,8 @@
     "build:dev": "webpack --config webpack.config.dev.js",
     "build:prod": "webpack --config webpack.config.prod.js",
     "dev": "webpack-dev-server --config webpack.config.dev.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build:dev",
     "lint": "tslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""
   },

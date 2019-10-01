@@ -5,7 +5,7 @@ const autoprefixer = require('autoprefixer');
 const baseConfig = {
   entry: "./src/index.tsx",
   output: {
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "build"),
     filename: "script.js",
     publicPath: '/'
   },

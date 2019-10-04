@@ -4,9 +4,11 @@ import {Table} from "../../components/table/table";
 import {TableHeader} from "../../components/table/tableHeader";
 import {TableRow} from "../../components/table/tableRow";
 import {TableRowCell} from "../../components/table/tableRowCell";
+import {DateTime} from "luxon";
 
 export const TestPage: FC = (): JSX.Element => {
   const thumb = (value: number) => `${value}`;
+  const dt = DateTime;
 
   return (
     <div className="container">
@@ -48,6 +50,11 @@ export const TestPage: FC = (): JSX.Element => {
           </TableRowCell>
         </TableRow>
       </Table>
+
+      <div>
+        <h3>LUXON</h3>
+        <div>{dt.local().toISODate()}</div>
+      </div>
     </div>
   );
 };

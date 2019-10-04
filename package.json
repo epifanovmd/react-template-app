@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "http-proxy-middleware": "^0.19.1",
-    "moment": "^2.24.0",
+    "luxon": "^1.19.3",
     "rc-datetime-picker": "^1.6.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -39,6 +39,7 @@
   },
   "license": "ISC",
   "devDependencies": {
+    "@types/luxon": "^1.15.2",
     "@types/node": "^10.12.18",
     "@types/react": "^16.7.6",
     "@types/react-dom": "^16.0.9",

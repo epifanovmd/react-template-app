@@ -24,7 +24,6 @@
   "dependencies": {
     "http-proxy-middleware": "^0.19.1",
     "luxon": "^1.19.3",
-    "rc-datetime-picker": "^1.6.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-redux": "^7.1.1",

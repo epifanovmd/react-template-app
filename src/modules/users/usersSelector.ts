@@ -12,7 +12,7 @@ class UsersSelector {
 
   mapDispatch = (dispatch: SimpleDispatch) => (
     {
-      getUsers: (callback?: (users: IUsers[]) => void): void => {
+      getUsers: (callback?: (users: IUsers[]) => void) => {
         return dispatch(UsersThunk.getUsers(callback));
       },
     });

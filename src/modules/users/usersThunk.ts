@@ -3,8 +3,7 @@ import {UsersActions} from "./usersActions";
 import {requestRepository} from "../../api/RequestsRepository.g";
 import {popup} from "../../common/popup";
 import {IUsers} from "../../api/dto/Users.g";
-import {Dispatch} from "react";
-import {Action} from "redux";
+import {Action, Dispatch} from "redux";
 
 export class UsersThunk {
   static getUsers(callback?: (users: IUsers[]) => void): SimpleThunk {
@@ -14,12 +13,10 @@ export class UsersThunk {
       try {
         const result = await requestRepository.usersApiRequest.get();
         callback && callback(result);
-
-        return dispatch(UsersActions.getUsers.done({params, result}));
+        dispatch(UsersActions.getUsers.done({params, result}));
       } catch (error) {
         popup.error(error.type);
-
-        return dispatch(UsersActions.getUsers.failed({params, error}));
+        dispatch(UsersActions.getUsers.failed({params, error}));
       }
     };
   }

@@ -26,7 +26,7 @@ const webpackConfigDev = {
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),
-    compress: false,
+    compress: true,
     historyApiFallback: true,
     hot: true,
     https: true,

@@ -50,17 +50,6 @@ const baseLoaders = {
       },
     },
     {
-      loader: 'postcss-loader',
-      options: {
-        plugins: [
-          autoprefixer({
-            browsers: ["cover 99.5%"]
-          })
-        ],
-        sourceMap: true
-      }
-    },
-    {
       loader: "sass-loader",
       options: {
         sourceMap: true,

@@ -3,17 +3,17 @@
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  font-size: 1rem;
+  font-size: 14px;
   line-height: 1.5;
 
 
   &__header {
-    font-weight: 700;
+    font-weight: bold;
     display: flex;
     flex-flow: row nowrap;
     width: 100%;
-
-    & .table__row-cell {
+    @media only screen and (max-width: 599px) {
+      display: none;
     }
   }
 
@@ -21,6 +21,12 @@
     display: flex;
     flex-flow: row nowrap;
     width: 100%;
+    @media only screen and (max-width: 599px) {
+      box-shadow: 0 0 3px rgba(0,0,0,0.3);
+      padding: 5px;
+      border-radius: 3px;
+      margin: 5px 0;
+    }
   }
 
   &__row-cell {
@@ -29,6 +35,33 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
+    &-title {
+      font-weight: bold;
+      flex-grow: 1;
+      flex-basis: 0;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: none;
+    }
+
+    &-value {
+      flex-grow: 1;
+      flex-basis: 0;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media only screen and (max-width: 599px) {
+      &-title {
+        display: block;
+      }
+      display: flex;
+    }
 
     &.cell {
       flex-basis: 0;

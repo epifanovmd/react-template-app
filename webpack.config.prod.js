@@ -11,9 +11,6 @@ const webpackConfigProd = {
       {
         test: /\.scss$/,
         use: [
-          {
-            loader: "style-loader",
-          },
           ...webpackConfig.baseLoaders.scss,
         ],
       },

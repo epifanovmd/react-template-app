@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const browserList = require('./package');
 
 const baseConfig = {
   entry: "./src/index.tsx",
@@ -42,12 +43,21 @@ const baseLoaders = {
   ],
   scss: [
     {
+      loader: "style-loader",
+    },
+    {
       loader: "css-loader",
-      query: {
-        modules: true,
-        sourceMap: true,
-        localIdentName: "[local]",
-      },
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        plugins: [
+          autoprefixer({
+            overrideBrowserslist: browserList.browserslist
+          })
+        ],
+        sourceMap: true
+      }
     },
     {
       loader: "sass-loader",

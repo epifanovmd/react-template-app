@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IAppState} from "../../store/IAppState";
 import {IUsers} from "../../api/dto/Users.g";
 import {UsersThunk} from "../users/usersThunk";
+import "./styles.scss";
 
 interface IUseFormMapStateToProps {
   users: IUsers[];

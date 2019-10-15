@@ -11,9 +11,6 @@ const webpackConfigDev = {
       {
         test: /\.scss$/,
         use: [
-          {
-            loader: "style-loader",
-          },
           ...webpackConfig.baseLoaders.scss,
         ],
       },

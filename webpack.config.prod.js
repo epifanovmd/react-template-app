@@ -28,7 +28,8 @@ const webpackConfigProd = {
   plugins: [
     ...webpackConfig.basePlugins,
     new MiniCssExtractPlugin({
-      filename: "styles.css",
+      filename: '[name].[chunkhash:8].css',
+      chunkFilename: '[id].css',
     }),
   ],
   optimization: {

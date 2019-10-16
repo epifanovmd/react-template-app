@@ -2,12 +2,15 @@ const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const browserList = require('./package');
+const ManifestPlugin = require('webpack-manifest-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const baseConfig = {
   entry: "./src/index.tsx",
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: "script.js",
+    filename: 'static/js/[name].js',
+    chunkFilename: 'static/js/[name].chunk.js',
     publicPath: '/'
   },
   resolve: {
@@ -70,9 +73,15 @@ const baseLoaders = {
 
 const basePlugins = [
   new HtmlWebpackPlugin({
-    template: "./src/index.html",
-    favicon: "",
+    template: "./public/index.html",
+    inject: true,
   }),
+  new ManifestPlugin({
+    fileName: 'asset-manifest.json',
+  }),
+  new CopyPlugin([
+    { from: 'public' },
+  ]),
 ];
 
 const webpackConfig = {

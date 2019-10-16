@@ -1,9 +1,16 @@
+const path = require("path");
 const webpackConfig = require("./webpack.config.base");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const webpackConfigProd = {
   ...webpackConfig.baseConfig,
+  output: {
+    path: path.resolve(__dirname, "build"),
+    filename: 'static/js/[name].[chunkhash:8].js',
+    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    publicPath: '/'
+  },
   mode: "production",
   module: {
     rules: [

@@ -4,7 +4,7 @@ interface IProps {
   text: string;
 }
 
-export const RenderComponentFC: FC<IProps> = memo( ({text}): JSX.Element => {
+export const RenderComponentFC: FC<IProps> = memo( ({text}) => {
   useEffect(() => {
     console.log(text);
   });

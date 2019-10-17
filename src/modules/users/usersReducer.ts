@@ -7,7 +7,7 @@ import {Success} from "typescript-fsa";
 import {IEmpty} from "../../common/IEmpty";
 import {IUsers} from "../../api/dto/Users.g";
 
-function getUsersStartedHandler(state: IUsersState): IUsersState {
+function getUsersStartedHandler(state: IUsersState) {
   return newState(state, {
     users: {
       loadState: LoadState.refreshing,
@@ -16,7 +16,7 @@ function getUsersStartedHandler(state: IUsersState): IUsersState {
   });
 }
 
-function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUsers[]>): IUsersState {
+function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUsers[]>) {
   return newState(state, newState(state, {
     users: {
       loadState: LoadState.idle,
@@ -25,7 +25,7 @@ function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty
   }));
 }
 
-function getUsersFailedHandler(state: IUsersState): IUsersState {
+function getUsersFailedHandler(state: IUsersState) {
   return newState(state, newState(state, {
     users: {
       loadState: LoadState.error,

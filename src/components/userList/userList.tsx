@@ -5,7 +5,7 @@ interface IProps {
   users: IUsers[];
 }
 
-export const UserList: FC<IProps> = ({users}): JSX.Element => {
+export const UserList: FC<IProps> = ({users}) => {
 
   return (
     <div className={"container"}>

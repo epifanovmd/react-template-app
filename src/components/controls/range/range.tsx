@@ -37,7 +37,7 @@ export class Rangew extends React.Component<IRangeProps, IState> {
     };
   }
 
-  render(): JSX.Element {
+  render() {
     const {valueInputLeft, valueInputRight, value} = this.state;
     const {multiply, maxValue, minValue, thumbText, rightThumbText, className} = this.props;
     const left = `calc(${this.getOffsetLeft()}% - calc(50px * ${this.getOffsetLeft() / 100}))`;
@@ -108,7 +108,7 @@ export class Rangew extends React.Component<IRangeProps, IState> {
     );
   }
 
-  private changeEventLeftInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  private changeEventLeftInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {multiply, onChange} = this.props;
     const {value, valueInputRight, valueInputLeft} = this.state;
     if (event && event.target && event.target.value) {
@@ -130,7 +130,7 @@ export class Rangew extends React.Component<IRangeProps, IState> {
     }
   };
 
-  private changeEventRightInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  private changeEventRightInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {onChange} = this.props;
     const {valueInputLeft, valueInputRight} = this.state;
     if (event && event.target && event.target.value) {
@@ -145,20 +145,20 @@ export class Rangew extends React.Component<IRangeProps, IState> {
     }
   };
 
-  private mouseUpEventInput = (): void => {
+  private mouseUpEventInput = () => {
     const {multiply, onChanged, outValue} = this.props;
     const {value, valueInputRight, valueInputLeft} = this.state;
     if (multiply) {
       onChanged && onChanged({
         from: outValue && outValue(valueInputLeft) || `${valueInputLeft}`,
-        to:  outValue && outValue(valueInputRight) || `${valueInputRight}`,
+        to: outValue && outValue(valueInputRight) || `${valueInputRight}`,
       });
     } else {
       onChanged && onChanged(outValue && outValue(value) || `${value}`);
     }
   };
 
-  private getOffsetLeft = (): number => {
+  private getOffsetLeft = () => {
     const {multiply, maxValue} = this.props;
     const offset = multiply ? this.state.valueInputLeft * (MAX_PERCENT / (maxValue ? maxValue : 100)) :
       this.state.value * (MAX_PERCENT / (maxValue ? maxValue : 100));
@@ -166,7 +166,7 @@ export class Rangew extends React.Component<IRangeProps, IState> {
     return offset;
   };
 
-  private getOffsetRight = (): number => {
+  private getOffsetRight = () => {
     const {maxValue} = this.props;
 
     return this.state.valueInputRight * (MAX_PERCENT / (maxValue ? maxValue : 100));

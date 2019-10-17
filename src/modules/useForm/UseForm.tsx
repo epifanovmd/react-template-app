@@ -10,7 +10,7 @@ interface IUseFormMapStateToProps {
   users: IUsers[];
 }
 
-export const UseFormComponent = (): JSX.Element => {
+export const UseFormComponent = () => {
   const {
     values,
     errors,

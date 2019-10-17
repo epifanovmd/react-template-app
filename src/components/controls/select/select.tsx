@@ -29,20 +29,20 @@ export class Select extends Component<ISelectProps, IState> {
     };
   }
 
-  public componentDidMount(): void {
+  public componentDidMount() {
     document.addEventListener("touchstart", this.handleClickOutside);
     document.addEventListener("mousedown", this.handleClickOutside);
     document.addEventListener("scroll", this.handleClickOutsideScroll);
     this.setSelectedId();
   }
 
-  public componentWillUnmount(): void {
+  public componentWillUnmount() {
     document.removeEventListener("touchstart", this.handleClickOutside);
     document.removeEventListener("mousedown", this.handleClickOutside);
     document.removeEventListener("scroll", this.handleClickOutsideScroll);
   }
 
-  componentDidUpdate(prevProps: Readonly<ISelectProps>): void {
+  componentDidUpdate(prevProps: Readonly<ISelectProps>) {
     if (prevProps.options && prevProps.options.length === 0) {
       this.setSelectedId();
     }
@@ -52,7 +52,7 @@ export class Select extends Component<ISelectProps, IState> {
     }
   }
 
-  public render(): JSX.Element {
+  public render() {
     const {options} = this.props;
     const dropDown = this.getDropDownValue();
     const classNameSelect = (this.state.selected.length > 0) ?
@@ -78,7 +78,7 @@ export class Select extends Component<ISelectProps, IState> {
     );
   }
 
-  private setSelectedId = (): void => {
+  private setSelectedId = () => {
     const {options, selected, onChange} = this.props;
     if (selected) {
       const _selected = options &&
@@ -91,25 +91,25 @@ export class Select extends Component<ISelectProps, IState> {
     }
   };
 
-  private setDropdownRef = (node: HTMLDivElement): void => {
+  private setDropdownRef = (node: HTMLDivElement) => {
     this.dropdownRef = node;
   };
 
-  private handleClickOutsideScroll = (): void => {
+  private handleClickOutsideScroll = () => {
     this.setState({isOpen: false});
   };
 
-  private handleClickOutside = (event: any): void => {
+  private handleClickOutside = (event: any) => {
     if (this.dropdownRef && !this.dropdownRef.contains(event.target)) {
       this.setState({isOpen: false});
     }
   };
 
-  private clickDropDown = (): void => {
+  private clickDropDown = () => {
     this.setState({isOpen: !this.state.isOpen});
   };
 
-  private toggleSelected = (item: IItem): void => {
+  private toggleSelected = (item: IItem) => {
     const {multiply} = this.props;
     const {selected} = this.state;
     let list = selected;
@@ -132,18 +132,18 @@ export class Select extends Component<ISelectProps, IState> {
 
   };
 
-  private getToggleSelectedHandler = (item: IItem): () => void => {
-    return ((): void => {
+  private getToggleSelectedHandler = (item: IItem) => {
+    return (() => {
       const {multiply} = this.props;
       !multiply && this.setState({isOpen: false});
       this.toggleSelected(item);
     });
   };
 
-  private isSelected = (item: IItem): boolean =>
+  private isSelected = (item: IItem) =>
     this.state.selected.map(e => e.id).indexOf(item.id) !== -1;
 
-  private renderSelectItem = (list: IItem[]): JSX.Element[] => {
+  private renderSelectItem = (list: IItem[]) => {
     return (
       list.map((item) => {
         const className = (this.isSelected(item)) ?
@@ -166,7 +166,7 @@ export class Select extends Component<ISelectProps, IState> {
     );
   };
 
-  private getDropDownValue(): string {
+  private getDropDownValue() {
     if (this.state.selected.length > 1) {
       return `Выбрано: ${this.state.selected.length}`;
     }

@@ -1,13 +1,12 @@
-import {SimpleThunk} from "../../common/simpleThunk";
 import {UsersActions} from "./usersActions";
 import {requestRepository} from "../../api/RequestsRepository.g";
 import {popup} from "../../common/popup";
 import {IUsers} from "../../api/dto/Users.g";
-import {Action, Dispatch} from "redux";
+import {SimpleThunk} from "../../common/simpleThunk";
 
 export class UsersThunk {
   static getUsers(callback?: (users: IUsers[]) => void): SimpleThunk {
-    return async (dispatch: Dispatch<Action>): Promise<void> => {
+    return async (dispatch) => {
       const params = {};
       dispatch(UsersActions.getUsers.started(params));
       try {

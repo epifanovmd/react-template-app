@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 import {RenderComponentFC} from "../../components/renderComponent/renderComponent";
 
-export const TestRender: FC = (): JSX.Element => {
+export const TestRender: FC = () => {
 
   const [logText, setLogText] = useState("Рендер 1");
   const setText = () => {

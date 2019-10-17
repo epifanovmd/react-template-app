@@ -29,17 +29,17 @@ export class PopupNotification extends Component<IEmpty, IState> {
     this.listenerId = "";
   }
 
-  componentDidMount(): void {
+  componentDidMount() {
     this.listenerId = eventRegister.addEventListener(EventNames.notification, (data: INotificationPopupData): void => {
       this.setState({...data, isOpen: true});
     });
   }
 
-  componentWillUnmount(): void {
+  componentWillUnmount() {
     eventRegister.removeEventListener(this.listenerId);
   }
 
-  render(): JSX.Element | null {
+  render() {
     const {title, subtitle, iconType} = this.state;
     if (!this.state.isOpen) {
       return null;
@@ -67,7 +67,7 @@ export class PopupNotification extends Component<IEmpty, IState> {
     );
   }
 
-  private onClose = (): void => {
+  private onClose = () => {
     this.setState({isOpen: false});
   };
 }

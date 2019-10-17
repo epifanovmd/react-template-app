@@ -9,7 +9,7 @@ import {UseFormComponent} from "./modules/useForm/UseForm";
 import {TestPage} from "./modules/testPage/TestPage";
 import {TestRender} from "./modules/testRender/testRender";
 
-export const Routes = (): JSX.Element => (
+export const Routes = () => (
   <>
     <PopupNotification/>
     <ul className={"container"}>

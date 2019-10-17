@@ -191,6 +191,7 @@
       "check-preblock"
     ],
     "jsx-no-bind": true,
-    "jsx-no-multiline-js": false
+    "jsx-no-multiline-js": false,
+    "jsx-wrap-multiline": false
   }
 }

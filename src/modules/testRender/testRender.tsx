@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 import {RenderComponentFC} from "../../components/renderComponent/renderComponent";
 
-export const TestRender: FC = () => {
+const TestRender: FC = () => {
 
   const [logText, setLogText] = useState("Рендер 1");
   const setText = () => {
@@ -12,9 +12,12 @@ export const TestRender: FC = () => {
   return (
     <>
       <div onClick={setText}>Change</div>
-      <RenderComponentFC text={logText}/>
-      <RenderComponentFC text={"Рендер 2"}/>
-      <RenderComponentFC text={"Рендер 3"}/>
+      <RenderComponentFC text={logText} />
+      <RenderComponentFC text={"Рендер 2"} />
+      <RenderComponentFC text={"Рендер 3"} />
     </>
   );
 };
+
+//tslint:disable-next-line
+export default TestRender;

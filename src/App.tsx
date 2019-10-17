@@ -1,17 +1,18 @@
 import {PopupNotification} from "./components/popupNotification/popupNotification";
 import {Route} from "react-router";
-import {Users} from "./modules/users/Users";
-import React from "react";
+import React, {lazy, Suspense} from "react";
 import {NavLink} from "react-router-dom";
 
 import "./assets/clearfix.scss";
-import {UseFormComponent} from "./modules/useForm/UseForm";
-import {TestPage} from "./modules/testPage/TestPage";
-import {TestRender} from "./modules/testRender/testRender";
+
+const Users = lazy(() => import("./modules/users/Users"));
+const UseFormComponent = lazy(() => import("./modules/useForm/UseForm"));
+const TestPage = lazy(() => import("./modules/testPage/TestPage"));
+const TestRender = lazy(() => import("./modules/testRender/testRender"));
 
 export const Routes = () => (
   <>
-    <PopupNotification/>
+    <PopupNotification />
     <ul className={"container"}>
       <li>
         <NavLink to={"/"}>{"Users"}</NavLink>
@@ -27,11 +28,12 @@ export const Routes = () => (
       </li>
     </ul>
     <br />
-
-    <Route exact={true} path="/" component={Users}/>
-    <Route exact={true} path="/userlist/:id" component={Users}/>
-    <Route exact={true} path="/test" component={TestPage}/>
-    <Route exact={true} path="/useform" component={UseFormComponent}/>
-    <Route exact={true} path="/testRender" component={TestRender}/>
+    <Suspense fallback={<div>Загрузка...</div>}>
+      <Route exact={true} path="/" component={Users} />
+      <Route exact={true} path="/userlist/:id" component={Users} />
+      <Route exact={true} path="/test" component={TestPage} />
+      <Route exact={true} path="/useform" component={UseFormComponent} />
+      <Route exact={true} path="/testRender" component={TestRender} />
+    </Suspense>
   </>
 );

@@ -6,7 +6,7 @@ import {TableRow} from "../../components/table/tableRow";
 import {TableRowCell} from "../../components/table/tableRowCell";
 import {DateTime} from "luxon";
 
-export const TestPage: FC = () => {
+const TestPage: FC = () => {
   const thumb = (value: number) => `${value}`;
   const dt = DateTime;
 
@@ -58,3 +58,6 @@ export const TestPage: FC = () => {
     </div>
   );
 };
+
+//tslint:disable-next-line
+export default TestPage;

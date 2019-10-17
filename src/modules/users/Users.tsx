@@ -22,7 +22,7 @@ interface IRouteParams {
   id: string;
 }
 
-class UsersStatic extends Component<TProps> {
+class Users extends Component<TProps> {
   componentDidMount() {
     this.props.getUsers((result) => {
       console.log("-------", result);
@@ -52,4 +52,5 @@ class UsersStatic extends Component<TProps> {
   };
 }
 
-export const Users = withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));
+//tslint:disable-next-line
+export default withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(Users));

@@ -1,6 +1,8 @@
 import * as React from "react";
-import "./styles.scss";
 import {ITableProps} from "./table";
+
+import cn from "classnames";
+import styles from "./styles";
 
 interface IState {
 }
@@ -10,12 +12,9 @@ export class TableRowCell extends React.Component<ITableProps & { label?: string
     const {children, className, label, ...rest} = this.props;
 
     return (
-      <div
-        className={className ? `table__row-cell ${className}` : "table__row-cell"}
-        {...rest}
-      >
-        <div className="table__row-cell-title">{label}</div>
-        <div className="table__row-cell-value">{children}</div>
+      <div className={cn(styles["row-cell"], className)} {...rest}>
+        <div className={cn(styles.title)}>{label}</div>
+        <div className={cn(styles.value)}>{children}</div>
       </div>
     );
   }

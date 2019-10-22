@@ -3,7 +3,7 @@ import {Route} from "react-router";
 import React, {lazy, Suspense} from "react";
 import {NavLink} from "react-router-dom";
 
-import "./assets/clearfix.scss";
+import styles from "./assets/global";
 
 const Users = lazy(() => import("./modules/users/Users"));
 const UseFormComponent = lazy(() => import("./modules/useForm/UseForm"));
@@ -13,7 +13,7 @@ const TestRender = lazy(() => import("./modules/testRender/testRender"));
 export const Routes = () => (
   <>
     <PopupNotification />
-    <ul className={"container"}>
+    <ul className={styles.container}>
       <li>
         <NavLink to={"/"}>{"Users"}</NavLink>
       </li>

@@ -1,5 +1,6 @@
 import React from "react";
-import "./styles.scss";
+import cn from "classnames";
+import styles from "./styles";
 
 export interface ITableProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -13,7 +14,7 @@ export class Table extends React.Component<ITableProps, IState> {
     const {children, className, ...rest} = this.props;
 
     return (
-      <div className={className ? `table ${className}` : "table"} {...rest}>
+      <div className={cn(styles.table, className)} {...rest}>
         {children}
       </div>
     );

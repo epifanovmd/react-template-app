@@ -2,8 +2,8 @@ import React, {Component} from "react";
 import Modal from "react-responsive-modal";
 import {IEmpty} from "../../common/IEmpty";
 import {EventNames, eventRegister} from "../../common/eventRegister";
-
-import "./styles.scss";
+import cn from "classnames";
+import styles from "./styles";
 
 interface IState extends INotificationPopupData {
   isOpen: boolean;
@@ -53,13 +53,13 @@ export class PopupNotification extends Component<IEmpty, IState> {
         onClose={this.onClose}
         center={true}
       >
-        <div className={"popup"}>
-          <div className={"popup__icon"}>
-            <div className={`popup__icon-${iconType}`} />
+        <div className={styles.popup}>
+          <div className={styles.icon}>
+            <div className={cn(styles[iconType])} />
           </div>
-          <div className={"popup__title"}>{title}</div>
-          <div className={"popup__subtitle"}>{subtitle}</div>
-          <div className={"popup__buttons"}>
+          <div className={styles.title}>{title}</div>
+          <div className={styles.subtitle}>{subtitle}</div>
+          <div className={styles.buttons}>
             <button onClick={this.onClose}>{"ОК"}</button>
           </div>
         </div>

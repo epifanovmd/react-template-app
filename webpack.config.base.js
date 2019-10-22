@@ -50,6 +50,11 @@ const baseLoaders = {
     },
     {
       loader: "css-loader",
+      options: {
+        modules: {
+          localIdentName: '[local]--[hash:base64:5]',
+        },
+      }
     },
     {
       loader: 'postcss-loader',

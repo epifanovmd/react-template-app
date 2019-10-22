@@ -7,7 +7,7 @@
   line-height: 1.5;
 
 
-  &__header {
+  .header {
     font-weight: bold;
     display: flex;
     flex-flow: row nowrap;
@@ -17,7 +17,7 @@
     }
   }
 
-  &__row {
+  .row {
     display: flex;
     flex-flow: row nowrap;
     width: 100%;
@@ -29,14 +29,14 @@
     }
   }
 
-  &__row-cell {
+  .row-cell {
     flex-grow: 1;
     flex-basis: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &-title {
+    .title {
       font-weight: bold;
       flex-grow: 1;
       flex-basis: 0;
@@ -47,20 +47,13 @@
       display: none;
     }
 
-    &-value {
+    .value {
       flex-grow: 1;
       flex-basis: 0;
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-    }
-
-    @media only screen and (max-width: 599px) {
-      &-title {
-        display: block;
-      }
-      display: flex;
     }
 
     &.cell {
@@ -121,6 +114,13 @@
     &.cell-12 {
       flex-basis: 0;
       flex-grow: 12;
+    }
+
+    @media only screen and (max-width: 599px) {
+      &.title {
+        display: block;
+      }
+      display: flex;
     }
   }
 }

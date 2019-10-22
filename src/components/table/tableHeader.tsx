@@ -1,6 +1,8 @@
 import React from "react";
-import "./styles.scss";
 import {ITableProps} from "./table";
+
+import cn from "classnames";
+import styles from "./styles";
 
 interface IState {
 }
@@ -10,7 +12,7 @@ export class TableHeader extends React.Component<ITableProps, IState> {
     const { children, className, ...rest } = this.props;
 
     return (
-      <div className={className ? `table__header ${className}` : "table__header"} {...rest}>
+      <div className={cn(styles.header, className)} {...rest}>
         {children}
       </div>
     );

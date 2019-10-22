@@ -6,7 +6,7 @@ import {TableRowCell} from "../../components/table/tableRowCell";
 import {DateTime} from "luxon";
 
 import cn from "classnames";
-import styles from "../../components/table/styles";
+import styles from "../../components/table/styles.scss";
 
 const TestPage: FC = () => {
   const dt = DateTime;
@@ -25,7 +25,7 @@ const TestPage: FC = () => {
         </TableHeader>
 
         <TableRow>
-          <TableRowCell className={cn(styles["cell-3"])}>1</TableRowCell>
+          <TableRowCell className={cn(styles.cell3)}>1</TableRowCell>
           <TableRowCell>4</TableRowCell>
           <TableRowCell>5</TableRowCell>
         </TableRow>
@@ -34,13 +34,13 @@ const TestPage: FC = () => {
           <TableRowCell>1</TableRowCell>
           <TableRowCell>2</TableRowCell>
           <TableRowCell>3</TableRowCell>
-          <TableRowCell className={cn(styles["cell-2"])}>
+          <TableRowCell className={cn(styles.cell2)}>
             <TableRow>
               <TableRowCell>подстр 1</TableRowCell>
               <TableRowCell>подстр 2</TableRowCell>
             </TableRow>
             <TableRow>
-              <TableRowCell className={cn(styles["cell-2"])}>подстр 1</TableRowCell>
+              <TableRowCell className={cn(styles.cell2)}>подстр 1</TableRowCell>
             </TableRow>
           </TableRowCell>
         </TableRow>

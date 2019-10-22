@@ -49,11 +49,12 @@ const baseLoaders = {
       loader: "style-loader",
     },
     {
-      loader: "css-loader",
+      loader: "typings-for-css-modules-loader?modules",
       options: {
-        modules: {
-          localIdentName: '[local]--[hash:base64:5]',
-        },
+        modules: true,
+        localIdentName: '[local]--[hash:base64:5]',
+        namedExport:true,
+        camelCase:true
       }
     },
     {

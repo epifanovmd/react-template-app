@@ -3,7 +3,7 @@ import Modal from "react-responsive-modal";
 import {IEmpty} from "../../common/IEmpty";
 import {EventNames, eventRegister} from "../../common/eventRegister";
 import cn from "classnames";
-import styles from "./styles";
+import styles from "./styles.scss";
 
 interface IState extends INotificationPopupData {
   isOpen: boolean;

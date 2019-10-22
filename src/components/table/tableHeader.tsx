@@ -2,7 +2,7 @@ import React from "react";
 import {ITableProps} from "./table";
 
 import cn from "classnames";
-import styles from "./styles";
+import styles from "./styles.scss";
 
 interface IState {
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import cn from "classnames";
-import styles from "./styles";
+import styles from "./styles.scss";
 
 export interface ITableProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;

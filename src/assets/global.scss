@@ -10,6 +10,13 @@
   padding-right: 15px;
 }
 
+.test {
+  .tt {}
+}
+.test1 {
+  .tt {}
+}
+
 @media (min-width: 544px) {
   .container {
     max-width: 576px

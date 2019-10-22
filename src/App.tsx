@@ -3,7 +3,7 @@ import {Route} from "react-router";
 import React, {lazy, Suspense} from "react";
 import {NavLink} from "react-router-dom";
 
-import styles from "./assets/global";
+import styles from "./assets/global.scss";
 
 const Users = lazy(() => import("./modules/users/Users"));
 const UseFormComponent = lazy(() => import("./modules/useForm/UseForm"));

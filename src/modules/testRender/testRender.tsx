@@ -1,5 +1,5 @@
 import React, {FC, useState} from "react";
-import {RenderComponentFC} from "../../components/renderComponent/renderComponent";
+import {RenderComponent} from "../../components/renderComponent/renderComponent";
 
 const TestRender: FC = () => {
 
@@ -12,9 +12,9 @@ const TestRender: FC = () => {
   return (
     <>
       <div onClick={setText}>Change</div>
-      <RenderComponentFC text={logText} />
-      <RenderComponentFC text={"Рендер 2"} />
-      <RenderComponentFC text={"Рендер 3"} />
+      <RenderComponent text={logText} />
+      <RenderComponent text={"Рендер 2"} />
+      <RenderComponent text={"Рендер 3"} />
     </>
   );
 };

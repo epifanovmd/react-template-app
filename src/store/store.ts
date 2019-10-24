@@ -2,6 +2,7 @@ import {applyMiddleware, createStore} from "redux";
 import thunkMiddleware from "redux-thunk";
 // import {logger} from "redux-logger";
 import {createMainReduce} from "./reducers";
+import {IAppState} from "./IAppState";
 
 const Middleware =
   process.env.NODE_ENV === "development"
@@ -9,7 +10,5 @@ const Middleware =
     : applyMiddleware(thunkMiddleware);
 
 const reducers = createMainReduce();
-export const store = createStore(
-  reducers,
-  Middleware,
-);
+
+export const createSimpleStore = ( initialState?: IAppState ) => createStore( reducers, initialState, Middleware );

@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const browserList = require('./package');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
@@ -62,7 +61,7 @@ const baseLoaders = {
       options: {
         plugins: [
           autoprefixer({
-            overrideBrowserslist: browserList.browserslist
+            overrideBrowserslist: ["cover 99.5%"]
           })
         ],
         sourceMap: true

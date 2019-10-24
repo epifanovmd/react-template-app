@@ -10,7 +10,7 @@ export class UsersApiRequest extends BaseRequest {
 
   get(config?: Object): Promise<IUsers[]> {
     return this.fetch(
-      `/users`,
+      `/api/users`,
       Object.assign({
         method : RequestType.GET
       }, config))

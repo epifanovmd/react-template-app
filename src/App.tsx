@@ -1,21 +1,15 @@
 import {PopupNotification} from "./components/popupNotification/popupNotification";
-import {Route} from "react-router";
-import React, {lazy, Suspense} from "react";
+import {Route, Switch} from "react-router";
+import React from "react";
 import {NavLink} from "react-router-dom";
-
-import styles from "./assets/global.scss";
-
-const Users = lazy(() => import("./modules/users/Users"));
-const UseFormComponent = lazy(() => import("./modules/useForm/UseForm"));
-const TestPage = lazy(() => import("./modules/testPage/TestPage"));
-const TestRender = lazy(() => import("./modules/testRender/testRender"));
+import {routes} from "./routes";
 
 export const Routes = () => (
   <>
     <PopupNotification />
-    <ul className={styles.container}>
+    <ul>
       <li>
-        <NavLink to={"/"}>{"Users"}</NavLink>
+        <NavLink to={"/"}>{"Users1"}</NavLink>
       </li>
       <li>
         <NavLink to={"/test"}>{"Test Page"}</NavLink>
@@ -28,12 +22,8 @@ export const Routes = () => (
       </li>
     </ul>
     <br />
-    <Suspense fallback={<div>Загрузка...</div>}>
-      <Route exact={true} path="/" component={Users} />
-      <Route exact={true} path="/userlist/:id" component={Users} />
-      <Route exact={true} path="/test" component={TestPage} />
-      <Route exact={true} path="/useform" component={UseFormComponent} />
-      <Route exact={true} path="/testRender" component={TestRender} />
-    </Suspense>
+    <Switch>
+      { routes.map( route => <Route key={ route.path } { ...route } /> ) }
+    </Switch>
   </>
 );

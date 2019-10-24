@@ -2,9 +2,11 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {Provider} from "react-redux";
 import {Router} from "react-router-dom";
-import {store} from "./store/store";
 import {createBrowserHistory} from "history";
 import {Routes} from "./App";
+import {createSimpleStore} from "./store/store";
+
+const store = createSimpleStore(window.REDUX_DATA);
 
 const root = (
   <Provider store={store}>
@@ -16,7 +18,7 @@ const root = (
   </Provider>
 );
 
-ReactDOM.render(
+ReactDOM.hydrate(
   root,
   document.getElementById("root"),
 );

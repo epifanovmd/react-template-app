@@ -1,5 +1,6 @@
 import {assertNotNull} from "../common/assertNotNull";
 import {NoAuthError} from "../common/exceptionType";
+import fetch from "isomorphic-unfetch";
 /*tslint:disable*/
 
 type Action<T> = () => T;
@@ -21,21 +22,22 @@ export class BaseRequest {
   static setToken: (token: string) => void = (token) => BaseRequest.token = token;
 
   async fetch(url: string, config: Object): Promise<any> {
-    let headers = new Headers({
+    let headers: any = {
       "Accept": "application/json",
       "Content-Type": "application/json"
-    });
+    };
 
     if (BaseRequest.getToken()) {
-      headers.set("cookie", `access_token=${BaseRequest.token}`);
-    } else if (document.cookie) {
-      headers.set("Cookie", document.cookie);
+      headers = {
+        ...headers,
+        "cookie": `access_token=${BaseRequest.token}`,
+      }
     }
     if (process.env.NODE_ENV === "development") {
       console.log("URL - ", url);
     }
 
-    const response = await fetch(url, Object.assign({headers: headers}, config));
+    const response = await fetch("http://localhost:8080" + url, Object.assign({headers: headers}, config));
     if (response.status == 401) {
       throw new NoAuthError("NoAuthorization");
     } else if (response.status == 204) {

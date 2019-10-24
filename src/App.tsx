@@ -9,7 +9,7 @@ export const Routes = () => (
     <PopupNotification />
     <ul>
       <li>
-        <NavLink to={"/"}>{"Users1"}</NavLink>
+        <NavLink to={"/"}>{"Users"}</NavLink>
       </li>
       <li>
         <NavLink to={"/test"}>{"Test Page"}</NavLink>

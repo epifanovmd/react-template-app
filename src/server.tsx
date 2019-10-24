@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 
 import React from "react";
 import serialize from "serialize-javascript";
@@ -29,7 +28,7 @@ if (proxy) {
   });
 }
 
-app.use(express.static(path.resolve(__dirname, "../dist")));
+app.use(express.static("build"));
 
 app.get("/*", (req: any, res: any) => {
   const context = {};
@@ -60,7 +59,7 @@ app.get("/*", (req: any, res: any) => {
 });
 
 app.listen(port, () => {
-  console.log("Server started on port: localhost:" + port);
+  console.log("Server started on port: http://localhost:" + port);
 });
 
 function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
@@ -72,7 +71,6 @@ function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
             ${helmetData.title.toString()}
             ${helmetData.meta.toString()}
             <title>React SSR</title>
-            <link rel="stylesheet" type="text/css" href="./styles.css" />
         </head>
 
         <body>
@@ -80,7 +78,7 @@ function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
             <script>
                 window.REDUX_DATA = ${serialize(reduxState, { isJSON: true })}
             </script>
-            <script src="./main.js"></script>
+            <script src="./client.js"></script>
         </body>
         </html>
     `;

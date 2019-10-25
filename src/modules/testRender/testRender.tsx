@@ -1,7 +1,7 @@
 import React, {FC, useState} from "react";
 import {RenderComponent} from "../../components/renderComponent/renderComponent";
 
-const TestRender: FC = () => {
+export const TestRender: FC = () => {
 
   const [logText, setLogText] = useState("Рендер 1");
   const setText = () => {
@@ -18,6 +18,3 @@ const TestRender: FC = () => {
     </>
   );
 };
-
-//tslint:disable-next-line
-export default TestRender;

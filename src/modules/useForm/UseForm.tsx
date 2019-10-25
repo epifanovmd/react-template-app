@@ -9,7 +9,7 @@ interface IUseFormMapStateToProps {
   users: IUsers[];
 }
 
-const UseFormComponent = () => {
+export const UseFormComponent = () => {
   const {
     values,
     errors,
@@ -99,6 +99,3 @@ const UseFormComponent = () => {
     </div>
   );
 };
-
-//tslint:disable-next-line
-export default UseFormComponent;

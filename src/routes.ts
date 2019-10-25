@@ -1,11 +1,9 @@
 import * as React from "react";
 import {RouteComponentProps} from "react-router";
-import {RenderComponent} from "./components/renderComponent/renderComponent";
-
-// const Users = lazy(() => import("./modules/users/Users"));
-// const UseFormComponent = lazy(() => import("./modules/useForm/UseForm"));
-// const TestPage = lazy(() => import("./modules/testPage/TestPage"));
-// const TestRender = lazy(() => import("./modules/testRender/testRender"));
+import {TestPage} from "./modules/testPage/TestPage";
+import {UseFormComponent} from "./modules/useForm/UseForm";
+import {Users} from "./modules/users/Users";
+import {TestRender} from "./modules/testRender/testRender";
 
 export interface IRoute {
   path: string;
@@ -14,24 +12,24 @@ export interface IRoute {
 }
 
 export const routes: IRoute[] = [
-  // {
-  //   path: "/",
-  //   component: Users,
-  //   exact: true,
-  // },
-  // {
-  //   path: "/useform",
-  //   component: UseFormComponent,
-  //   exact: true,
-  // },
-  // {
-  //   path: "/test",
-  //   component: TestPage,
-  //   exact: true,
-  // },
+  {
+    path: "/",
+    component: Users,
+    exact: true,
+  },
+  {
+    path: "/useform",
+    component: UseFormComponent,
+    exact: true,
+  },
+  {
+    path: "/test",
+    component: TestPage,
+    exact: true,
+  },
   {
     path: "/testRender",
-    component: RenderComponent,
+    component: TestRender,
     exact: true,
   },
 ];

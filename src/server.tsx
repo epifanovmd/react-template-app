@@ -1,15 +1,14 @@
 import express from "express";
-import path from "path";
 
 import React from "react";
 import serialize from "serialize-javascript";
-import { renderToString } from "react-dom/server";
-import { matchPath, StaticRouter } from "react-router-dom";
-import { Provider as ReduxProvider } from "react-redux";
+import {renderToString} from "react-dom/server";
+import {matchPath, StaticRouter} from "react-router-dom";
+import {Provider as ReduxProvider} from "react-redux";
 import Helmet from "react-helmet";
-import { routes } from "./routes";
-import { createSimpleStore } from "./store/store";
-import { Routes } from "./App";
+import {routes} from "./routes";
+import {createSimpleStore} from "./store/store";
+import {Routes} from "./App";
 import proxyMiddleware from "http-proxy-middleware";
 
 const proxy: any = {
@@ -29,7 +28,7 @@ if (proxy) {
   });
 }
 
-app.use(express.static(path.resolve(__dirname, "../dist")));
+app.use(express.static("build"));
 
 app.get("/*", (req: any, res: any) => {
   const context = {};
@@ -54,7 +53,7 @@ app.get("/*", (req: any, res: any) => {
     const reduxState = store.getState();
     const helmetData = Helmet.renderStatic();
 
-    res.writeHead(200, { "Content-Type": "text/html" });
+    res.writeHead(200, {"Content-Type": "text/html"});
     res.end(htmlTemplate(reactDom, reduxState, helmetData));
   });
 });
@@ -65,23 +64,26 @@ app.listen(port, () => {
 
 function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
   return `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            ${helmetData.title.toString()}
-            ${helmetData.meta.toString()}
-            <title>React SSR</title>
-            <link rel="stylesheet" type="text/css" href="./styles.css" />
-        </head>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" href="/favicon.ico">
+  ${helmetData.title.toString()}
+  ${helmetData.meta.toString()}
+  <title>React SSR</title>
+  <link rel="stylesheet" type="text/css" href="./static/styles/client.css" />
+</head>
 
-        <body>
-            <div id="app">${reactDom}</div>
-            <script>
-                window.REDUX_DATA = ${serialize(reduxState, { isJSON: true })}
-            </script>
-            <script src="./main.js"></script>
-        </body>
-        </html>
+<body>
+<div id="root">${reactDom}</div>
+<script>
+  window.REDUX_DATA = ${serialize(reduxState, {isJSON: true})}
+</script>
+<script src="./static/js/client.js"></script>
+</body>
+</html>
     `;
 }

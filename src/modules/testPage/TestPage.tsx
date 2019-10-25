@@ -8,11 +8,11 @@ import {DateTime} from "luxon";
 import cn from "classnames";
 import styles from "../../components/table/styles.scss";
 
-const TestPage: FC = () => {
+export const TestPage: FC = () => {
   const dt = DateTime;
 
   return (
-    <div className="container">
+    <div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -53,6 +53,3 @@ const TestPage: FC = () => {
     </div>
   );
 };
-
-//tslint:disable-next-line
-export default TestPage;

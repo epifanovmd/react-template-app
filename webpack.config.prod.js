@@ -1,24 +1,20 @@
-const path = require("path");
 const webpackConfig = require("./webpack.config.base");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const webpackConfigProd = {
-  ...webpackConfig.baseConfig,
-  output: {
-    path: path.resolve(__dirname, "build"),
-    filename: 'static/js/[name].[chunkhash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
-    publicPath: '/'
-  },
+const webpackConfigDev = {
+  ...webpackConfig.baseConfigClient,
   mode: "production",
   module: {
     rules: [
       webpackConfig.baseLoaders.ts,
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
-          ...webpackConfig.baseLoaders.scss,
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          ...webpackConfig.baseLoaders.scss
         ],
       },
       ...webpackConfig.baseLoaders.font,
@@ -28,8 +24,9 @@ const webpackConfigProd = {
   plugins: [
     ...webpackConfig.basePlugins,
     new MiniCssExtractPlugin({
-      filename: '[name].[chunkhash:8].css',
-      chunkFilename: '[id].css',
+      filename: 'static/styles/[name].css',
+      chunkFilename: 'static/styles/[id].css',
+      ignoreOrder: false,
     }),
   ],
   optimization: {
@@ -37,4 +34,27 @@ const webpackConfigProd = {
   },
 };
 
-module.exports = webpackConfigProd;
+const server = {
+  ...webpackConfig.baseConfigServer,
+  mode: "production",
+  module: {
+    rules: [
+      webpackConfig.baseLoaders.ts,
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          {
+            loader: "isomorphic-style-loader",
+          },
+          ...webpackConfig.baseLoaders.scss
+        ],
+      },
+    ],
+  },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()],
+  },
+};
+
+module.exports = [webpackConfigDev, server];
+

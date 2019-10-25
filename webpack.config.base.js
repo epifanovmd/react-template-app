@@ -1,11 +1,13 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const nodeExternals = require("webpack-node-externals");
 
-const baseConfig = {
-  entry: "./src/index.tsx",
+const baseConfigClient = {
+  entry: {
+    client: path.resolve(__dirname, "src/index.tsx"),
+  },
   output: {
     path: path.resolve(__dirname, "build"),
     filename: 'static/js/[name].js',
@@ -16,6 +18,26 @@ const baseConfig = {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: "node_modules",
+};
+
+const baseConfigServer = {
+  name: "server",
+  target: "node",
+  entry: {
+    server: path.resolve(__dirname, "src/server.tsx"),
+  },
+  output: {
+    filename: "server.js",
+    path: path.resolve(__dirname, "build")
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty'
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".scss"],
+  },
+  externals: [nodeExternals()],
 };
 
 const baseLoaders = {
@@ -45,10 +67,7 @@ const baseLoaders = {
   ],
   scss: [
     {
-      loader: "style-loader",
-    },
-    {
-      loader: "typings-for-css-modules-loader?modules",
+      loader: "typings-for-css-modules-loader",
       options: {
         modules: true,
         localIdentName: '[local]--[hash:base64:5]',
@@ -77,10 +96,6 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  new HtmlWebpackPlugin({
-    template: "./public/index.html",
-    inject: true,
-  }),
   new ManifestPlugin({
     fileName: 'asset-manifest.json',
   }),
@@ -90,7 +105,8 @@ const basePlugins = [
 ];
 
 const webpackConfig = {
-  baseConfig,
+  baseConfigClient,
+  baseConfigServer,
   baseLoaders,
   basePlugins,
 };

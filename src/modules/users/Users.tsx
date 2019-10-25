@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import {UserList} from "../../components/userList/userList";
 import {RouteComponentProps, withRouter} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
+import {SimpleDispatch} from "../../common/simpleThunk";
+import {UsersThunk} from "./usersThunk";
 
 export interface IUsersQuery {
   search: string;
@@ -22,7 +24,12 @@ interface IRouteParams {
   id: string;
 }
 
-class Users extends Component<TProps> {
+class UsersStatic extends Component<TProps> {
+  static componentGetInitialData = () => {
+    return (dispatch: SimpleDispatch) => {
+      return dispatch(UsersThunk.getUsers());
+    };
+  }
   componentDidMount() {
     this.props.getUsers((result) => {
       console.log("-------", result);
@@ -52,5 +59,4 @@ class Users extends Component<TProps> {
   };
 }
 
-//tslint:disable-next-line
-export default withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(Users));
+export const Users = withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));

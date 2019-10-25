@@ -59,7 +59,7 @@ app.get("/*", (req: any, res: any) => {
 });
 
 app.listen(port, () => {
-  console.log("Server started on port: localhost:" + port);
+  console.log("Server started on port: http://localhost:" + port);
 });
 
 function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {

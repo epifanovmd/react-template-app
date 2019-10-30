@@ -24,8 +24,8 @@ const client = {
   plugins: [
     ...webpackConfig.basePlugins,
     new MiniCssExtractPlugin({
-      filename: 'static/styles/[name].css',
-      chunkFilename: 'static/styles/[id].css',
+      filename: 'client/styles/[name].css',
+      chunkFilename: 'client/styles/[id].css',
       ignoreOrder: false,
     }),
   ],

@@ -6,18 +6,12 @@ import {renderToString} from "react-dom/server";
 import {matchPath, StaticRouter} from "react-router-dom";
 import {Provider as ReduxProvider} from "react-redux";
 import Helmet from "react-helmet";
-import {routes} from "./routes";
 import {createSimpleStore} from "./store/store";
 import {Routes} from "./App";
 import proxyMiddleware from "http-proxy-middleware";
-
-const proxy: any = {
-  "/api": {
-    target: "https://jsonplaceholder.typicode.com/",
-    pathRewrite: {"^/api": "/"},
-    changeOrigin: true,
-  },
-};
+import {routes} from "./routes";
+import {SimpleDispatch, SimpleThunk} from "./common/simpleThunk";
+import {proxy} from "../proxy";
 
 const app = express();
 const port = 8080;
@@ -34,12 +28,14 @@ app.get("/*", (req: any, res: any) => {
   const context = {};
   const store = createSimpleStore();
 
+  const getData = (thunk: SimpleThunk): any => (dispatch: SimpleDispatch) => (dispatch(thunk));
+
   const dataRequirements =
     routes
-      .filter(route => matchPath(req.url, route)) // filter matching paths
-      .map(route => route.component) // map to components
-      .filter(comp => (comp as any).componentGetInitialData) // check if components have data requirement
-      .map(comp => store.dispatch((comp as any).componentGetInitialData())); // dispatch data requirement
+      .filter(route => matchPath(req.url, route))
+      .map(route => route.getInitialData &&
+        store.dispatch(getData(route.getInitialData)),
+      );
 
   Promise.all(dataRequirements).then(() => {
     const jsx = (
@@ -69,12 +65,12 @@ function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="manifest" href="/manifest.json">
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="manifest" href="/client/manifest.json">
+  <link rel="shortcut icon" href="/client/favicon.ico">
   ${helmetData.title.toString()}
   ${helmetData.meta.toString()}
   <title>React SSR</title>
-  <link rel="stylesheet" type="text/css" href="./static/styles/client.css" />
+  <link rel="stylesheet" type="text/css" href="./client/styles/client.css" />
 </head>
 
 <body>

@@ -100,7 +100,7 @@ const basePlugins = [
     fileName: 'asset-manifest.json',
   }),
   new CopyPlugin([
-    { from: 'public' },
+    { from: 'public', to: "client" },
   ]),
 ];
 

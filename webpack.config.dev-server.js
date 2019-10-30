@@ -1,5 +1,7 @@
+const path = require("path");
 const webpackConfig = require("./webpack.config.base");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const autoprefixer = require('autoprefixer');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const client = {
   ...webpackConfig.baseConfigClient,
@@ -10,10 +12,33 @@ const client = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
+          { loader: "style-loader" },
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: "css-loader",
+            options: {
+              modules: true,
+              localIdentName: '[local]--[hash:base64:5]',
+              namedExport:true,
+              camelCase:true,
+            }
           },
-          ...webpackConfig.baseLoaders.scss
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [
+                autoprefixer({
+                  overrideBrowserslist: ["cover 99.5%"]
+                })
+              ],
+              sourceMap: true
+            }
+          },
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: true,
+            },
+          },
         ],
       },
       ...webpackConfig.baseLoaders.font,
@@ -22,12 +47,25 @@ const client = {
   },
   plugins: [
     ...webpackConfig.basePlugins,
-    new MiniCssExtractPlugin({
-      filename: 'static/styles/[name].css',
-      chunkFilename: 'static/styles/[id].css',
-      ignoreOrder: false,
+    new HtmlWebpackPlugin({
+      template: "./src/index.html",
+      inject: true,
     }),
   ],
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    historyApiFallback: true,
+    hot: true,
+    noInfo: false,
+    proxy: {
+      "/api": {
+        target: "https://jsonplaceholder.typicode.com/",
+        pathRewrite: {"^/api": "/"},
+        changeOrigin: true,
+      },
+    },
+  },
 };
 
 module.exports = client;

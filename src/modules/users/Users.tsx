@@ -25,11 +25,6 @@ interface IRouteParams {
 }
 
 class UsersStatic extends Component<TProps> {
-  static componentGetInitialData = () => {
-    return (dispatch: SimpleDispatch) => {
-      return dispatch(UsersThunk.getUsers());
-    };
-  }
   componentDidMount() {
     this.props.getUsers((result) => {
       console.log("-------", result);

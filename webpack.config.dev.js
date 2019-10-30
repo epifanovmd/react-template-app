@@ -21,7 +21,7 @@ const webpackConfigDev = env => ({
   plugins: [
     ...webpackConfig.basePlugins,
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
+      'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
     }),
   ],
   devServer: {

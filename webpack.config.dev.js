@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.base");
 
-const webpackConfigDev = {
+const webpackConfigDev = env => ({
   ...webpackConfig.baseConfig,
   mode: "development",
   module: {
@@ -20,6 +20,9 @@ const webpackConfigDev = {
   },
   plugins: [
     ...webpackConfig.basePlugins,
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env.NODE_ENV),
+    }),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -35,6 +38,6 @@ const webpackConfigDev = {
       },
     },
   },
-};
+});
 
 module.exports = webpackConfigDev;

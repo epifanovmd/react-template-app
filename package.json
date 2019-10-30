@@ -14,7 +14,8 @@
   "scripts": {
     "build:dev": "webpack --config webpack.config.dev.js --watch",
     "build:prod": "webpack --config webpack.config.prod.js",
-    "server": "node build/server.js",
+    "server": "node build/server/server.js",
+    "dev": "webpack-dev-server --env.NODE_ENV=development --config webpack.config.dev.js",
     "lint": "tslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""
   },

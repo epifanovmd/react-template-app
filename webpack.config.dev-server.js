@@ -1,4 +1,3 @@
-const path = require("path");
 const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -31,23 +30,4 @@ const client = {
   ],
 };
 
-const server = {
-  ...webpackConfig.baseConfigServer,
-  mode: "development",
-  module: {
-    rules: [
-      webpackConfig.baseLoaders.ts,
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: "isomorphic-style-loader",
-          },
-          ...webpackConfig.baseLoaders.scss
-        ],
-      },
-    ],
-  },
-};
-
-module.exports = [client, server];
+module.exports = client;

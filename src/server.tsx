@@ -82,7 +82,7 @@ function htmlTemplate(reactDom: any, reduxState: any, helmetData: any) {
 <script>
   window.REDUX_DATA = ${serialize(reduxState, {isJSON: true})}
 </script>
-<script src="./static/js/client.js"></script>
+<script src="./client/client.js"></script>
 </body>
 </html>
     `;

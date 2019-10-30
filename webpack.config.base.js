@@ -10,8 +10,8 @@ const baseConfigClient = {
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    filename: 'client/[name].js',
+    chunkFilename: 'client/[name].chunk.js',
     publicPath: '/'
   },
   resolve: {
@@ -27,7 +27,7 @@ const baseConfigServer = {
     server: path.resolve(__dirname, "src/server.tsx"),
   },
   output: {
-    filename: "server.js",
+    filename: "server/[name].js",
     path: path.resolve(__dirname, "build")
   },
   node: {

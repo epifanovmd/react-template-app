@@ -10,7 +10,7 @@ interface IState {
 }
 
 export class Table extends React.Component<ITableProps, IState> {
-  render(): JSX.Element {
+  render() {
     const {children, className, ...rest} = this.props;
 
     return (

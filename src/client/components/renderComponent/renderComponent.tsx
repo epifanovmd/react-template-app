@@ -10,10 +10,6 @@ interface IState {
 }
 
 export class RenderComponent extends PureComponent<IProps, IState> {
-  static componentGetInitialData () {
-    return ( dispatch: SimpleDispatch ) =>
-      dispatch( UsersThunk.getUsers() );
-  }
   render(): JSX.Element {
     const {text} = this.props;
 

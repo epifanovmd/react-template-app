@@ -1,18 +1,17 @@
 const path = require("path");
 const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 const nodeExternals = require("webpack-node-externals");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
-const baseConfigClient = (SSR) => ({
+const baseConfigClient = (ssr) => ({
   entry: {
     client: path.resolve(__dirname, "src/client/index.tsx"),
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: SSR ? 'client/[name].js' : '[name].js',
-    chunkFilename: SSR ? 'client/[name].chunk.js' : '[name].js',
+    filename: ssr ? 'client/[name].js' : '[name].js',
+    chunkFilename: ssr ? 'client/[name].chunk.js' : '[name].chunk.js',
     publicPath: '/'
   },
   resolve: {
@@ -96,30 +95,15 @@ const baseLoaders = {
   ],
 };
 
-const basePlugins = (SSR) => {
-  if (!SSR) {
-    return [
-      new ManifestPlugin({
-        fileName: 'asset-manifest.json',
-      }),
-      new CopyPlugin([
-        { from: 'public', to: SSR ? "client" : "" },
-      ]),
-      new HtmlWebpackPlugin({
-        template: "./src/client/index.html",
-        inject: true,
-      }),
-    ]
-  }
-  return [
-    new ManifestPlugin({
-      fileName: 'asset-manifest.json',
-    }),
-    new CopyPlugin([
-      { from: 'public', to: SSR ? "client" : "" },
-    ]),
-  ]
-};
+const basePlugins = (ssr) => ([
+  new ManifestPlugin({
+    fileName: 'asset-manifest.json',
+  }),
+  new CopyPlugin([
+    { from: 'public', to: ssr ? "client" : "" },
+  ]),
+]);
+
 
 const webpackConfig = {
   baseConfigClient,

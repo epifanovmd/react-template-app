@@ -2,9 +2,10 @@ const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const client = env => ({
-  ...webpackConfig.baseConfigClient(env.SSR),
+  ...webpackConfig.baseConfigClient('SSR'),
   mode: "production",
   module: {
     rules: [
@@ -23,15 +24,18 @@ const client = env => ({
     ],
   },
   plugins: [
-    ...webpackConfig.basePlugins(env.SSR),
+    ...webpackConfig.basePlugins("SSR"),
     new MiniCssExtractPlugin({
-      filename: env.SSR ? 'client/styles/[name].css' : '[name].css',
-      chunkFilename: env.SSR ? 'client/styles/[id].css' : '[id].css',
+      filename: 'client/styles/[name].css',
+      chunkFilename: 'client/styles/[id].css',
       ignoreOrder: false,
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
     }),
+    new CopyPlugin([
+      { from: 'public', to: "client", ignore: ['*.html'], },
+    ],),
   ],
   optimization: {
     minimizer: [new UglifyJsPlugin()],
@@ -39,7 +43,6 @@ const client = env => ({
 });
 
 const server = env => {
-  if (!env.SSR) return {};
   return {
     ...webpackConfig.baseConfigServer,
     mode: "production",
@@ -64,4 +67,3 @@ const server = env => {
 };
 
 module.exports = [client, server];
-

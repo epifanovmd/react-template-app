@@ -12,10 +12,10 @@
     "url": "https://github.com/epifanovmd/react-template-app.git"
   },
   "scripts": {
-    "build:dev": "webpack --env.NODE_ENV=development --config webpack.config.dev.js",
-    "build:prod": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.js",
-    "build:dev:ssr": "webpack --env.SSR --env.NODE_ENV=development --config webpack.config.dev.js",
-    "build:prod:ssr": "webpack --env.SSR --env.NODE_ENV=prodaction --config webpack.config.prod.js",
+    "build:dev": "webpack --env.NODE_ENV=development --config webpack.config.dev.client.js",
+    "build:prod": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.client.js",
+    "build:dev:ssr": "webpack --env.NODE_ENV=development --config webpack.config.dev.ssr.js",
+    "build:prod:ssr": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.ssr.js",
     "dev:ssr": "yarn build:dev:ssr && node build/server/server.js",
     "prod:ssr": "yarn build:prod:ssr && node build/server/server.js",
     "dev": "webpack-dev-server --env.NODE_ENV=development --config webpack.config.dev-server.js",

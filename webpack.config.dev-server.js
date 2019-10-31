@@ -18,8 +18,8 @@ const client = {
             options: {
               modules: true,
               localIdentName: '[local]--[hash:base64:5]',
-              namedExport:true,
-              camelCase:true,
+              namedExport: true,
+              camelCase: true,
             }
           },
           {
@@ -61,7 +61,7 @@ const client = {
     proxy: {
       "/api": {
         target: "https://jsonplaceholder.typicode.com/",
-        pathRewrite: {"^/api": "/"},
+        pathRewrite: { "^/api": "/" },
         changeOrigin: true,
       },
     },

@@ -14,9 +14,7 @@ export class RenderComponent extends PureComponent<IProps, IState> {
     const {text} = this.props;
 
     return (
-      <>
         <div>{text}</div>
-      </>
     );
   }
 }

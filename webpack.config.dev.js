@@ -3,7 +3,7 @@ const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const client = env => ({
-  ...webpackConfig.baseConfigClient,
+  ...webpackConfig.baseConfigClient(env.SSR),
   mode: "development",
   module: {
     rules: [
@@ -22,35 +22,38 @@ const client = env => ({
     ],
   },
   plugins: [
-    ...webpackConfig.basePlugins,
+    ...webpackConfig.basePlugins(env.SSR),
+    new MiniCssExtractPlugin({
+      filename: env.SSR ? 'client/styles/[name].css' : '[name].css',
+      chunkFilename: env.SSR ? 'client/styles/[id].css' : '[id].css',
+      ignoreOrder: false,
+    }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'client/styles/[name].css',
-      chunkFilename: 'client/styles/[id].css',
-      ignoreOrder: false,
     }),
   ],
 });
 
-const server = env => ({
-  ...webpackConfig.baseConfigServer,
-  mode: "development",
-  module: {
-    rules: [
-      webpackConfig.baseLoaders.ts,
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: "isomorphic-style-loader",
-          },
-          ...webpackConfig.baseLoaders.scss
-        ],
-      },
-    ],
-  },
-});
+const server = env => {
+  if (!env.SSR) return {};
+  return {
+    ...webpackConfig.baseConfigServer,
+    mode: "development",
+    module: {
+      rules: [
+        webpackConfig.baseLoaders.ts,
+        {
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            {
+              loader: "isomorphic-style-loader",
+            },
+            ...webpackConfig.baseLoaders.scss
+          ],
+        },
+      ],
+    },
+  }
+};
 
 module.exports = [client, server];

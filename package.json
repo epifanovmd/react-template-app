@@ -12,13 +12,14 @@
     "url": "https://github.com/epifanovmd/react-template-app.git"
   },
   "scripts": {
-    "build:stage": "webpack --env.NODE_ENV=stage --config webpack.config.dev.js",
+    "build:dev": "webpack --env.NODE_ENV=development --config webpack.config.dev.js",
     "build:prod": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.js",
-    "stage": "yarn build:stage && node build/server/server.js",
-    "prod": "yarn build:prod && node build/server/server.js",
+    "build:dev:ssr": "webpack --env.SSR --env.NODE_ENV=development --config webpack.config.dev.js",
+    "build:prod:ssr": "webpack --env.SSR --env.NODE_ENV=prodaction --config webpack.config.prod.js",
+    "dev:ssr": "yarn build:dev:ssr && node build/server/server.js",
+    "prod:ssr": "yarn build:prod:ssr && node build/server/server.js",
     "dev": "webpack-dev-server --env.NODE_ENV=development --config webpack.config.dev-server.js",
-    "build": "webpack --env.NODE_ENV=development --config webpack.config.prod.js",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d build",
     "lint": "tslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""

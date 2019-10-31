@@ -3,22 +3,23 @@ const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const nodeExternals = require("webpack-node-externals");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const baseConfigClient = {
+const baseConfigClient = (SSR) => ({
   entry: {
     client: path.resolve(__dirname, "src/client/index.tsx"),
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: 'client/[name].js',
-    chunkFilename: 'client/[name].chunk.js',
+    filename: SSR ? 'client/[name].js' : '[name].js',
+    chunkFilename: SSR ? 'client/[name].chunk.js' : '[name].js',
     publicPath: '/'
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: "node_modules",
-};
+});
 
 const baseConfigServer = {
   name: "server",
@@ -60,10 +61,10 @@ const baseLoaders = {
     },
   },
   font: [
-    {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-    {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-    {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream"},
-    {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
+    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff" },
+    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff" },
+    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream" },
+    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
   ],
   scss: [
     {
@@ -71,8 +72,8 @@ const baseLoaders = {
       options: {
         modules: true,
         localIdentName: '[local]--[hash:base64:5]',
-        namedExport:true,
-        camelCase:true
+        namedExport: true,
+        camelCase: true
       }
     },
     {
@@ -95,14 +96,30 @@ const baseLoaders = {
   ],
 };
 
-const basePlugins = [
-  new ManifestPlugin({
-    fileName: 'asset-manifest.json',
-  }),
-  new CopyPlugin([
-    { from: 'public', to: "client" },
-  ]),
-];
+const basePlugins = (SSR) => {
+  if (!SSR) {
+    return [
+      new ManifestPlugin({
+        fileName: 'asset-manifest.json',
+      }),
+      new CopyPlugin([
+        { from: 'public', to: SSR ? "client" : "" },
+      ]),
+      new HtmlWebpackPlugin({
+        template: "./src/client/index.html",
+        inject: true,
+      }),
+    ]
+  }
+  return [
+    new ManifestPlugin({
+      fileName: 'asset-manifest.json',
+    }),
+    new CopyPlugin([
+      { from: 'public', to: SSR ? "client" : "" },
+    ]),
+  ]
+};
 
 const webpackConfig = {
   baseConfigClient,

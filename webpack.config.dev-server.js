@@ -4,7 +4,7 @@ const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const client = {
-  ...webpackConfig.baseConfigClient,
+  ...webpackConfig.baseConfigClient(),
   mode: "development",
   module: {
     rules: [
@@ -46,7 +46,7 @@ const client = {
     ],
   },
   plugins: [
-    ...webpackConfig.basePlugins,
+    ...webpackConfig.basePlugins(),
     new HtmlWebpackPlugin({
       template: "./src/client/index.html",
       inject: true,

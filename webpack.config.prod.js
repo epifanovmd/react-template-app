@@ -1,9 +1,10 @@
+const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const client = env => ({
-  ...webpackConfig.baseConfigClient,
+  ...webpackConfig.baseConfigClient(env.SSR),
   mode: "production",
   module: {
     rules: [
@@ -22,10 +23,10 @@ const client = env => ({
     ],
   },
   plugins: [
-    ...webpackConfig.basePlugins,
+    ...webpackConfig.basePlugins(env.SSR),
     new MiniCssExtractPlugin({
-      filename: 'client/styles/[name].css',
-      chunkFilename: 'client/styles/[id].css',
+      filename: env.SSR ? 'client/styles/[name].css' : '[name].css',
+      chunkFilename: env.SSR ? 'client/styles/[id].css' : '[id].css',
       ignoreOrder: false,
     }),
     new webpack.DefinePlugin({
@@ -37,27 +38,30 @@ const client = env => ({
   },
 });
 
-const server = env => ({
-  ...webpackConfig.baseConfigServer,
-  mode: "production",
-  module: {
-    rules: [
-      webpackConfig.baseLoaders.ts,
-      {
-        test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: "isomorphic-style-loader",
-          },
-          ...webpackConfig.baseLoaders.scss
-        ],
-      },
-    ],
-  },
-  optimization: {
-    minimizer: [new UglifyJsPlugin()],
-  },
-});
+const server = env => {
+  if (!env.SSR) return {};
+  return {
+    ...webpackConfig.baseConfigServer,
+    mode: "production",
+    module: {
+      rules: [
+        webpackConfig.baseLoaders.ts,
+        {
+          test: /\.(sa|sc|c)ss$/,
+          use: [
+            {
+              loader: "isomorphic-style-loader",
+            },
+            ...webpackConfig.baseLoaders.scss
+          ],
+        },
+      ],
+    },
+    optimization: {
+      minimizer: [new UglifyJsPlugin()],
+    },
+  }
+};
 
 module.exports = [client, server];
 

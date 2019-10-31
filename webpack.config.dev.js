@@ -2,6 +2,7 @@ const path = require("path");
 const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+
 const client = {
   ...webpackConfig.baseConfigClient,
   mode: "development",

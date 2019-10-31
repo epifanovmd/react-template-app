@@ -10,11 +10,9 @@ const store = createSimpleStore(window.REDUX_DATA);
 
 const root = (
   <Provider store={store}>
-    <>
-      <Router history={createBrowserHistory()}>
-        <Routes />
-      </Router>
-    </>
+    <Router history={createBrowserHistory()}>
+      <Routes />
+    </Router>
   </Provider>
 );
 

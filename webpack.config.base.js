@@ -3,10 +3,11 @@ const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const nodeExternals = require("webpack-node-externals");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfigClient = {
   entry: {
-    client: path.resolve(__dirname, "src/index.tsx"),
+    client: path.resolve(__dirname, "src/client/index.tsx"),
   },
   output: {
     path: path.resolve(__dirname, "build"),
@@ -24,7 +25,7 @@ const baseConfigServer = {
   name: "server",
   target: "node",
   entry: {
-    server: path.resolve(__dirname, "src/server.tsx"),
+    server: path.resolve(__dirname, "src/server/index.tsx"),
   },
   output: {
     filename: "server/[name].js",

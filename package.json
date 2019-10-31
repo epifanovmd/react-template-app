@@ -1,7 +1,7 @@
 {
   "name": "react-app",
   "version": "1.0.0",
-  "description": "React Template App",
+  "description": "React Template App SSR",
   "homepage": "https://epifanovmd.github.io/react-template-app",
   "author": {
     "name": "Epifanov Andrew",

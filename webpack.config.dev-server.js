@@ -48,7 +48,7 @@ const client = {
   plugins: [
     ...webpackConfig.basePlugins,
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: "./src/client/index.html",
       inject: true,
     }),
   ],

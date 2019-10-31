@@ -4,8 +4,7 @@ import {connect} from "react-redux";
 import {UserList} from "../../components/userList/userList";
 import {RouteComponentProps, withRouter} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
-import {SimpleDispatch} from "../../common/simpleThunk";
-import {UsersThunk} from "./usersThunk";
+import Helmet from "react-helmet";
 
 export interface IUsersQuery {
   search: string;
@@ -42,6 +41,9 @@ class UsersStatic extends Component<TProps> {
 
     return (
       <>
+        <Helmet>
+          <title>Users</title>
+        </Helmet>
         <UserList users={this.props.users.items} />
         <div>{`Search - ${query.search}`}</div>
         <div onClick={this.setQuery}>SetQuery</div>

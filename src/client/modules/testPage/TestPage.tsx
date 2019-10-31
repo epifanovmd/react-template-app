@@ -7,12 +7,16 @@ import {DateTime} from "luxon";
 
 import cn from "classnames";
 import styles from "../../components/table/styles.scss";
+import Helmet from "react-helmet";
 
 export const TestPage: FC = () => {
   const dt = DateTime;
 
   return (
     <div>
+      <Helmet>
+        <title>Test Page</title>
+      </Helmet>
       <Table>
         <TableHeader>
           <TableRow>

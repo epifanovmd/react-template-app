@@ -1,5 +1,6 @@
 import React, {FC, useState} from "react";
 import {RenderComponent} from "../../components/renderComponent/renderComponent";
+import Helmet from "react-helmet";
 
 export const TestRender: FC = () => {
 
@@ -11,6 +12,9 @@ export const TestRender: FC = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Test Render Page</title>
+      </Helmet>
       <div onClick={setText}>Change</div>
       <RenderComponent text={logText} />
       <RenderComponent text={"Рендер 2"} />

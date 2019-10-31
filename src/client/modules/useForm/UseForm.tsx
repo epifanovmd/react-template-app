@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {IAppState} from "../../store/IAppState";
 import {IUsers} from "../../api/dto/Users.g";
 import {UsersThunk} from "../users/usersThunk";
+import Helmet from "react-helmet";
 
 interface IUseFormMapStateToProps {
   users: IUsers[];
@@ -54,6 +55,9 @@ export const UseFormComponent = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Use Form</title>
+      </Helmet>
       {console.log(errors)}
       {console.log(touchedValues)}
       <form onSubmit={handleSubmit}>

@@ -8,7 +8,7 @@ interface IState {
 }
 
 export class TableRow extends React.Component<ITableProps, IState> {
-  render(): JSX.Element {
+  render() {
     const { children, className, ...rest } = this.props;
 
     return (

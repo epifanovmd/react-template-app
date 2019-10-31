@@ -4,10 +4,7 @@ import {createMainReduce} from "./reducers";
 import {IAppState} from "./IAppState";
 import { composeWithDevTools } from "redux-devtools-extension";
 
-const Middleware =
-  process.env.NODE_ENV === "development"
-    ? applyMiddleware(thunkMiddleware)
-    : applyMiddleware(thunkMiddleware);
+const Middleware = applyMiddleware(thunkMiddleware);
 
 const reducers = createMainReduce();
 

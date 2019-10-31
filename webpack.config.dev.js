@@ -1,4 +1,3 @@
-const path = require("path");
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -33,9 +32,9 @@ const client = env => ({
       ignoreOrder: false,
     }),
   ],
-};
+});
 
-const server = {
+const server = env => ({
   ...webpackConfig.baseConfigServer,
   mode: "development",
   module: {

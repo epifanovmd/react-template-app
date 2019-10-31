@@ -3,7 +3,6 @@ const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const nodeExternals = require("webpack-node-externals");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfigClient = {
   entry: {

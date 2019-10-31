@@ -37,7 +37,7 @@ const client = env => ({
   },
 });
 
-const server = {
+const server = env => ({
   ...webpackConfig.baseConfigServer,
   mode: "production",
   module: {
@@ -57,7 +57,7 @@ const server = {
   optimization: {
     minimizer: [new UglifyJsPlugin()],
   },
-};
+});
 
 module.exports = [client, server];
 

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {ITableProps} from "./table";
 
 import cn from "classnames";
@@ -8,7 +8,7 @@ interface IState {
 }
 
 export class TableRowCell extends React.Component<ITableProps & { label?: string }, IState> {
-  render(): JSX.Element {
+  render() {
     const {children, className, label, ...rest} = this.props;
 
     return (

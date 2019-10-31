@@ -1,17 +1,21 @@
 const path = require("path");
 const webpack = require("webpack");
 const webpackConfig = require("./webpack.config.base");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const webpackConfigDev = env => ({
-  ...webpackConfig.baseConfig,
+const client = env => ({
+  ...webpackConfig.baseConfigClient,
   mode: "development",
   module: {
     rules: [
       webpackConfig.baseLoaders.ts,
       {
-        test: /\.scss$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
-          ...webpackConfig.baseLoaders.scss,
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          ...webpackConfig.baseLoaders.scss
         ],
       },
       ...webpackConfig.baseLoaders.font,
@@ -23,21 +27,31 @@ const webpackConfigDev = env => ({
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
     }),
+    new MiniCssExtractPlugin({
+      filename: 'client/styles/[name].css',
+      chunkFilename: 'client/styles/[id].css',
+      ignoreOrder: false,
+    }),
   ],
-  devServer: {
-    contentBase: path.join(__dirname, "dist"),
-    compress: true,
-    historyApiFallback: true,
-    hot: true,
-    https: true,
-    noInfo: false,
-    proxy: {
-      "/users": {
-        target: "https://jsonplaceholder.typicode.com/",
-        changeOrigin: true,
+};
+
+const server = {
+  ...webpackConfig.baseConfigServer,
+  mode: "development",
+  module: {
+    rules: [
+      webpackConfig.baseLoaders.ts,
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          {
+            loader: "isomorphic-style-loader",
+          },
+          ...webpackConfig.baseLoaders.scss
+        ],
       },
-    },
+    ],
   },
 });
 
-module.exports = webpackConfigDev;
+module.exports = [client, server];

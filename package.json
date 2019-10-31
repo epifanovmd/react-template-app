@@ -1,7 +1,7 @@
 {
   "name": "react-app",
   "version": "1.0.0",
-  "description": "React Template App",
+  "description": "React Template App SSR",
   "homepage": "https://epifanovmd.github.io/react-template-app",
   "author": {
     "name": "Epifanov Andrew",
@@ -12,6 +12,12 @@
     "url": "https://github.com/epifanovmd/react-template-app.git"
   },
   "scripts": {
+    "build:dev": "webpack --config webpack.config.dev.js",
+    "build:prod": "webpack --config webpack.config.prod.js",
+    "stage": "yarn build:dev && node build/server/server.js",
+    "prod": "yarn build:prod && node build/server/server.js",
+    "dev": "webpack-dev-server --proxy=proxy.ts --env.NODE_ENV=development --config webpack.config.dev-server.js",
+
     "build:stage": "webpack --env.NODE_ENV=stage --config webpack.config.dev.js",
     "build:prod": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.js",
     "build": "webpack --env.NODE_ENV=development --config webpack.config.prod.js",
@@ -22,35 +28,47 @@
     "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""
   },
   "dependencies": {
+    "classnames": "^2.2.6",
+    "express": "^4.17.1",
     "luxon": "^1.19.3",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
+    "react-helmet": "^5.2.1",
     "react-redux": "^7.1.1",
     "react-responsive-modal": "^4.0.1",
     "react-router-dom": "^5.1.2",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
+    "serialize-javascript": "^2.1.0",
     "typescript-fsa": "^3.0.0",
-    "typescript-fsa-reducers": "^1.2.1",
-    "webpack-node-externals": "^1.7.2"
+    "typescript-fsa-reducers": "^1.2.1"
   },
   "license": "ISC",
   "devDependencies": {
+    "@types/autoprefixer": "^9.6.1",
+    "@types/classnames": "^2.2.9",
+    "@types/express": "^4.17.1",
+    "@types/html-webpack-plugin": "^3.2.1",
+    "@types/http-proxy-middleware": "^0.19.3",
     "@types/luxon": "^1.15.2",
     "@types/node": "^12.7.12",
     "@types/react": "^16.9.6",
     "@types/react-dom": "^16.9.2",
+    "@types/react-helmet": "^5.0.13",
     "@types/react-redux": "^7.1.4",
     "@types/react-router-dom": "^5.1.0",
     "@types/redux": "^3.6.0",
+    "@types/serialize-javascript": "^1.5.0",
     "autoprefixer": "^9.6.5",
     "copy-webpack-plugin": "^5.0.4",
-    "css-loader": "^3.2.0",
+    "css-loader": "^1.0.1",
     "file-loader": "^4.2.0",
     "gh-pages": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.20.0",
+    "isomorphic-style-loader": "^5.1.0",
+    "isomorphic-unfetch": "^3.0.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
     "postcss-loader": "^3.0.0",
@@ -61,14 +79,13 @@
     "tslint": "^5.20.0",
     "tslint-react": "^4.1.0",
     "typescript": "^3.6.4",
+    "typings-for-css-modules-loader": "^1.7.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.2.0",
     "webpack": "^4.41.1",
     "webpack-cli": "^3.3.9",
     "webpack-dev-server": "^3.8.2",
-    "webpack-manifest-plugin": "^2.2.0"
-  },
-  "browserslist": [
-    "cover 99.5%"
-  ]
+    "webpack-manifest-plugin": "^2.2.0",
+    "webpack-node-externals": "^1.7.2"
+  }
 }

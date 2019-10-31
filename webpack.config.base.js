@@ -1,22 +1,44 @@
 const path = require("path");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const browserList = require('./package');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const nodeExternals = require("webpack-node-externals");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const baseConfig = {
-  entry: "./src/index.tsx",
+const baseConfigClient = {
+  entry: {
+    client: path.resolve(__dirname, "src/client/index.tsx"),
+  },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    filename: 'client/[name].js',
+    chunkFilename: 'client/[name].chunk.js',
     publicPath: '/'
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: "node_modules",
+};
+
+const baseConfigServer = {
+  name: "server",
+  target: "node",
+  entry: {
+    server: path.resolve(__dirname, "src/server/index.tsx"),
+  },
+  output: {
+    filename: "server/[name].js",
+    path: path.resolve(__dirname, "build")
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty'
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".scss"],
+  },
+  externals: [nodeExternals()],
 };
 
 const baseLoaders = {
@@ -46,17 +68,20 @@ const baseLoaders = {
   ],
   scss: [
     {
-      loader: "style-loader",
-    },
-    {
-      loader: "css-loader",
+      loader: "typings-for-css-modules-loader",
+      options: {
+        modules: true,
+        localIdentName: '[local]--[hash:base64:5]',
+        namedExport:true,
+        camelCase:true
+      }
     },
     {
       loader: 'postcss-loader',
       options: {
         plugins: [
           autoprefixer({
-            overrideBrowserslist: browserList.browserslist
+            overrideBrowserslist: ["cover 99.5%"]
           })
         ],
         sourceMap: true
@@ -72,20 +97,17 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  new HtmlWebpackPlugin({
-    template: "./public/index.html",
-    inject: true,
-  }),
   new ManifestPlugin({
     fileName: 'asset-manifest.json',
   }),
   new CopyPlugin([
-    { from: 'public' },
+    { from: 'public', to: "client" },
   ]),
 ];
 
 const webpackConfig = {
-  baseConfig,
+  baseConfigClient,
+  baseConfigServer,
   baseLoaders,
   basePlugins,
 };

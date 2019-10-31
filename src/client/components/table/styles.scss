@@ -1,0 +1,126 @@
+.table {
+  margin: 0 auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 1.5;
+
+
+  .header {
+    font-weight: bold;
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    @media only screen and (max-width: 599px) {
+      display: none;
+    }
+  }
+
+  .row {
+    display: flex;
+    flex-flow: row nowrap;
+    width: 100%;
+    @media only screen and (max-width: 599px) {
+      box-shadow: 0 0 3px rgba(0,0,0,0.3);
+      padding: 5px;
+      border-radius: 3px;
+      margin: 5px 0;
+    }
+  }
+
+  .row-cell {
+    flex-grow: 1;
+    flex-basis: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    .title {
+      font-weight: bold;
+      flex-grow: 1;
+      flex-basis: 0;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: none;
+    }
+
+    .value {
+      flex-grow: 1;
+      flex-basis: 0;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &.cell {
+      flex-basis: 0;
+      flex-grow: 1;
+    }
+
+    &.cell-2 {
+      flex-basis: 0;
+      flex-grow: 2;
+    }
+
+    &.cell-3 {
+      flex-basis: 0;
+      flex-grow: 3;
+    }
+
+    &.cell-4 {
+      flex-basis: 0;
+      flex-grow: 4;
+    }
+
+    &.cell-5 {
+      flex-basis: 0;
+      flex-grow: 5;
+    }
+
+    &.cell-6 {
+      flex-basis: 0;
+      flex-grow: 6;
+    }
+
+    &.cell-7 {
+      flex-basis: 0;
+      flex-grow: 7;
+    }
+
+    &.cell-8 {
+      flex-basis: 0;
+      flex-grow: 8;
+    }
+
+    &.cell-9 {
+      flex-basis: 0;
+      flex-grow: 9;
+    }
+
+    &.cell-10 {
+      flex-basis: 0;
+      flex-grow: 10;
+    }
+
+    &.cell-11 {
+      flex-basis: 0;
+      flex-grow: 11;
+    }
+
+    &.cell-12 {
+      flex-basis: 0;
+      flex-grow: 12;
+    }
+
+    @media only screen and (max-width: 599px) {
+      &.title {
+        display: block;
+      }
+      display: flex;
+    }
+  }
+}

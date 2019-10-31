@@ -1,0 +1,54 @@
+.popup {
+  font-family: Roboto, sans-serif;
+  max-width: 500px;
+  padding: 20px 75px;
+
+  .icon {
+    display: flex;
+    flex-flow: row;
+    justify-content: center;
+    padding: 20px 0 0;
+
+    .error {
+      height: 90px;
+      width: 90px;
+    }
+
+    .warning {
+      height: 90px;
+      width: 90px;
+    }
+
+    .success {
+      height: 90px;
+      width: 90px;
+    }
+
+    .none {
+      display: none;
+      height: 90px;
+      width: 90px;
+    }
+  }
+
+  .title {
+    font-size: 36px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #303551;
+    padding: 15px 0;
+  }
+
+  .subtitle {
+    font-size: 18px;
+    text-align: center;
+    color: #858484;
+    padding: 15px 0 25px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+  }
+}

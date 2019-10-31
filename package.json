@@ -14,7 +14,7 @@
   "scripts": {
     "build:stage": "webpack --env.NODE_ENV=stage --config webpack.config.dev.js",
     "build:prod": "webpack --env.NODE_ENV=prodaction --config webpack.config.prod.js",
-    "stage": "yarn build:dev && node build/server/server.js",
+    "stage": "yarn build:stage && node build/server/server.js",
     "prod": "yarn build:prod && node build/server/server.js",
     "dev": "webpack-dev-server --env.NODE_ENV=development --config webpack.config.dev-server.js",
     "build": "webpack --env.NODE_ENV=development --config webpack.config.prod.js",

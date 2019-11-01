@@ -1,11 +1,11 @@
-import React, {FC} from "react";
-import {IUsers} from "../../api/dto/Users.g";
+import React, {FC, memo} from "react";
+import {IUser} from "../../api/dto/Users.g";
 
 interface IProps {
-  users: IUsers[];
+  users: IUser[];
 }
 
-export const UserList: FC<IProps> = ({users}) => {
+export const UserList: FC<IProps> = memo(({users}) => {
 
   return (
     <div>
@@ -15,4 +15,4 @@ export const UserList: FC<IProps> = ({users}) => {
       }
     </div>
   );
-};
+});

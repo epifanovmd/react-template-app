@@ -3,7 +3,7 @@
 import {Address} from "./Address.g";
 import {Company} from "./Company.g";
 
-export interface IUsers {
+export interface IUser {
   id: number;
   name: string;
   username: string;

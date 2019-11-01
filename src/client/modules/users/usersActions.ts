@@ -1,7 +1,7 @@
 import {actionCreator} from "../../store/common/actionCreator";
 import {IEmpty} from "../../common/IEmpty";
-import {IUsers} from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 
 export class UsersActions {
-  static getUsers = actionCreator.async<IEmpty, IUsers[], Error>("Users/GET_USERS");
+  static getUsers = actionCreator.async<IEmpty, IUser[], Error>("Users/GET_USERS");
 }

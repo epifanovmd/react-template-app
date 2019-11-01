@@ -1,9 +1,9 @@
 import {LoadState} from "../../common/loadState";
-import {IUsers} from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 import {IResponse} from "../../common/response";
 
 export interface IUsersState {
-  users: IResponse<IUsers[]>;
+  users: IResponse<IUser[]>;
 }
 
 export const usersInitialState: IUsersState = {

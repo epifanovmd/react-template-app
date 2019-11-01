@@ -5,7 +5,7 @@ import {newState} from "../../store/common/newState";
 import {LoadState} from "../../common/loadState";
 import {Success} from "typescript-fsa";
 import {IEmpty} from "../../common/IEmpty";
-import {IUsers} from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 
 function getUsersStartedHandler(state: IUsersState) {
   return newState(state, {
@@ -16,7 +16,7 @@ function getUsersStartedHandler(state: IUsersState) {
   });
 }
 
-function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUsers[]>) {
+function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUser[]>) {
   return newState(state, newState(state, {
     users: {
       loadState: LoadState.idle,

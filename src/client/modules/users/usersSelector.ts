@@ -1,6 +1,6 @@
 import {IAppState} from "../../store/IAppState";
 import {UsersThunk} from "./usersThunk";
-import {IUsers} from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 import {SimpleDispatch} from "../../common/simpleThunk";
 
 class UsersSelector {
@@ -12,7 +12,7 @@ class UsersSelector {
 
   mapDispatch = (dispatch: SimpleDispatch) => (
     {
-      getUsers: (callback?: (users: IUsers[]) => void) => {
+      getUsers: (callback?: (users: IUser[]) => void) => {
         return dispatch(UsersThunk.getUsers(callback));
       },
     });

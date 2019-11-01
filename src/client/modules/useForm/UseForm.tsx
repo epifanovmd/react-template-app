@@ -2,13 +2,10 @@ import React, {useEffect} from "react";
 import {useForm} from "../../common/useForm";
 import {useDispatch, useSelector} from "react-redux";
 import {IAppState} from "../../store/IAppState";
-import {IUsers} from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 import {UsersThunk} from "../users/usersThunk";
 import Helmet from "react-helmet";
-
-interface IUseFormMapStateToProps {
-  users: IUsers[];
-}
+import {UserList} from "../../components/userList/userList";
 
 export const UseFormComponent = () => {
   const {
@@ -49,9 +46,7 @@ export const UseFormComponent = () => {
     dispatch(UsersThunk.getUsers());
   }, []);
 
-  const props = useSelector(((state: IAppState): IUseFormMapStateToProps => ({
-    users: state.usersPage.users.items,
-  })));
+  const users = useSelector(((state: IAppState): IUser[] => state.usersPage.users.items));
 
   return (
     <div>
@@ -94,11 +89,7 @@ export const UseFormComponent = () => {
       <div>
         <br />
         <h5>Users:</h5>
-        {
-          (props.users || []).map((item: IUsers) => {
-            return (<div key={item.id}>{item.name}</div>);
-          })
-        }
+        <UserList users={users} />
       </div>
     </div>
   );

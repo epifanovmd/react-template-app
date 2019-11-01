@@ -1,17 +1,19 @@
+const webpack = require("webpack");
 const path = require("path");
 const autoprefixer = require('autoprefixer');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const nodeExternals = require("webpack-node-externals");
 const CopyPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const baseConfigClient = (ssr) => ({
+const baseConfigClient = (env) => ({
   entry: {
     client: path.resolve(__dirname, "src/client/index.tsx"),
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: ssr ? 'client/[name].js' : '[name].js',
-    chunkFilename: ssr ? 'client/[name].chunk.js' : '[name].chunk.js',
+    filename: env.RENDER ? 'client/[name].js' : '[name].js',
+    chunkFilename: env.RENDER ? 'client/[name].chunk.js' : '[name].chunk.js',
     publicPath: '/'
   },
   resolve: {
@@ -20,7 +22,7 @@ const baseConfigClient = (ssr) => ({
   externals: "node_modules",
 });
 
-const baseConfigServer = {
+const baseConfigServer = () => ({
   name: "server",
   target: "node",
   entry: {
@@ -38,7 +40,7 @@ const baseConfigServer = {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: [nodeExternals()],
-};
+});
 
 const baseLoaders = {
   ts: {
@@ -95,21 +97,30 @@ const baseLoaders = {
   ],
 };
 
-const basePlugins = (ssr) => ([
+const basePlugins = (env) => ([
   new ManifestPlugin({
     fileName: 'asset-manifest.json',
   }),
+  new MiniCssExtractPlugin({
+    filename: env.RENDER ? 'client/styles/[name].css' : 'styles/[name].css',
+    chunkFilename: env.RENDER ? 'client/styles/[id].css' : 'styles/[id].css',
+    ignoreOrder: false,
+  }),
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
+    'process.env.RENDER': env && JSON.stringify(env.RENDER),
+  }),
   new CopyPlugin([
-    { from: 'public', to: ssr ? "client" : "" },
+    { from: 'public', to: env.RENDER ? "client" : "", ignore: env.RENDER ? ['*.html'] : [], },
   ]),
 ]);
 
 
-const webpackConfig = {
+const webpackBaseConfig = {
   baseConfigClient,
   baseConfigServer,
   baseLoaders,
   basePlugins,
 };
 
-module.exports = webpackConfig;
+module.exports = webpackBaseConfig;

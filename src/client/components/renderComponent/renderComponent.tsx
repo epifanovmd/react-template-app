@@ -1,20 +1,13 @@
-import React, {PureComponent} from "react";
-import {SimpleDispatch} from "../../common/simpleThunk";
-import {UsersThunk} from "../../modules/users/usersThunk";
-
 interface IProps {
   text: string;
 }
 
-interface IState {
-}
+import React, {FC, memo} from "react";
 
-export class RenderComponent extends PureComponent<IProps, IState> {
-  render(): JSX.Element {
-    const {text} = this.props;
+export const RenderComponent: FC<IProps> = memo(({text}) => {
+  console.log(text);
 
-    return (
-        <div>{text}</div>
-    );
-  }
-}
+  return (
+    <div>{text}</div>
+  );
+});

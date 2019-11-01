@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import {NavLink} from "react-router-dom";
 
-export const Header: FC = (): JSX.Element => {
+export const Header: FC = () => {
 
   return (
     <ul>

@@ -13,7 +13,7 @@ export const TestPage: FC = () => {
   const dt = DateTime;
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>Test Page</title>
       </Helmet>
@@ -54,6 +54,6 @@ export const TestPage: FC = () => {
         <h3>LUXON</h3>
         <div>{dt.local().toISODate()}</div>
       </div>
-    </div>
+    </>
   );
 };

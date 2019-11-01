@@ -1,6 +1,6 @@
 /*tslint:disable*/
 import {BaseRequest} from "./BaseRequest";
-import {IUsers} from "./dto/Users.g";
+import {IUser} from "./dto/Users.g";
 import {RequestType} from "../common/requestType";
 
 export class UsersApiRequest extends BaseRequest {
@@ -8,7 +8,7 @@ export class UsersApiRequest extends BaseRequest {
     super(baseurl);
   }
 
-  get(config?: Object): Promise<IUsers[]> {
+  get(config?: Object): Promise<IUser[]> {
     return this.fetch(
       `/api/users`,
       Object.assign({

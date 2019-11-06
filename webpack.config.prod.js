@@ -1,6 +1,6 @@
 const webpackBaseConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const client = env => ({
   ...webpackBaseConfig.baseConfigClient(env),
@@ -25,8 +25,8 @@ const client = env => ({
     ...webpackBaseConfig.basePlugins(env),
   ],
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
-  },
+    minimizer: [new TerserPlugin()]
+  }
 });
 
 const server = (env) => ({
@@ -47,12 +47,12 @@ const server = (env) => ({
     ],
   },
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
-  },
+    minimizer: [new TerserPlugin()]
+  }
 });
 
 module.exports = (env) => {
-  if (env.RENDER) {
+  if (env.SSR) {
     return [client(env), server(env)];
   } else return client(env);
 };

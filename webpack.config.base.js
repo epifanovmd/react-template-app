@@ -12,9 +12,13 @@ const baseConfigClient = (env) => ({
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: env.RENDER ? 'client/[name].js' : '[name].js',
-    chunkFilename: env.RENDER ? 'client/[name].chunk.js' : '[name].chunk.js',
+    filename: env.SSR ? 'client/[name].js' : '[name].js',
+    chunkFilename: env.SSR ? 'client/[name].chunk.js' : '[name].chunk.js',
     publicPath: '/'
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty'
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
@@ -102,16 +106,17 @@ const basePlugins = (env) => ([
     fileName: 'asset-manifest.json',
   }),
   new MiniCssExtractPlugin({
-    filename: env.RENDER ? 'client/styles/[name].css' : 'styles/[name].css',
-    chunkFilename: env.RENDER ? 'client/styles/[id].css' : 'styles/[id].css',
+    filename: env.SSR ? 'client/styles/[name].css' : 'styles/[name].css',
+    chunkFilename: env.SSR ? 'client/styles/[id].css' : 'styles/[id].css',
     ignoreOrder: false,
   }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
-    'process.env.RENDER': env && JSON.stringify(env.RENDER),
+    'process.env.SSR': env && JSON.stringify(env.SSR),
+    'process.env.PORT': env && JSON.stringify(env.PORT),
   }),
   new CopyPlugin([
-    { from: 'public', to: env.RENDER ? "client" : "", ignore: env.RENDER ? ['*.html'] : [], },
+    { from: 'public', to: env.SSR ? "client" : "", ignore: env.SSR ? ['*.html'] : [], },
   ]),
 ]);
 

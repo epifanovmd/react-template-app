@@ -60,7 +60,7 @@ const server = (env) => ({
 });
 
 module.exports = (env) => {
-  if (env.RENDER) {
+  if (env.SSR) {
     return [client(env), server(env)];
   } else return client(env);
 };

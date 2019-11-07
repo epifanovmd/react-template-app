@@ -37,18 +37,10 @@ const server = (env) => ({
       webpackBaseConfig.baseLoaders.ts,
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [
-          {
-            loader: "isomorphic-style-loader",
-          },
-          ...webpackBaseConfig.baseLoaders.scss
-        ],
+        loader: "null-loader",
       },
     ],
   },
-  optimization: {
-    minimizer: [new TerserPlugin()]
-  }
 });
 
 module.exports = (env) => {

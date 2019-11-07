@@ -7,6 +7,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const baseConfigClient = (env) => ({
+  name: "client",
+  target: "web",
   entry: {
     client: path.resolve(__dirname, "src/client/index.tsx"),
   },

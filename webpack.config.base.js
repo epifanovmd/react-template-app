@@ -32,7 +32,7 @@ const baseConfigServer = () => ({
   name: "server",
   target: "node",
   entry: {
-    server: path.resolve(__dirname, "src/server/index.tsx"),
+    server: path.resolve(__dirname, "src/server/index.ts"),
   },
   output: {
     filename: "server/[name].js",

@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const webpackBaseConfig = require("./webpack.config.base");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require("path");
@@ -23,6 +24,7 @@ const client = env => ({
   },
   plugins: [
     ...webpackBaseConfig.basePlugins(env),
+    new webpack.HotModuleReplacementPlugin(),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),

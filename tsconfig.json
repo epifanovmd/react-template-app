@@ -35,6 +35,7 @@
     "allowJs": true,
     "sourceMap": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
     "skipLibCheck": true

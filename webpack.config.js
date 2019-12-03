@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const TerserPlugin = require('terser-webpack-plugin');
 const webpackBaseConfig = require("./webpack.config.base");
+const proxy = require("./proxy");
 
 const client = {
   ...webpackBaseConfig.baseConfigClient,
@@ -24,13 +25,7 @@ const client = {
     historyApiFallback: true,
     hot: true,
     noInfo: false,
-    proxy: {
-      "/api": {
-        target: "https://jsonplaceholder.typicode.com/",
-        pathRewrite: { "^/api": "/" },
-        changeOrigin: true,
-      },
-    },
+    proxy: proxy,
   },
   optimization: {
     minimizer: [

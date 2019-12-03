@@ -21,7 +21,7 @@ const renderMethod = typeof document === "undefined" ?
 const renderApp = (Comp?: any) => {
   renderMethod(
     <Provider store={store}>
-      <Suspense fallback={"Loading lang"}>
+      <Suspense fallback={"Loading..."}>
         <Router history={createBrowserHistory()}>
           <Comp />
         </Router>

@@ -52,6 +52,11 @@ const server = {
       webpackBaseConfig.baseLoaders.scss_null_loader,
     ],
   },
+  plugins: [
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
+    }),
+  ]
 };
 
 module.exports = process.env.SSR ? [client, server] : client;

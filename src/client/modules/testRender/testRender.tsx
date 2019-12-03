@@ -2,7 +2,7 @@ import React, {FC, useState} from "react";
 import {RenderComponent} from "../../components/renderComponent/renderComponent";
 import Helmet from "react-helmet";
 
-export const TestRender: FC = () => {
+const TestRender: FC = () => {
 
   const [logText, setLogText] = useState("Рендер 1");
   const setText = () => {
@@ -22,3 +22,6 @@ export const TestRender: FC = () => {
     </>
   );
 };
+
+//tslint:disable
+export default TestRender;

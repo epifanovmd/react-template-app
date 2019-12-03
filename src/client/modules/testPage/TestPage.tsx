@@ -9,7 +9,7 @@ import cn from "classnames";
 import styles from "../../components/table/styles.scss";
 import Helmet from "react-helmet";
 
-export const TestPage: FC = () => {
+const TestPage: FC = () => {
   const dt = DateTime;
 
   return (
@@ -57,3 +57,6 @@ export const TestPage: FC = () => {
     </>
   );
 };
+
+//tslint:disable
+export default TestPage;

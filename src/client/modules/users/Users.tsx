@@ -55,5 +55,5 @@ class UsersStatic extends Component<TProps> {
     pushRoute<IUsersQuery>({queryParams: {search: "22"}}, {...this.props});
   };
 }
-
-export const Users = withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));
+//tslint:disable
+export default withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));

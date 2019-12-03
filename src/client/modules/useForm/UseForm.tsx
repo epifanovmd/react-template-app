@@ -7,7 +7,7 @@ import {UsersThunk} from "../users/usersThunk";
 import Helmet from "react-helmet";
 import {UserList} from "../../components/userList/userList";
 
-export const UseFormComponent = () => {
+const UseFormComponent = () => {
   const {
     values,
     errors,
@@ -94,3 +94,6 @@ export const UseFormComponent = () => {
     </div>
   );
 };
+
+//tslint:disable
+export default UseFormComponent;

@@ -1,12 +1,12 @@
 const webpack = require("webpack");
 const path = require("path");
-const autoprefixer = require('autoprefixer');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const autoprefixer = require("autoprefixer");
+const ManifestPlugin = require("webpack-manifest-plugin");
 const nodeExternals = require("webpack-node-externals");
-const CopyPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const baseConfigClient = (env) => ({
+const baseConfigClient = {
   name: "client",
   target: "web",
   entry: {
@@ -14,21 +14,21 @@ const baseConfigClient = (env) => ({
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: env.SSR ? 'client/[name].js' : '[name].js',
-    chunkFilename: env.SSR ? 'client/[name].chunk.js' : '[name].chunk.js',
-    publicPath: '/'
+    filename: process.env.SSR ? "client/[name].js" : "[name].js",
+    chunkFilename: process.env.SSR ? "client/[name].chunk.js" : "[name].chunk.js",
+    publicPath: "/",
   },
   node: {
-    fs: 'empty',
-    net: 'empty'
+    fs: "empty",
+    net: "empty",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: "node_modules",
-});
+};
 
-const baseConfigServer = () => ({
+const baseConfigServer = {
   name: "server",
   target: "node",
   entry: {
@@ -36,17 +36,17 @@ const baseConfigServer = () => ({
   },
   output: {
     filename: "server/[name].js",
-    path: path.resolve(__dirname, "build")
+    path: path.resolve(__dirname, "build"),
   },
   node: {
-    fs: 'empty',
-    net: 'empty'
+    fs: "empty",
+    net: "empty",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
   },
   externals: [nodeExternals()],
-});
+};
 
 const baseLoaders = {
   ts: {
@@ -55,16 +55,16 @@ const baseLoaders = {
   },
   url: {
     test: /\.(pdf|jpg|png|gif|svg|ico)$/,
-    loader: 'url-loader',
+    loader: "url-loader",
     options: {
       limit: 25000,
     },
   },
   file: {
     test: /\.(pdf|jpg|png|gif|svg|ico)$/,
-    loader: 'file-loader',
+    loader: "file-loader",
     options: {
-      name: '[path][name].[hash:8].[ext]',
+      name: "[path][name].[hash:8].[ext]",
     },
   },
   font: [
@@ -73,61 +73,66 @@ const baseLoaders = {
     { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream" },
     { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
   ],
-  scss: [
-    {
-      loader: "typings-for-css-modules-loader",
-      options: {
-        modules: true,
-        localIdentName: '[local]--[hash:base64:5]',
-        namedExport: true,
-        camelCase: true
-      }
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        plugins: [
-          autoprefixer({
-            overrideBrowserslist: ["cover 99.5%"]
-          })
-        ],
-        sourceMap: true
-      }
-    },
-    {
-      loader: "sass-loader",
-      options: {
-        sourceMap: true,
+  scss: {
+    test: /\.(sa|sc|c)ss$/,
+    use: [
+      {
+        loader: MiniCssExtractPlugin.loader,
       },
-    },
-  ],
+      {
+        loader: "typings-for-css-modules-loader",
+        options: {
+          modules: true,
+          localIdentName: "[local]--[hash:base64:5]",
+          namedExport: true,
+          camelCase: true,
+        },
+      },
+      {
+        loader: "postcss-loader",
+        options: {
+          plugins: [
+            autoprefixer({
+              overrideBrowserslist: ["cover 99.5%"],
+            }),
+          ],
+          sourceMap: true,
+        },
+      },
+      {
+        loader: "sass-loader",
+        options: {
+          sourceMap: true,
+        },
+      },
+    ],
+  },
+  scss_null_loader: {
+    test: /\.(sa|sc|c)ss$/,
+    loader: "null-loader",
+  },
 };
 
-const basePlugins = (env) => ([
+const basePlugins = [
   new ManifestPlugin({
-    fileName: 'asset-manifest.json',
+    fileName: "asset-manifest.json",
   }),
   new MiniCssExtractPlugin({
-    filename: env.SSR ? 'client/styles/[name].css' : 'styles/[name].css',
-    chunkFilename: env.SSR ? 'client/styles/[id].css' : 'styles/[id].css',
+    filename: process.env.SSR ? "client/styles/[name].css" : "styles/[name].css",
+    chunkFilename: process.env.SSR ? "client/styles/[id].css" : "styles/[id].css",
     ignoreOrder: false,
   }),
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': env && JSON.stringify(env.NODE_ENV),
-    'process.env.SSR': env && JSON.stringify(env.SSR),
-    'process.env.PORT': env && JSON.stringify(env.PORT),
-  }),
   new CopyPlugin([
-    { from: 'public', to: env.SSR ? "client" : "", ignore: env.SSR ? ['*.html'] : [], },
+    { from: "public", to: process.env.SSR ? "client" : "", ignore: process.env.SSR ? ["*.html"] : [] },
   ]),
-]);
+  new webpack.DefinePlugin({
+    "process.env.SSR": process.env.SSR,
+  }),
+];
 
-
-const webpackBaseConfig = {
+module.exports = {
   baseConfigClient,
   baseConfigServer,
   baseLoaders,
   basePlugins,
 };
-
-module.exports = webpackBaseConfig;

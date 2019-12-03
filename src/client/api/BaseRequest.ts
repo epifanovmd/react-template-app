@@ -4,6 +4,7 @@ import fetch from "isomorphic-unfetch";
 /*tslint:disable*/
 
 type Action<T> = () => T;
+const port = process.env.PORT || 8080;
 
 export class BaseRequest {
   static token: string;
@@ -36,8 +37,7 @@ export class BaseRequest {
     if (process.env.NODE_ENV === "development") {
       console.log("URL - ", url);
     }
-
-    const response = await fetch("http://localhost:8080" + url, Object.assign({headers: headers}, config));
+    const response = await fetch(`http://localhost:${port}` + url, Object.assign({headers: headers}, config));
     if (response.status == 401) {
       throw new NoAuthError("NoAuthorization");
     } else if (response.status == 204) {

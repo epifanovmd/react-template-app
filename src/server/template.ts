@@ -22,10 +22,10 @@ export const template = (reactDom: string, reduxState: IAppState, helmetData: He
 
 <body>
 <div id="root">${reactDom}</div>
-${extractor.getScriptTags()}
 <script>
   window.REDUX_DATA = ${serialize(reduxState, {isJSON: true})}
 </script>
+${extractor.getScriptTags()}
 </body>
 </html>
     `;

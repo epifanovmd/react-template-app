@@ -5,7 +5,7 @@ import {routes} from "./routes";
 import {Header} from "./components/layouts/header/header";
 import {useTranslation} from "react-i18next";
 
-const Routes = () => {
+const App = () => {
   const {i18n} =  useTranslation();
 
     return (
@@ -21,4 +21,4 @@ const Routes = () => {
 };
 
 //tslint:disable-next-line
-export default Routes;
+export default App;

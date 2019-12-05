@@ -1,23 +1,46 @@
 const webpack = require("webpack");
 const path = require("path");
 const TerserPlugin = require('terser-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
+const LoadablePlugin = require('@loadable/webpack-plugin');
+const ManifestPlugin = require("webpack-manifest-plugin");
 const webpackBaseConfig = require("./webpack.config.base");
 const proxy = require("./proxy");
 
+const {
+  baseConfigClient,
+  baseConfigServer,
+  baseLoaders,
+  basePlugins,
+  IS_SERVER,
+  IS_CLIENT,
+  IS_DEVELOPMENT,
+  IS_PRODUCTION,
+  IS_SSR,
+} = webpackBaseConfig;
+
 const client = {
-  ...webpackBaseConfig.baseConfigClient,
-  mode: process.env.NODE_ENV,
+  ...baseConfigClient,
+  mode: IS_PRODUCTION ? "production" : "development",
   module: {
     rules: [
-      webpackBaseConfig.baseLoaders.ts,
-      webpackBaseConfig.baseLoaders.scss,
-      ...webpackBaseConfig.baseLoaders.font,
-      webpackBaseConfig.baseLoaders.file,
+      baseLoaders.ts,
+      baseLoaders.scss,
+      ...baseLoaders.font,
+      baseLoaders.file,
     ],
   },
   plugins: [
-    ...webpackBaseConfig.basePlugins,
-    new webpack.HotModuleReplacementPlugin(),
+    ...basePlugins,
+    new ManifestPlugin({
+      fileName: "client/asset-manifest.json",
+    }),
+    new CopyPlugin([
+      { from: "public", to: IS_SSR ? "client" : "", ignore: IS_SSR ? ["*.html"] : [] },
+    ]),
+    new LoadablePlugin(),
+    new webpack.NamedModulesPlugin(),
+    ...(IS_DEVELOPMENT ? [new webpack.HotModuleReplacementPlugin()] : []),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -38,20 +61,21 @@ const client = {
 };
 
 const server = {
-  ...webpackBaseConfig.baseConfigServer,
-  mode: process.env.NODE_ENV,
+  ...baseConfigServer,
+  mode: IS_PRODUCTION ? "production" : "development",
   module: {
     rules: [
-      webpackBaseConfig.baseLoaders.ts,
-      ...webpackBaseConfig.baseLoaders.font,
-      webpackBaseConfig.baseLoaders.scss_null_loader,
+      baseLoaders.ts,
+      ...baseLoaders.font,
+      baseLoaders.scss_null_loader,
     ],
   },
   plugins: [
+    ...basePlugins,
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
     }),
   ]
 };
 
-module.exports = process.env.SSR ? [client, server] : client;
+module.exports = IS_SSR ? [client, server] : client;

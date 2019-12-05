@@ -3,7 +3,8 @@ import ReactDOM from "react-dom";
 import {Provider} from "react-redux";
 import {Router} from "react-router-dom";
 import {createBrowserHistory} from "history";
-import Routes from "./App";
+import {loadableReady} from "@loadable/component";
+import App from "./App";
 import {createSimpleStore} from "./store/store";
 import "./assets/global.scss";
 import {initLocalization} from "./localization/localization";
@@ -11,10 +12,10 @@ import {Cookies} from "react-cookie";
 
 const cookie = new Cookies();
 
-initLocalization({initLang: cookie.get("i18next")});
+initLocalization({initLang: cookie.get("i18next")}).finally();
 const store = createSimpleStore(window.REDUX_DATA);
 
-const renderMethod = typeof document === "undefined" ?
+const renderMethod = typeof window === "undefined" ?
   ReactDOM.hydrate :
   ReactDOM.render;
 
@@ -31,7 +32,9 @@ const renderApp = (Comp?: any) => {
   );
 };
 
-renderApp(Routes);
+loadableReady(() => {
+  renderApp(App);
+}).finally();
 
 if ((module as any).hot) {
   (module as any).hot.accept("./App", () => {

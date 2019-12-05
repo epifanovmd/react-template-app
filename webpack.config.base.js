@@ -1,10 +1,14 @@
 const webpack = require("webpack");
 const path = require("path");
 const autoprefixer = require("autoprefixer");
-const ManifestPlugin = require("webpack-manifest-plugin");
 const nodeExternals = require("webpack-node-externals");
-const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+const IS_SERVER = typeof window === "undefined";
+const IS_CLIENT = typeof window === "object";
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const IS_SSR = process.env.SSR;
 
 const baseConfigClient = {
   name: "client",
@@ -14,8 +18,20 @@ const baseConfigClient = {
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: process.env.SSR ? "client/[name].js" : "[name].js",
-    chunkFilename: process.env.SSR ? "client/[name].chunk.js" : "[name].chunk.js",
+    filename: IS_SSR ?
+      IS_PRODUCTION ?
+        "client/[contenthash].js" :
+        "client/[name].js" :
+      IS_PRODUCTION ?
+        "[contenthash].js" :
+        "[name].js",
+    chunkFilename: IS_SSR ?
+      IS_PRODUCTION ?
+        "client/[contenthash].chunk.js" :
+        "client/[name].chunk.js" :
+      IS_PRODUCTION ?
+        "[contenthash].chunk.js" :
+        "[name].chunk.js",
     publicPath: "/",
   },
   node: {
@@ -51,13 +67,18 @@ const baseConfigServer = {
 const baseLoaders = {
   ts: {
     test: /\.tsx?$/,
-    loader: "ts-loader",
+    exclude: /node_modules/,
+    use: [
+      'babel-loader',
+      'ts-loader'
+    ],
   },
   url: {
     test: /\.(pdf|jpg|png|gif|svg|ico)$/,
     loader: "url-loader",
     options: {
       limit: 25000,
+      name: "[path][name].[hash:8].[ext]",
     },
   },
   file: {
@@ -114,19 +135,30 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  new ManifestPlugin({
-    fileName: "asset-manifest.json",
-  }),
   new MiniCssExtractPlugin({
-    filename: process.env.SSR ? "client/styles/[name].css" : "styles/[name].css",
-    chunkFilename: process.env.SSR ? "client/styles/[id].css" : "styles/[id].css",
+    filename: IS_SSR ?
+      IS_PRODUCTION ?
+        "client/styles/[contenthash].css" :
+        "client/styles/[name].css" :
+      IS_PRODUCTION ?
+        "styles/[contenthash].css" :
+        "styles/[name].css",
+    chunkFilename: IS_SSR ?
+      IS_PRODUCTION ?
+        "client/styles/[contenthash].chunk.css" :
+        "client/styles/[id].chunk.css" :
+      IS_PRODUCTION ?
+        "styles/[contenthash].chunk.css" :
+        "styles/[id].chunk.css",
     ignoreOrder: false,
   }),
-  new CopyPlugin([
-    { from: "public", to: process.env.SSR ? "client" : "", ignore: process.env.SSR ? ["*.html"] : [] },
-  ]),
   new webpack.DefinePlugin({
-    "process.env.SSR": process.env.SSR,
+    "process.env.SSR": JSON.stringify(process.env.SSR),
+    IS_SERVER: JSON.stringify(IS_SERVER),
+    IS_CLIENT: JSON.stringify(IS_CLIENT),
+    IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
+    IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
+    IS_SSR: JSON.stringify(IS_SSR),
   }),
 ];
 
@@ -135,4 +167,9 @@ module.exports = {
   baseConfigServer,
   baseLoaders,
   basePlugins,
+  IS_SERVER,
+  IS_CLIENT,
+  IS_DEVELOPMENT,
+  IS_PRODUCTION,
+  IS_SSR,
 };

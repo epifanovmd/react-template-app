@@ -1,7 +1,7 @@
 import express from "express";
 import proxyMiddleware from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
-import {serverSideRender} from "./render";
+import {serverRenderer} from "./render";
 import proxy from "../../proxy.json";
 
 const app = express();
@@ -15,7 +15,7 @@ if (proxy) {
 
 app.use(express.static("build"));
 app.use(cookieParser());
-app.use(serverSideRender);
+app.use(serverRenderer());
 
 app.listen(port, () => {
   console.log("Server started on port: http://localhost:" + port);

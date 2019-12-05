@@ -1,8 +1,9 @@
 import serialize from "serialize-javascript";
 import {IAppState} from "../client/store/IAppState";
 import {HelmetData} from "react-helmet";
+import {ChunkExtractor} from "@loadable/server";
 
-export const template = (reactDom: string, reduxState: IAppState, helmetData: HelmetData) => {
+export const template = (reactDom: string, reduxState: IAppState, helmetData: HelmetData, extractor: ChunkExtractor) => {
   return `
 <!DOCTYPE html>
 <html>
@@ -14,15 +15,17 @@ export const template = (reactDom: string, reduxState: IAppState, helmetData: He
   <title>React SSR</title>
   ${helmetData.title.toString()}
   ${helmetData.meta.toString()}
+  ${extractor.getLinkTags()}
+  ${extractor.getStyleTags()}
   <link rel="stylesheet" type="text/css" href="./client/styles/client.css" />
 </head>
 
 <body>
 <div id="root">${reactDom}</div>
+${extractor.getScriptTags()}
 <script>
   window.REDUX_DATA = ${serialize(reduxState, {isJSON: true})}
 </script>
-<script src="./client/client.js"></script>
 </body>
 </html>
     `;

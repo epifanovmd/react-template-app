@@ -23,7 +23,7 @@ export const initLocalization = ({initLang = "en", isServer}: IInitLocalizationP
         interpolation: {
           escapeValue: false,
         },
-        debug: process.env.NODE_ENV !== "production",
+        debug: IS_DEVELOPMENT,
         load: "languageOnly",
         backend: {
           loadPath: `${process.cwd()}/build/client/locales/{{lng}}/{{ns}}.json`,
@@ -38,13 +38,13 @@ export const initLocalization = ({initLang = "en", isServer}: IInitLocalizationP
       .init({
         fallbackLng: initLang,
         lng: initLang,
-        debug: process.env.NODE_ENV !== "production",
+        debug: IS_DEVELOPMENT,
         load: "languageOnly",
         interpolation: {
           escapeValue: false,
         },
         backend: {
-          loadPath: process.env.SSR ? "client/locales/{{lng}}/{{ns}}.json" : "/locales/{{lng}}/{{ns}}.json",
+          loadPath: IS_SSR ? "client/locales/{{lng}}/{{ns}}.json" : "/locales/{{lng}}/{{ns}}.json",
         },
       });
   }

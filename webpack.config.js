@@ -33,7 +33,9 @@ const client = {
   plugins: [
     ...basePlugins,
     new ManifestPlugin({
-      fileName: "client/asset-manifest.json",
+      fileName: IS_SSR ?
+        "client/asset-manifest.json" :
+        "asset-manifest.json",
     }),
     new CopyPlugin([
       { from: "public", to: IS_SSR ? "client" : "", ignore: IS_SSR ? ["*.html"] : [] },

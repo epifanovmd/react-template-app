@@ -14,8 +14,11 @@
   "scripts": {
     "build:dev": "cross-env NODE_ENV=development webpack",
     "build:prod": "cross-env NODE_ENV=production webpack",
-    "dev:ssr": "cross-env SSR=true yarn build:dev && node build/server/server.js",
-    "prod:ssr": "cross-env SSR=true yarn build:prod && node build/server/server.js",
+    "build:dev:ssr": "cross-env SSR=true NODE_ENV=development webpack",
+    "build:prod:ssr": "cross-env SSR=true NODE_ENV=production webpack",
+    "dev:ssr": "cross-env yarn build:dev:ssr && node build/server/server.js",
+    "prod:ssr": "cross-env yarn build:prod:ssr && node build/server/server.js",
+    "start": "node build/server/server.js",
     "dev": "webpack-dev-server",
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d build",

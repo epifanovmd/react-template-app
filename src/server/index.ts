@@ -18,5 +18,5 @@ app.use(cookieParser());
 app.use(serverRenderer());
 
 app.listen(port, () => {
-  console.log("Server started on port: http://localhost:" + port);
+  console.log("Application listening on: http://localhost:" + port);
 });

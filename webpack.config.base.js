@@ -151,6 +151,7 @@ const basePlugins = [
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
     IS_SSR: JSON.stringify(IS_SSR),
+    "process.env.PORT": JSON.stringify(process.env.PORT),
   }),
 ];
 

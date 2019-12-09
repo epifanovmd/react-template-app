@@ -98,7 +98,7 @@ const baseLoaders = {
     test: /\.(sa|sc|c)ss$/,
     use: [
       {
-        loader: MiniCssExtractPlugin.loader,
+        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : 'style-loader',
       },
       {
         loader: "typings-for-css-modules-loader",
@@ -135,23 +135,15 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  new MiniCssExtractPlugin({
-    filename: IS_SSR ?
-      IS_PRODUCTION ?
-        "client/styles/[contenthash].css" :
-        "client/styles/[name].css" :
-      IS_PRODUCTION ?
-        "styles/[contenthash].css" :
-        "styles/[name].css",
-    chunkFilename: IS_SSR ?
-      IS_PRODUCTION ?
-        "client/styles/[contenthash].chunk.css" :
-        "client/styles/[id].chunk.css" :
-      IS_PRODUCTION ?
-        "styles/[contenthash].chunk.css" :
-        "styles/[id].chunk.css",
-    ignoreOrder: false,
-  }),
+  ...(
+    IS_PRODUCTION ?
+      [new MiniCssExtractPlugin({
+        filename: IS_SSR ? "client/styles/[contenthash].css" : "styles/[contenthash].css",
+        chunkFilename: IS_SSR ? "client/styles/[contenthash].chunk.css" : "styles/[contenthash].chunk.css",
+        ignoreOrder: false,
+      })] :
+      []
+  ),
   new webpack.DefinePlugin({
     "process.env.SSR": JSON.stringify(process.env.SSR),
     IS_SERVER: JSON.stringify(IS_SERVER),

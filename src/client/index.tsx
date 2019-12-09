@@ -11,6 +11,7 @@ import {initLocalization} from "./localization/localization";
 import {Cookies} from "react-cookie";
 
 const cookie = new Cookies();
+const history = createBrowserHistory();
 
 initLocalization({initLang: cookie.get("i18next")}).finally();
 const store = createSimpleStore(window.REDUX_DATA);
@@ -23,7 +24,7 @@ const renderApp = (Comp?: any) => {
   renderMethod(
     <Provider store={store}>
       <Suspense fallback={"Loading..."}>
-        <Router history={createBrowserHistory()}>
+        <Router history={history}>
           <Comp />
         </Router>
       </Suspense>

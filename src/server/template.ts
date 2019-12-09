@@ -17,7 +17,6 @@ export const template = (reactDom: string, reduxState: IAppState, helmetData: He
   ${helmetData.meta.toString()}
   ${extractor.getLinkTags()}
   ${extractor.getStyleTags()}
-  <link rel="stylesheet" type="text/css" href="./client/styles/client.css" />
 </head>
 
 <body>

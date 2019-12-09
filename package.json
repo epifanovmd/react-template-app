@@ -19,6 +19,7 @@
     "dev:ssr": "cross-env yarn build:dev:ssr && node build/server/server.js",
     "prod:ssr": "cross-env yarn build:prod:ssr && node build/server/server.js",
     "start": "node build/server/server.js",
+    "test": "cross-env SSR=true NODE_ENV=production webpack",
     "dev": "webpack-dev-server",
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d build",

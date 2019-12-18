@@ -26,6 +26,9 @@ export const Header: FC = () => {
           <li>
             <NavLink to={"/testRender"}>{t("test-render")}</NavLink>
           </li>
+          <li>
+            <NavLink to={"/chat"}>{t("chat")}</NavLink>
+          </li>
         </ul>
       </menu>
       <div>

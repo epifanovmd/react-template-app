@@ -51,7 +51,8 @@
     "reselect": "^4.0.0",
     "serialize-javascript": "^2.1.1",
     "typescript-fsa": "^3.0.0",
-    "typescript-fsa-reducers": "^1.2.1"
+    "typescript-fsa-reducers": "^1.2.1",
+    "ws": "^7.2.1"
   },
   "license": "ISC",
   "devDependencies": {
@@ -77,9 +78,11 @@
     "@types/react-router-dom": "^5.1.1",
     "@types/redux": "^3.6.0",
     "@types/serialize-javascript": "^1.5.0",
+    "@types/socket.io": "^2.1.4",
     "@types/webpack-dev-server": "^3.9.0",
     "@types/webpack-manifest-plugin": "^2.1.0",
     "@types/webpack-node-externals": "^1.7.0",
+    "@types/ws": "^6.0.4",
     "autoprefixer": "^9.7.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.0.6",

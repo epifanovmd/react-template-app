@@ -3,6 +3,7 @@ import {RouteComponentProps} from "react-router";
 import {SimpleThunk} from "./common/simpleThunk";
 import {UsersThunk} from "./modules/users/usersThunk";
 import loadable from "@loadable/component";
+import {Chat} from "./modules/Chat/chat";
 
 const TestPage = loadable(() => import("./modules/testPage/TestPage"));
 const UseFormComponent = loadable(() => import("./modules/useForm/UseForm"));
@@ -42,6 +43,11 @@ export const routes: IRoute[] = [
   {
     path: "/testRender",
     component: TestRender,
+    exact: true,
+  },
+  {
+    path: "/chat",
+    component: Chat,
     exact: true,
   },
 ];

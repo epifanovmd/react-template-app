@@ -1,6 +1,7 @@
 import React, {ChangeEvent, PureComponent} from "react";
 import {ChatMessage} from "../../components/chat/chatMessage/chatMessage";
 import {ChatInput} from "../../components/chat/chatInput/chatInput";
+import {connect} from "socket.io-client";
 
 interface IProps {
 }
@@ -8,41 +9,53 @@ interface IProps {
 interface IState {
   name: string;
   messages: { name: string, message: string }[];
-  ws: WebSocket;
+  ioSocket: any;
 }
 
-const URL = "ws://localhost:3030";
+const SOCKET_URL = "http://localhost:3131";
 
 export class Chat extends PureComponent<IProps, IState> {
-  ws = new WebSocket(URL);
+  ioSocket = connect(SOCKET_URL);
 
   constructor(props: IProps) {
     super(props);
     this.state = {
       name: "Bob",
       messages: [],
-      ws: new WebSocket(URL),
+      ioSocket: connect(SOCKET_URL),
     };
   }
 
   setValue = (event: ChangeEvent<HTMLInputElement>) => this.setState({name: event.target.value});
 
   componentDidMount() {
-    this.ws.onopen = () => {
+    this.ioSocket.on("connect", () => {
       console.log("connected");
-    };
+    });
+    this.ioSocket.on("SET_NAME", (name: any) => {
+      this.setState({name});
+    });
 
-    this.ws.onmessage = evt => {
-      const message = JSON.parse(evt.data);
+    this.ioSocket.on("message", (evt: any) => {
+      console.log(evt);
+      const message = JSON.parse(evt);
       this.addMessage(message);
-    };
+    });
 
-    this.ws.onclose = () => {
+    this.ioSocket.on("error", (error: any) => {
+      console.log("SocketError: ", error);
+    });
+
+    this.ioSocket.on("disconnect", () => {
       console.log("disconnected");
       this.setState({
-        ws: new WebSocket(URL),
+        ioSocket: connect(SOCKET_URL),
       });
-    };
+    });
+  }
+
+  componentWillUnmount(): void {
+    this.ioSocket.close();
   }
 
   addMessage = (message: { name: string, message: string }) =>
@@ -54,7 +67,7 @@ export class Chat extends PureComponent<IProps, IState> {
       name: this.state.name,
       message: messageString,
     };
-    this.ws.send(JSON.stringify(message));
+    this.ioSocket.emit("message", JSON.stringify(message));
     this.addMessage(message);
   };
 

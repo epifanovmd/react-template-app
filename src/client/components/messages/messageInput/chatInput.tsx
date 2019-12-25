@@ -1,39 +1,36 @@
-import React, {ChangeEvent, FormEvent, PureComponent} from "react";
+import React, {ChangeEvent, FC, FormEvent, memo, useState} from "react";
+import {useTranslation} from "react-i18next";
 
 interface IProps {
   onSubmitMessage: any;
 }
 
-interface IState {
-  message: string;
-}
-
-export class ChatInput extends PureComponent<IProps, IState> {
-  state = {
+export const ChatInput: FC<IProps> = memo(({onSubmitMessage}) => {
+  const [state, setState] = useState({
     message: "",
-  };
-
-  setValue = (event: ChangeEvent<HTMLInputElement>) => this.setState({message: event.target.value});
-  onSubmit = (event: FormEvent) => {
+  });
+  const {t} = useTranslation();
+  const setValue = (event: ChangeEvent<HTMLInputElement>) => setState({message: event.target.value});
+  const onSubmit = (event: FormEvent) => {
     event.preventDefault();
-    this.props.onSubmitMessage(this.state.message);
-    this.setState({message: ""});
+    onSubmitMessage(state.message);
+    setState({message: ""});
   };
 
-  render() {
-    return (
-      <form
-        action="."
-        onSubmit={this.onSubmit}
-      >
-        <input
-          type="text"
-          placeholder={"Enter message..."}
-          value={this.state.message}
-          onChange={this.setValue}
-        />
-        <input type="submit" value={"Send"} />
-      </form>
-    );
-  }
-}
+  return (
+    <form
+      action="."
+      onSubmit={onSubmit}
+    >
+      <input
+        type="text"
+        placeholder={t("enter_message")}
+        value={state.message}
+        onChange={setValue}
+      />
+      <button type="submit">
+        {t("send")}
+      </button>
+    </form>
+  );
+});

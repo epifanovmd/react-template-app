@@ -1,20 +1,14 @@
-import React from "react";
+import React, {FC, memo} from "react";
 import {ITableProps} from "./table";
 
 import cn from "classnames";
-import styles from "./styles.scss";
+import styles from "./styles.module.scss";
 
-interface IState {
-}
+export const TableHeader: FC<ITableProps> = memo(({children, className, ...rest}) => {
 
-export class TableHeader extends React.Component<ITableProps, IState> {
-  render() {
-    const { children, className, ...rest } = this.props;
-
-    return (
-      <div className={cn(styles.header, className)} {...rest}>
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={cn(styles.header, className)} {...rest}>
+      {children}
+    </div>
+  );
+});

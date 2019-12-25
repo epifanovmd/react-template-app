@@ -1,5 +1,5 @@
 import Socket from "socket.io-client";
-import {MessagesActions} from "./modules/Messages/messagesActions";
+import {MessagesActions} from "./modules/messages/messagesActions";
 import {IAppState} from "./store/IAppState";
 import {Store} from "redux";
 

@@ -4,6 +4,9 @@ import React from "react";
 import {routes} from "./routes";
 import {Header} from "./components/layouts/header/header";
 import {useTranslation} from "react-i18next";
+import loadable from "@loadable/component";
+import {AuthorizationMiddleware} from "./middlewares/authorization";
+const Authorization = loadable(() => import("./modules/authentication/authorization/Authorization"));
 
 const App = () => {
   const {i18n} = useTranslation();
@@ -14,11 +17,11 @@ const App = () => {
       <Header />
       <br />
       <Switch>
-        {routes.map(route => <Route key={route.path} {...route} />)}
+        {routes.map(route => <Route {...route} key={route.path} component={AuthorizationMiddleware(route.component)} />)}
+        <Route exact={true} path={"/authorization"} component={Authorization} />
       </Switch>
     </div>
   );
 };
 
-//tslint:disable-next-line
 export default App;

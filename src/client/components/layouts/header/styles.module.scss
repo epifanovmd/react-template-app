@@ -1,0 +1,18 @@
+.header {
+  menu {
+    .items {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+  }
+
+  li {
+    list-style-type: none;
+
+    &:not(:first-of-type):not(:last-of-type) {
+      margin: 0 5px 0 5px;
+    }
+  }
+}
+

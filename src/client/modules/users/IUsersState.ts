@@ -8,7 +8,7 @@ export interface IUsersState {
 
 export const usersInitialState: IUsersState = {
   users: {
-    items: [],
+    data: [],
     loadState: LoadState.needLoad,
   },
 };

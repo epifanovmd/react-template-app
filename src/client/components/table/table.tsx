@@ -1,22 +1,16 @@
-import React from "react";
+import React, {FC, memo} from "react";
 import cn from "classnames";
-import styles from "./styles.scss";
+import styles from "./styles.module.scss";
 
 export interface ITableProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-interface IState {
-}
+export const Table: FC<ITableProps> = memo(({children, className, ...rest}) => {
 
-export class Table extends React.Component<ITableProps, IState> {
-  render() {
-    const {children, className, ...rest} = this.props;
-
-    return (
-      <div className={cn(styles.table, className)} {...rest}>
-        {children}
-      </div>
-    );
-  }
-}
+  return (
+    <div className={cn(styles.table, className)} {...rest}>
+      {children}
+    </div>
+  );
+});

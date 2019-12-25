@@ -1,4 +1,5 @@
 import {RouteComponentProps} from "react-router";
+import * as H from "history";
 
 export const queryObjectToString = (queryObject: any): string => {
   if (queryObject && Object.keys(queryObject).length > 0) {
@@ -39,7 +40,10 @@ interface IUrlProps<T> {
   pathname?: string;
 }
 
-export const pushRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
+export const pushRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: {
+  history: H.History;
+  location: H.Location<H.LocationState>;
+}): void => {
   const {
     location,
     history: {push},

@@ -6,21 +6,22 @@ import {LoadState} from "../../common/loadState";
 import {Success} from "typescript-fsa";
 import {IEmpty} from "../../common/IEmpty";
 import {IUser} from "../../api/dto/Users.g";
+import {IResponse} from "../../common/response";
 
 function getUsersStartedHandler(state: IUsersState) {
   return newState(state, {
     users: {
+      ...state.users,
       loadState: LoadState.refreshing,
-      items: state.users.items,
     },
   });
 }
 
-function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty, IUser[]>) {
+function getUsersDoneHandler(state: IUsersState, {result}: Success<IEmpty, IResponse<IUser[]>>) {
   return newState(state, newState(state, {
     users: {
+      ...result,
       loadState: LoadState.idle,
-      items: users,
     },
   }));
 }
@@ -28,8 +29,8 @@ function getUsersDoneHandler(state: IUsersState, {result: users}: Success<IEmpty
 function getUsersFailedHandler(state: IUsersState) {
   return newState(state, newState(state, {
     users: {
+      ...state.users,
       loadState: LoadState.error,
-      items: state.users.items,
     },
   }));
 }

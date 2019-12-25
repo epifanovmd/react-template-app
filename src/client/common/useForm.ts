@@ -1,4 +1,5 @@
 import React from "react";
+import {string} from "prop-types";
 
 interface IUseForm<T> {
   initialValues: T;
@@ -8,7 +9,7 @@ interface IUseForm<T> {
 
 interface IUseFormReturn<T> {
   values: T;
-  touchedValues: Partial<T>;
+  touchedValues: Partial<Record<keyof T, boolean>>;
   errors: Partial<T>;
   handleChange: (event: any) => void;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -17,7 +18,7 @@ interface IUseFormReturn<T> {
 
 export const useForm = <T extends {}>({ initialValues, onSubmit, validate }: IUseForm<T>): IUseFormReturn<T> => {
   const [values, setValues] = React.useState<T>(initialValues);
-  const [touchedValues, setTouchedValues] = React.useState<T | {}>({});
+  const [touchedValues, setTouchedValues] = React.useState<Partial<Record<keyof T, boolean>>>({});
   const [errors, setErrors] = React.useState<T | {}>({});
 
   const handleChange = (event: any): void => {

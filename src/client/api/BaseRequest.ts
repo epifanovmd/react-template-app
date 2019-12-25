@@ -22,7 +22,7 @@ export class BaseRequest {
 
   static setToken: (token: string) => void = (token) => BaseRequest.token = token;
 
-  async fetch(url: string, config: Object): Promise<any> {
+  async fetch(url: string, config: RequestInit): Promise<any> {
     let headers: any = {
       "Accept": "application/json",
       "Content-Type": "application/json"
@@ -31,7 +31,7 @@ export class BaseRequest {
     if (BaseRequest.getToken()) {
       headers = {
         ...headers,
-        "cookie": `access_token=${BaseRequest.token}`,
+        "cookie": `token=${BaseRequest.token}`,
       }
     }
     if (process.env.NODE_ENV === "development") {

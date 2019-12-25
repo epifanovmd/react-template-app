@@ -1,10 +1,12 @@
-import React, {Component} from "react";
-import {usersSelector} from "./usersSelector";
-import {connect} from "react-redux";
+import React, {FC, memo, useEffect} from "react";
 import {UserList} from "../../components/userList/userList";
-import {RouteComponentProps, withRouter} from "react-router";
+import {useHistory, useLocation, useRouteMatch} from "react-router";
 import {pushRoute, queryStringToObject} from "../../common/query";
 import Helmet from "react-helmet";
+import {useDispatch, useSelector} from "react-redux";
+import {UsersThunk} from "./usersThunk";
+import {IAppState} from "../../store/IAppState";
+import {useTranslation} from "react-i18next";
 
 export interface IUsersQuery {
   search: string;
@@ -13,47 +15,46 @@ export interface IUsersQuery {
 interface IProps {
 }
 
-type TProps =
-  IProps &
-  ReturnType<typeof usersSelector.mapState> &
-  ReturnType<typeof usersSelector.mapDispatch> &
-  RouteComponentProps<IRouteParams>;
-
 interface IRouteParams {
   id: string;
 }
 
-class UsersStatic extends Component<TProps> {
-  componentDidMount() {
-    this.props.getUsers((result) => {
+const UsersStatic: FC<IProps> = memo(() => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(UsersThunk.getUsers((result) => {
       console.log("-------", result);
-    });
+    }));
 
     console.log("+++++++++");
-  }
+  }, []);
 
-  public render() {
-    const {location: {search}, match} = this.props;
-    const query = queryStringToObject<IUsersQuery>(search);
+  const {t} = useTranslation();
+  const location = useLocation();
+  const history = useHistory();
+  const match = useRouteMatch<IRouteParams>();
 
-    console.log("query", query.search);
-    console.log("match", match.params.id);
+  const query = queryStringToObject<IUsersQuery>(location.search);
 
-    return (
-      <>
-        <Helmet>
-          <title>Users</title>
-        </Helmet>
-        <UserList users={this.props.users.items} />
-        <div>{`Search - ${query.search}`}</div>
-        <div onClick={this.setQuery}>SetQuery</div>
-      </>
-    );
-  }
+  console.log("query", query.search);
+  match && console.log("match id", match.params.id);
 
-  private setQuery = (): void => {
-    pushRoute<IUsersQuery>({queryParams: {search: "22"}}, {...this.props});
+  const setQuery = (): void => {
+    pushRoute<IUsersQuery>({queryParams: {search: "22"}}, {history, location});
   };
-}
-//tslint:disable
-export default withRouter(connect(usersSelector.mapState, usersSelector.mapDispatch)(UsersStatic));
+  const users = useSelector((state: IAppState) => state.usersPage.users);
+
+  return (
+    <>
+      <Helmet>
+        <title>{t("users")}</title>
+      </Helmet>
+      <UserList users={users.data} />
+      <div>{`Search - ${query.search}`}</div>
+      <div onClick={setQuery}>SetQuery</div>
+    </>
+  );
+});
+
+export default UsersStatic;

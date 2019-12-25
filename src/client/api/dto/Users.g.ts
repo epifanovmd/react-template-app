@@ -4,12 +4,9 @@ import {Address} from "./Address.g";
 import {Company} from "./Company.g";
 
 export interface IUser {
-  id: number;
-  name: string;
+  id: string;
   username: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  address: Address,
-  phone: string;
-  website: string;
-  company: Company;
 }

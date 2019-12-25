@@ -6,7 +6,7 @@ import {createBrowserHistory} from "history";
 import {loadableReady} from "@loadable/component";
 import App from "./App";
 import {createSimpleStore} from "./store/store";
-import "./assets/global.scss";
+import "./assets/global.module.scss";
 import {initLocalization} from "./localization/localization";
 import {Cookies} from "react-cookie";
 import {initMessagesSocket} from "./initMessagesSocket";

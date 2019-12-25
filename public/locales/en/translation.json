@@ -1,7 +1,29 @@
 {
   "users": "Users",
-  "test-page": "Test Page",
-  "use-form": "Use Form",
-  "test-render": "Test Render",
-  "messages": "Messages"
+  "messages": "Messages",
+  "sign_in": "Sign In",
+  "log_out": "Sign Out",
+  "username": "Login",
+  "password": "Password",
+  "firstName": "First Name",
+  "lastName": "LastName",
+  "email": "Email",
+  "name": "Name",
+  "authorization": "Authorization",
+  "send": "Send",
+  "enter_message": "Enter message",
+  "enter_name": "Enter name",
+  "enter_username": "Enter login",
+  "enter_password": "Enter password",
+
+  "auth_error": "Wrong login or password",
+  "error": "Error",
+
+  "RouteNotFoundException": "Route not found",
+  "DataBaseErrorException": "Database error",
+  "UserNotFoundException": "User not found",
+  "UnauthorizedException": "User unauthorized",
+  "ValidateException": "Validate error",
+  "AccessRestrictedException": "Access denied",
+  "ServerErrorException": "Server error"
 }

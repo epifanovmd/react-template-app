@@ -1,20 +1,19 @@
 import {EventNames, eventRegister} from "./eventRegister";
-import {ExceptionType, getExceptionText} from "./exceptionType";
 import {INotificationPopupData} from "../components/popupNotification/popupNotification";
 
 class Popup {
-  error(e: ExceptionType | string): void {
+  error(title: string, message: string): void {
     eventRegister.emitEvent(EventNames.notification, {
-      title: "Ошибка",
-      subtitle: getExceptionText(e),
+      title: title,
+      subtitle: message,
       iconType: "error",
     } as INotificationPopupData);
   }
 
-  success(title: string): void {
+  success(title: string, message: string): void {
     eventRegister.emitEvent(EventNames.notification, {
-      title: "Внимание",
-      subtitle: title,
+      title: title,
+      subtitle: message,
       iconType: "success",
     } as INotificationPopupData);
   }

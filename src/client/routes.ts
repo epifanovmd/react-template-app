@@ -3,12 +3,10 @@ import {RouteComponentProps} from "react-router";
 import {SimpleThunk} from "./common/simpleThunk";
 import {UsersThunk} from "./modules/users/usersThunk";
 import loadable from "@loadable/component";
-import {Messages} from "./modules/Messages/messages";
 
-const TestPage = loadable(() => import("./modules/testPage/TestPage"));
-const UseFormComponent = loadable(() => import("./modules/useForm/UseForm"));
 const Users = loadable(() => import("./modules/users/Users"));
-const TestRender = loadable(() => import("./modules/testRender/testRender"));
+const Messages = loadable(() => import("./modules/messages/messages"));
+// const Registration = loadable(() => import("./modules/authentication/registration/Registration"));
 
 // import TestPage from "./modules/testPage/TestPage";
 // import UseFormComponent from "./modules/useForm/UseForm";
@@ -30,24 +28,13 @@ export const routes: IRoute[] = [
     getInitialData: UsersThunk.getUsers(),
   },
   {
-    path: "/useform",
-    component: UseFormComponent,
-    exact: true,
-    getInitialData: UsersThunk.getUsers(),
-  },
-  {
-    path: "/test",
-    component: TestPage,
-    exact: true,
-  },
-  {
-    path: "/testRender",
-    component: TestRender,
-    exact: true,
-  },
-  {
     path: "/messages",
     component: Messages,
     exact: true,
   },
+  // {
+  //   path: "/registration",
+  //   component: Registration,
+  //   exact: true,
+  // },
 ];

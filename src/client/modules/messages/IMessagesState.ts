@@ -14,7 +14,7 @@ export interface IMessagesState {
 
 export const messagesInitialState: IMessagesState = {
   messages: {
-    items: [],
+    data: [],
     loadState: LoadState.needLoad,
   },
 };

@@ -124,7 +124,7 @@
     "max-classes-per-file": [
       true
     ],
-    "no-default-export": true,
+    "no-default-export": false,
     "no-mergeable-namespace": true,
     // "no-require-imports": true,
     "prefer-const": true,

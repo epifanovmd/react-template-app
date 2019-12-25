@@ -1,7 +1,29 @@
 {
   "users": "Пользователи",
-  "test-page": "Тестовая страница",
-  "use-form": "Хук Формы",
-  "test-render": "Тест рендера",
-  "messages": "Сообщения"
+  "messages": "Сообщения",
+  "sign_in": "Вход",
+  "log_out": "Выход",
+  "username": "Логин",
+  "password": "Пароль",
+  "firstName": "Имя",
+  "lastName": "Фамилия",
+  "email": "Email",
+  "name": "Имя",
+  "authorization": "Авторизация",
+  "send": "Отправить",
+  "enter_message": "Введите сообщение",
+  "enter_name": "Введите имя",
+  "enter_username": "Введите логин",
+  "enter_password": "Введите пароль",
+
+  "auth_error": "Неверный логин или пароль",
+  "error": "Ошибка",
+
+  "RouteNotFoundException": "Путь не найден",
+  "DataBaseErrorException": "Ошибка базы данных",
+  "UserNotFoundException": "Пользователя не существует",
+  "UnauthorizedException": "Необходима авторизация",
+  "ValidateException": "Ошибка валидации",
+  "AccessRestrictedException": "Ошибка доступа",
+  "ServerErrorException": "Ошибка сервера"
 }

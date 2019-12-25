@@ -5,11 +5,11 @@ import {IMessage} from "./IMessagesState";
 
 export class MessagesThunk {
   static getUsers(callback?: (messages: IMessage[]) => void): SimpleThunk {
-    return async (dispatch) => {
+    return async (dispatch, {}, {i18next}) => {
       const params = {};
       dispatch(MessagesActions.getMessages.started(params));
       try {
-        // const result = await requestRepository.usersApiRequest.get();
+        // const data = await requestRepository.usersApiRequest.get();
         const result: IMessage[] = [{
           message: "",
           name: "",
@@ -18,7 +18,7 @@ export class MessagesThunk {
         callback && callback(result);
         dispatch(MessagesActions.getMessages.done({params, result}));
       } catch (error) {
-        popup.error(error.type);
+        popup.error(i18next.t("error"), i18next.t(error.error.type));
         dispatch(MessagesActions.getMessages.failed({params, error}));
       }
     };

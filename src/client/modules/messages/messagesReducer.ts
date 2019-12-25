@@ -10,7 +10,7 @@ function getMessagesStartedHandler(state: IMessagesState) {
   return newState(state, {
     messages: {
       loadState: LoadState.refreshing,
-      items: state.messages.items,
+      data: state.messages.data,
     },
   });
 }
@@ -19,7 +19,7 @@ function getMessagesDoneHandler(state: IMessagesState, {result: messages}: Succe
   return newState(state, newState(state, {
     messages: {
       loadState: LoadState.idle,
-      items: messages,
+      data: messages,
     },
   }));
 }
@@ -28,7 +28,7 @@ function getMessagesFailedHandler(state: IMessagesState) {
   return newState(state, newState(state, {
     messages: {
       loadState: LoadState.error,
-      items: state.messages.items,
+      data: state.messages.data,
     },
   }));
 }
@@ -37,7 +37,7 @@ function insertMessageHandler(state: IMessagesState, message: IMessage) {
   return newState(state, newState(state, {
     messages: {
       loadState: LoadState.idle,
-      items: [...state.messages.items, message],
+      data: [...state.messages.data, message],
     },
   }));
 }

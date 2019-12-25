@@ -1,27 +1,16 @@
 export enum ExceptionType {
-  Connection = "ConnectionError",
-  Unauthorized = "Unauthorized",
-  ValidationException = "ValidationException",
-  EmailInUse = "EmailAlreadyExistsException",
-  InvalidCode = "InvalidCodeException",
-  DateTooSmall = "DateTooSmallException",
+  RouteNotFoundException = "RouteNotFoundException",
+  DataBaseErrorException = "DataBaseErrorException",
   UserNotFoundException = "UserNotFoundException",
-  ObjectNotFoundException = "ObjectNotFoundException",
-  NotSubscribedException = "NotSubscribedException",
-  SubscribedExpireException = "SubscribedExpireException",
-  SubscribeFrozenException = "SubscribeFrozenException",
-  UserHaveTrainingInThisTimeException = "UserHaveTrainingInThisTimeException",
-  MaximumNumberOfVisitsException = "MaximumNumberOfVisitsException",
-  NoFreeSeatsException = "NoFreeSeatsException",
-  VisitWillBeCountedException = "VisitWillBeCountedException",
-  NotBookedException = "NotBookedException",
-  ObjectAlreadyExistsException = "ObjectAlreadyExistsException",
-  BadConfirmCodeException = "BadConfirmCodeException",
+  UnauthorizedException = "UnauthorizedException",
+  ValidateException = "ValidateException",
+  AccessRestrictedException = "AccessRestrictedException",
+  ServerErrorException = "ServerErrorException",
 }
 
 export class NoAuthError implements Error {
-  name = ExceptionType.Unauthorized;
-  type = ExceptionType.Unauthorized;
+  name = ExceptionType.UnauthorizedException;
+  type = ExceptionType.UnauthorizedException;
   message: string;
 
   constructor(message: string) {
@@ -31,42 +20,20 @@ export class NoAuthError implements Error {
 
 export function getExceptionText(e: ExceptionType | string): string {
   switch (e) {
-    case ExceptionType.UserNotFoundException:
+    case ExceptionType.RouteNotFoundException:
       return "Пользователь не найден";
-    case ExceptionType.Connection:
+    case ExceptionType.DataBaseErrorException:
       return "Проблемы с соеденением";
-    case ExceptionType.Unauthorized:
+    case ExceptionType.UserNotFoundException:
       return "Необходимо авторизироваться";
-    case ExceptionType.ValidationException:
+    case ExceptionType.UnauthorizedException:
       return "Ошибка в заполнении полей";
-    case ExceptionType.EmailInUse:
+    case ExceptionType.ValidateException:
       return "Почта уже занята";
-    case ExceptionType.InvalidCode:
+    case ExceptionType.AccessRestrictedException:
       return "Код введен с ошибкой";
-    case ExceptionType.DateTooSmall:
+    case ExceptionType.ServerErrorException:
       return "Дата слишком мала";
-    case ExceptionType.ObjectNotFoundException:
-      return "Ошибка сервера";
-    case ExceptionType.NotSubscribedException:
-      return "У пользователя нет подписки";
-    case ExceptionType.SubscribedExpireException:
-      return "Подписка пользователя истекла";
-    case ExceptionType.SubscribeFrozenException:
-      return "Подписка заморожена";
-    case ExceptionType.UserHaveTrainingInThisTimeException:
-      return "У пользователя уже есть тренеровка на это время";
-    case ExceptionType.MaximumNumberOfVisitsException:
-      return "Количество посещений достигло максимума";
-    case ExceptionType.NoFreeSeatsException:
-      return "Нет свободных мест";
-    case ExceptionType.VisitWillBeCountedException:
-      return "Посещение будет засчитанно";
-    case ExceptionType.NotBookedException:
-      return "Место не забронировано";
-    case ExceptionType.ObjectAlreadyExistsException:
-      return "Запись с такими данными уже существует";
-    case ExceptionType.BadConfirmCodeException:
-      return "Неверный код подтверждения брони";
     default:
       return "Ошибка сервера";
   }

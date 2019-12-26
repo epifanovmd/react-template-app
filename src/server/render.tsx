@@ -15,6 +15,7 @@ import {StaticRouter} from "react-router-dom";
 import {matchPath} from "react-router";
 import path from "path";
 import { ChunkExtractor } from "@loadable/server";
+import {checkAuthorization} from "../client/common/checkAuthorization";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
@@ -40,7 +41,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     const jsx = webExtractor.collectChunks(
       <I18nextProvider i18n={i18next}>
         <ReduxProvider store={store}>
-          <StaticRouter context={context} location={req.url}>
+          <StaticRouter context={context} location={checkAuthorization(req.cookies?.token) ? req.url : `/authorization?redirect=${req.url}`}>
             <App />
           </StaticRouter>
         </ReduxProvider>

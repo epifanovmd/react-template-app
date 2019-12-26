@@ -9,14 +9,12 @@ import {createSimpleStore} from "./store/store";
 import "./assets/global.module.scss";
 import {initLocalization} from "./localization/localization";
 import {Cookies} from "react-cookie";
-import {initMessagesSocket} from "./initMessagesSocket";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();
 
 initLocalization({initLang: cookie.get("i18next")}).finally();
-export const store = createSimpleStore(window.REDUX_DATA);
-export const messagesSocket = initMessagesSocket(store);
+export const store = createSimpleStore({...window.REDUX_DATA, auth: {token: cookie.get("token")}});
 
 const renderMethod = typeof window === "undefined" ?
   ReactDOM.hydrate :

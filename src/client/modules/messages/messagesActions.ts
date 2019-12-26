@@ -4,5 +4,5 @@ import {IMessage} from "./IMessagesState";
 
 export class MessagesActions {
   static getMessages = actionCreator.async<IEmpty, IMessage[], Error>("MESSAGES/GET_MESSAGES");
-  static insertMessage = actionCreator<IMessage>("MESSAGES/INSERT_MESSAGES");
+  static insertMessage = actionCreator.async<IEmpty, IMessage, Error>("MESSAGES/INSERT_MESSAGES");
 }

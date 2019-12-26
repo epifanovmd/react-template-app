@@ -1,12 +1,11 @@
 import React, {ChangeEvent, FC, memo, useCallback, useState} from "react";
 import {ChatMessage} from "../../components/messages/message/chatMessage";
 import {ChatInput} from "../../components/messages/messageInput/chatInput";
-import {messagesSocket} from "../../index";
 import {useDispatch, useSelector} from "react-redux";
-import {MessagesActions} from "./messagesActions";
 import {IAppState} from "../../store/IAppState";
 import {useTranslation} from "react-i18next";
 import Helmet from "react-helmet";
+import {MessagesThunk} from "./messagesThunk";
 
 interface IProps {
 }
@@ -26,8 +25,8 @@ const Messages: FC<IProps> = memo(() => {
       name: state.name,
       message: messageString,
     };
-    messagesSocket.emit("message", JSON.stringify(message));
-    dispatch(MessagesActions.insertMessage(message));
+
+    dispatch(MessagesThunk.sendMessage(message));
   }, [state.name]);
 
   const onSubmit = useCallback((messageString: string) => submitMessage(messageString), [submitMessage]);

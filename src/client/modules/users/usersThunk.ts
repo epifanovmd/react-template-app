@@ -14,7 +14,8 @@ export class UsersThunk {
         callback && callback(result.data);
         dispatch(UsersActions.getUsers.done({params, result}));
       } catch (error) {
-        popup.error(i18next.t("error"), i18next.t(error.error.type));
+        popup.error(i18next.t("error"), i18next.t(error.error?.type));
+        console.log("error", error);
         dispatch(UsersActions.getUsers.failed({params, error}));
       }
     };

@@ -23,7 +23,7 @@ export const initLocalization = ({initLang = "en", isServer}: IInitLocalizationP
         interpolation: {
           escapeValue: false,
         },
-        debug: IS_DEVELOPMENT,
+        debug: false,
         load: "languageOnly",
         backend: {
           loadPath: `${process.cwd()}/build/client/locales/{{lng}}/{{ns}}.json`,
@@ -38,7 +38,7 @@ export const initLocalization = ({initLang = "en", isServer}: IInitLocalizationP
       .init({
         fallbackLng: initLang,
         lng: initLang,
-        debug: IS_DEVELOPMENT,
+        debug: false,
         load: "languageOnly",
         interpolation: {
           escapeValue: false,

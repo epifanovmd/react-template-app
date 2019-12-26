@@ -4,8 +4,6 @@ const autoprefixer = require("autoprefixer");
 const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const IS_SERVER = typeof window === "undefined";
-const IS_CLIENT = typeof window === "object";
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const IS_SSR = process.env.SSR;
@@ -103,10 +101,10 @@ const baseLoaders = {
       {
         loader: "css-loader",
         options: {
-          modules: true,
-          localIdentName: "[local]--[hash:base64:5]",
-          namedExport: true,
-          camelCase: true,
+          sourceMap: true,
+          modules: {
+            localIdentName: "[local]--[hash:base64:5]",
+          },
         },
       },
       {
@@ -146,8 +144,6 @@ const basePlugins = [
   ),
   new webpack.DefinePlugin({
     "process.env.SSR": JSON.stringify(process.env.SSR),
-    IS_SERVER: JSON.stringify(IS_SERVER),
-    IS_CLIENT: JSON.stringify(IS_CLIENT),
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
     IS_SSR: JSON.stringify(IS_SSR),
@@ -160,8 +156,6 @@ module.exports = {
   baseConfigServer,
   baseLoaders,
   basePlugins,
-  IS_SERVER,
-  IS_CLIENT,
   IS_DEVELOPMENT,
   IS_PRODUCTION,
   IS_SSR,

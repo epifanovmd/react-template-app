@@ -20,6 +20,7 @@ export const Header: FC = memo(() => {
     dispatch(AuthActions.logOut());
   };
   const token = useSelector(((state: IAppState) => state.auth.token));
+  const {count = 0} = useSelector(((state: IAppState) => state.messagesPage.messages));
 
   return (
     <div className={styles.header}>
@@ -29,7 +30,7 @@ export const Header: FC = memo(() => {
             <NavLink to={"/"}>{t("users")}</NavLink>
           </li>
           <li>
-            <NavLink to={"/messages"}>{t("messages")}</NavLink>
+            <NavLink to={"/messages"}>{t("messages") + (count > 0 ? ` +${count}` : "")}</NavLink>
           </li>
           {
             !checkAuthorization(token) ?

@@ -12,8 +12,6 @@ const {
   baseConfigServer,
   baseLoaders,
   basePlugins,
-  IS_SERVER,
-  IS_CLIENT,
   IS_DEVELOPMENT,
   IS_PRODUCTION,
   IS_SSR,

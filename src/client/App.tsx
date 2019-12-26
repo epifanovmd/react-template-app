@@ -1,6 +1,6 @@
 import {PopupNotification} from "./components/popupNotification/popupNotification";
 import {Route, Switch} from "react-router-dom";
-import React from "react";
+import React, {FC} from "react";
 import {routes} from "./routes";
 import {Header} from "./components/layouts/header/header";
 import {useTranslation} from "react-i18next";

@@ -1,5 +1,4 @@
 import {LoadState} from "../../common/loadState";
-import {IUser} from "../../api/dto/Users.g";
 import {IResponse} from "../../common/response";
 
 export interface IMessage {
@@ -16,5 +15,6 @@ export const messagesInitialState: IMessagesState = {
   messages: {
     data: [],
     loadState: LoadState.needLoad,
+    count: 0,
   },
 };

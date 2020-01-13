@@ -5,6 +5,7 @@ React Redux Server Side Rendering Application
 ##### Stack:
   - Typescript
   - React
+  - React Router
   - React-Redux
   - Redux Thunk
   - Typescript Fsa

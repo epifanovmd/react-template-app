@@ -8,7 +8,6 @@ import {checkAuthorization} from "../../../common/checkAuthorization";
 import {IAppState} from "../../../store/IAppState";
 
 export const Header: FC = memo(() => {
-
   const {t, i18n} = useTranslation();
   const dispatch = useDispatch();
 
@@ -19,8 +18,8 @@ export const Header: FC = memo(() => {
   const logOut = () => {
     dispatch(AuthActions.logOut());
   };
-  const token = useSelector(((state: IAppState) => state.auth.token));
-  const {count = 0} = useSelector(((state: IAppState) => state.messagesPage.messages));
+  const token = useSelector((state: IAppState) => state.auth.token);
+  const {count = 0} = useSelector((state: IAppState) => state.messagesPage.messages);
 
   return (
     <div className={styles.header}>
@@ -32,16 +31,17 @@ export const Header: FC = memo(() => {
           <li>
             <NavLink to={"/messages"}>{t("messages") + (count > 0 ? ` +${count}` : "")}</NavLink>
           </li>
-          {
-            !checkAuthorization(token) ?
-              <li>
-                <NavLink to={"/authorization"}>{t("sign_in")}</NavLink>
-              </li>
-              :
-              <li>
-                <NavLink to={"/authorization"} onClick={logOut}>{t("log_out")}</NavLink>
-              </li>
-          }
+          {!checkAuthorization(token) ? (
+            <li>
+              <NavLink to={"/authorization"}>{t("sign_in")}</NavLink>
+            </li>
+          ) : (
+            <li>
+              <NavLink to={"/authorization"} onClick={logOut}>
+                {t("log_out")}
+              </NavLink>
+            </li>
+          )}
           <li>
             <select name="lang" onChange={changeLang} value={i18n.language}>
               <option value="en">En</option>

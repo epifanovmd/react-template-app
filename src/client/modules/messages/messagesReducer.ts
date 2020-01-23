@@ -1,10 +1,14 @@
-import {reducerWithInitialState} from "typescript-fsa-reducers";
-import {IMessage, IMessagesState, messagesInitialState} from "./IMessagesState";
-import {MessagesActions} from "./messagesActions";
-import {newState} from "../../store/common/newState";
-import {LoadState} from "../../common/loadState";
-import {Success} from "typescript-fsa";
-import {IEmpty} from "../../common/IEmpty";
+import { reducerWithInitialState } from "typescript-fsa-reducers";
+import {
+  IMessage,
+  IMessagesState,
+  messagesInitialState,
+} from "./IMessagesState";
+import { MessagesActions } from "./messagesActions";
+import { newState } from "../../store/common/newState";
+import { LoadState } from "../../common/loadState";
+import { Success } from "typescript-fsa";
+import { IEmpty } from "../../common/IEmpty";
 
 function getMessagesStartedHandler(state: IMessagesState) {
   return newState(state, {
@@ -16,54 +20,75 @@ function getMessagesStartedHandler(state: IMessagesState) {
   });
 }
 
-function getMessagesDoneHandler(state: IMessagesState, {result: messages}: Success<IEmpty, IMessage[]>) {
-  return newState(state, newState(state, {
-    messages: {
-      loadState: LoadState.idle,
-      data: messages,
-      count: messages.length,
-    },
-  }));
+function getMessagesDoneHandler(
+  state: IMessagesState,
+  { result: messages }: Success<IEmpty, IMessage[]>,
+) {
+  return newState(
+    state,
+    newState(state, {
+      messages: {
+        loadState: LoadState.idle,
+        data: messages,
+        count: messages.length,
+      },
+    }),
+  );
 }
 
 function getMessagesFailedHandler(state: IMessagesState) {
-  return newState(state, newState(state, {
-    messages: {
-      loadState: LoadState.error,
-      data: state.messages.data,
-      count: state.messages.data.length,
-    },
-  }));
+  return newState(
+    state,
+    newState(state, {
+      messages: {
+        loadState: LoadState.error,
+        data: state.messages.data,
+        count: state.messages.data.length,
+      },
+    }),
+  );
 }
 
 function insertMessageStartedHandler(state: IMessagesState) {
-  return newState(state, newState(state, {
-    messages: {
-      loadState: LoadState.refreshing,
-      data: [...state.messages.data],
-      count: state.messages.data.length,
-    },
-  }));
+  return newState(
+    state,
+    newState(state, {
+      messages: {
+        loadState: LoadState.refreshing,
+        data: [...state.messages.data],
+        count: state.messages.data.length,
+      },
+    }),
+  );
 }
 
-function insertMessageDoneHandler(state: IMessagesState, {result: message}: Success<IEmpty, IMessage>) {
-  return newState(state, newState(state, {
-    messages: {
-      loadState: LoadState.idle,
-      data: [...state.messages.data, message],
-      count: state.messages.data.length + 1,
-    },
-  }));
+function insertMessageDoneHandler(
+  state: IMessagesState,
+  { result: message }: Success<IEmpty, IMessage>,
+) {
+  return newState(
+    state,
+    newState(state, {
+      messages: {
+        loadState: LoadState.idle,
+        data: [...state.messages.data, message],
+        count: state.messages.data.length + 1,
+      },
+    }),
+  );
 }
 
 function insertMessageFailedHandler(state: IMessagesState) {
-  return newState(state, newState(state, {
-    messages: {
-      loadState: LoadState.error,
-      data: [...state.messages.data],
-      count: state.messages.data.length,
-    },
-  }));
+  return newState(
+    state,
+    newState(state, {
+      messages: {
+        loadState: LoadState.error,
+        data: [...state.messages.data],
+        count: state.messages.data.length,
+      },
+    }),
+  );
 }
 
 export const messagesReducer = reducerWithInitialState(messagesInitialState)

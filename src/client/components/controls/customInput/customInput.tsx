@@ -1,4 +1,4 @@
-import React, {FC, memo} from "react";
+import React, { FC, memo } from "react";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
@@ -7,7 +7,7 @@ interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const CustomInput: FC<IProps> = memo((props) => {
-  const {title, touch, error, name, ...rest} = props;
+  const { title, touch, error, name, ...rest } = props;
 
   return (
     <div>

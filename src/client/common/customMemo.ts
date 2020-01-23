@@ -1,4 +1,4 @@
-import {FC, memo} from "react";
+import { FC, memo } from "react";
 
 export function customMemo<P>(component: FC<P>, keys: (keyof P)[]) {
   return memo(component, (prevProps, nextProps) => {

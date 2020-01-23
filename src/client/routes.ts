@@ -1,7 +1,7 @@
 import * as React from "react";
-import {RouteComponentProps} from "react-router";
-import {SimpleThunk} from "./common/simpleThunk";
-import {UsersThunk} from "./modules/users/usersThunk";
+import { RouteComponentProps } from "react-router";
+import { SimpleThunk } from "./common/simpleThunk";
+import { UsersThunk } from "./modules/users/usersThunk";
 import loadable from "@loadable/component";
 
 const Users = loadable(() => import("./modules/users/Users"));
@@ -15,7 +15,9 @@ const Messages = loadable(() => import("./modules/messages/messages"));
 
 export interface IRoute {
   path: string;
-  component: React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
+  component:
+    | React.ComponentType<RouteComponentProps<any>>
+    | React.ComponentType<any>;
   exact: boolean;
   getInitialData?: SimpleThunk;
 }

@@ -1,7 +1,7 @@
 declare module "component-name" {
-  interface IComponentNameProps {
-  }
+  interface IComponentNameProps {}
 
-  export default class ComponentName extends React.Component<IComponentNameProps> {
-  }
+  export default class ComponentName extends React.Component<
+    IComponentNameProps
+  > {}
 }

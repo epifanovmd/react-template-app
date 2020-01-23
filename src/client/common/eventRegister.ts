@@ -26,7 +26,10 @@ class EventRegister {
     const eventName = this.listenersToEvent.get(listenerId);
     if (eventName != null) {
       const listeners = this.getOrCreateListeners(eventName);
-      this.listeners.set(eventName, listeners.filter(i => i.id != listenerId));
+      this.listeners.set(
+        eventName,
+        listeners.filter((i) => i.id != listenerId),
+      );
     }
   }
 
@@ -37,7 +40,7 @@ class EventRegister {
   emitEvent(eventName: string, data?: any): void {
     const listeners = this.listeners.get(eventName);
     if (listeners != null) {
-      listeners.forEach(i => i.callback(data));
+      listeners.forEach((i) => i.callback(data));
     }
   }
 

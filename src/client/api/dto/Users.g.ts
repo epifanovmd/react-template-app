@@ -1,7 +1,7 @@
 /*tslint:disable*/
 
-import {Address} from "./Address.g";
-import {Company} from "./Company.g";
+import { Address } from "./Address.g";
+import { Company } from "./Company.g";
 
 export interface IUser {
   id: string;

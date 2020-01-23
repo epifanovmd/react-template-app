@@ -1,8 +1,8 @@
-import {combineReducers, Reducer} from "redux";
-import {IAppState} from "../IAppState";
-import {usersReducer} from "../../modules/users/usersReducer";
-import {messagesReducer} from "../../modules/messages/messagesReducer";
-import {authReducer} from "../../modules/authentication/AuthReducer";
+import { combineReducers, Reducer } from "redux";
+import { IAppState } from "../IAppState";
+import { usersReducer } from "../../modules/users/usersReducer";
+import { messagesReducer } from "../../modules/messages/messagesReducer";
+import { authReducer } from "../../modules/authentication/AuthReducer";
 
 export type Reducers<T> = {
   [P in keyof T]: Reducer<T[P]>;
@@ -16,5 +16,4 @@ export function createMainReduce(): Reducer<IAppState> {
   };
 
   return combineReducers(_reducers);
-
 }

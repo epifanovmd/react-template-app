@@ -1,7 +1,7 @@
 import express from "express";
 import proxyMiddleware from "http-proxy-middleware";
 import cookieParser from "cookie-parser";
-import {serverRenderer} from "./render";
+import { serverRenderer } from "./render";
 import proxy from "../../proxy.json";
 
 const app = express();

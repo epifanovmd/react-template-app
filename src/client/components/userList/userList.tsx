@@ -1,17 +1,17 @@
-import React, {FC, memo} from "react";
-import {IUser} from "../../api/dto/Users.g";
-import {Table} from "../table/table";
-import {TableHeader} from "../table/tableHeader";
-import {TableRow} from "../table/tableRow";
-import {TableRowCell} from "../table/tableRowCell";
-import {useTranslation} from "react-i18next";
+import React, { FC, memo } from "react";
+import { IUser } from "../../api/dto/Users.g";
+import { Table } from "../table/table";
+import { TableHeader } from "../table/tableHeader";
+import { TableRow } from "../table/tableRow";
+import { TableRowCell } from "../table/tableRowCell";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   users: IUser[];
 }
 
-export const UserList: FC<IProps> = memo(({users}) => {
-  const {t} = useTranslation();
+export const UserList: FC<IProps> = memo(({ users }) => {
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -25,16 +25,17 @@ export const UserList: FC<IProps> = memo(({users}) => {
           </TableRow>
         </TableHeader>
 
-        {
-          users && users.map(item => (
+        {users &&
+          users.map((item) => (
             <TableRow key={item.id}>
               <TableRowCell label={t("username")}>{item.username}</TableRowCell>
-              <TableRowCell label={t("firstName")}>{item.firstName}</TableRowCell>
+              <TableRowCell label={t("firstName")}>
+                {item.firstName}
+              </TableRowCell>
               <TableRowCell label={t("lastName")}>{item.lastName}</TableRowCell>
               <TableRowCell label={t("email")}>{item.email}</TableRowCell>
             </TableRow>
-          ))
-        }
+          ))}
       </Table>
     </div>
   );

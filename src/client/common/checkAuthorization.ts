@@ -1,4 +1,4 @@
-import {decode} from "jsonwebtoken";
+import { decode } from "jsonwebtoken";
 
 export const checkAuthorization = (token: string) => {
   if (token) {

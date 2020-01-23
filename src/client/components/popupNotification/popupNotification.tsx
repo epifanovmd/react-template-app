@@ -1,6 +1,6 @@
-import React, {FC, memo, useCallback, useEffect, useState} from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
 import Modal from "react-responsive-modal";
-import {EventNames, eventRegister} from "../../common/eventRegister";
+import { EventNames, eventRegister } from "../../common/eventRegister";
 // import cn from "classnames";
 // import styles from "./styles.module.scss";
 
@@ -24,9 +24,12 @@ export const PopupNotification: FC = memo(() => {
   });
 
   useEffect(() => {
-    listenerId = eventRegister.addEventListener(EventNames.notification, (data: INotificationPopupData): void => {
-      setState({...data, isOpen: true});
-    });
+    listenerId = eventRegister.addEventListener(
+      EventNames.notification,
+      (data: INotificationPopupData): void => {
+        setState({ ...data, isOpen: true });
+      },
+    );
 
     return () => {
       eventRegister.removeEventListener(listenerId);
@@ -34,10 +37,10 @@ export const PopupNotification: FC = memo(() => {
   }, []);
 
   const onClose = useCallback(() => {
-    setState({...state, isOpen: false});
+    setState({ ...state, isOpen: false });
   }, [state.isOpen]);
 
-  const {title, subtitle, iconType, isOpen} = state;
+  const { title, subtitle, iconType, isOpen } = state;
   if (!isOpen) {
     return null;
   }

@@ -1,4 +1,4 @@
-import {LoadState} from "./loadState";
+import { LoadState } from "./loadState";
 
 export interface IResponse<T> {
   loadState?: LoadState;

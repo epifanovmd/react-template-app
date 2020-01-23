@@ -1,5 +1,5 @@
-import {LoadState} from "../../common/loadState";
-import {IResponse} from "../../common/response";
+import { LoadState } from "../../common/loadState";
+import { IResponse } from "../../common/response";
 
 export interface IMessage {
   recipientId: string;

@@ -1,24 +1,26 @@
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
-import {Provider} from "react-redux";
-import {Router} from "react-router-dom";
-import {createBrowserHistory} from "history";
-import {loadableReady} from "@loadable/component";
+import { Provider } from "react-redux";
+import { Router } from "react-router-dom";
+import { createBrowserHistory } from "history";
+import { loadableReady } from "@loadable/component";
 import App from "./App";
-import {createSimpleStore} from "./store/store";
+import { createSimpleStore } from "./store/store";
 import "./assets/global.module.scss";
-import {initLocalization} from "./localization/localization";
-import {Cookies} from "react-cookie";
+import { initLocalization } from "./localization/localization";
+import { Cookies } from "react-cookie";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();
 
-initLocalization({initLang: cookie.get("i18next")}).finally();
-export const store = createSimpleStore({...window.REDUX_DATA, auth: {token: cookie.get("token")}});
+initLocalization({ initLang: cookie.get("i18next") }).finally();
+export const store = createSimpleStore({
+  ...window.REDUX_DATA,
+  auth: { token: cookie.get("token") },
+});
 
-const renderMethod = typeof window === "undefined" ?
-  ReactDOM.hydrate :
-  ReactDOM.render;
+const renderMethod =
+  typeof window === "undefined" ? ReactDOM.hydrate : ReactDOM.render;
 
 const renderApp = (Comp?: any) => {
   renderMethod(

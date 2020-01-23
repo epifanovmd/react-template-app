@@ -1,11 +1,11 @@
-import {AuthActions} from "./AuthActions";
-import {Success} from "typescript-fsa";
-import {newState} from "../../store/common/newState";
-import {reducerWithInitialState} from "typescript-fsa-reducers";
-import {authInitialState, IAuthState} from "./IAuthState";
-import {LoadState} from "../../common/loadState";
-import {Login} from "../../api/dto/Auth.g";
-import {IUser} from "../../api/dto/Users.g";
+import { AuthActions } from "./AuthActions";
+import { Success } from "typescript-fsa";
+import { newState } from "../../store/common/newState";
+import { reducerWithInitialState } from "typescript-fsa-reducers";
+import { authInitialState, IAuthState } from "./IAuthState";
+import { LoadState } from "../../common/loadState";
+import { Login } from "../../api/dto/Auth.g";
+import { IUser } from "../../api/dto/Users.g";
 import Cookies from "react-cookies";
 
 function AuthStartedHandler(state: IAuthState): IAuthState {
@@ -18,7 +18,10 @@ function AuthStartedHandler(state: IAuthState): IAuthState {
   });
 }
 
-function AuthDoneHandler(state: IAuthState, success: Success<Login, IUser>): IAuthState {
+function AuthDoneHandler(
+  state: IAuthState,
+  success: Success<Login, IUser>,
+): IAuthState {
   return newState(state, {
     token: Cookies.load("token"),
     user: {

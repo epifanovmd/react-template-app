@@ -1,5 +1,5 @@
-import {EventNames, eventRegister} from "./eventRegister";
-import {INotificationPopupData} from "../components/popupNotification/popupNotification";
+import { EventNames, eventRegister } from "./eventRegister";
+import { INotificationPopupData } from "../components/popupNotification/popupNotification";
 
 class Popup {
   error(title: string, message: string): void {

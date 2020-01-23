@@ -1,10 +1,9 @@
-import {RouteComponentProps} from "react-router";
+import { RouteComponentProps } from "react-router";
 import * as H from "history";
 
 export const queryObjectToString = (queryObject: any): string => {
   if (queryObject && Object.keys(queryObject).length > 0) {
-    const queryString = Object
-      .keys(queryObject)
+    const queryString = Object.keys(queryObject)
       .map((key: string) => {
         return `${key}=${queryObject[key]}`;
       })
@@ -40,24 +39,29 @@ interface IUrlProps<T> {
   pathname?: string;
 }
 
-export const pushRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: {
-  history: H.History;
-  location: H.Location<H.LocationState>;
-}): void => {
+export const pushRoute = <T>(
+  { queryParams, pathname }: IUrlProps<T>,
+  RouteProps: {
+    history: H.History;
+    location: H.Location<H.LocationState>;
+  },
+): void => {
   const {
     location,
-    history: {push},
+    history: { push },
   } = RouteProps;
   let search = null;
 
   if (queryParams) {
-
     const query: T = queryStringToObject(location.search);
     const names = Object.keys(queryParams);
 
     names.map((name): void => {
       if (name) {
-        if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
+        if (
+          !(queryParams as any)[name] &&
+          {}.hasOwnProperty.call(query, name)
+        ) {
           delete (query as any)[name];
         } else if ((queryParams as any)[name]) {
           (query as any)[name] = (queryParams as any)[name];
@@ -67,26 +71,33 @@ export const pushRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: 
     search = queryObjectToString(query);
   }
 
-  search && pathname ? push({search, pathname}) :
-  pathname ? push({pathname}) :
-  search && push({search});
+  search && pathname
+    ? push({ search, pathname })
+    : pathname
+    ? push({ pathname })
+    : search && push({ search });
 };
 
-export const replaceRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProps: RouteComponentProps): void => {
+export const replaceRoute = <T>(
+  { queryParams, pathname }: IUrlProps<T>,
+  RouteProps: RouteComponentProps,
+): void => {
   const {
     location,
-    history: {replace},
+    history: { replace },
   } = RouteProps;
   let search = null;
 
   if (queryParams) {
-
     const query: T = queryStringToObject(location.search);
     const names = Object.keys(queryParams);
 
     names.map((name): void => {
       if (name) {
-        if (!(queryParams as any)[name] && {}.hasOwnProperty.call(query, name)) {
+        if (
+          !(queryParams as any)[name] &&
+          {}.hasOwnProperty.call(query, name)
+        ) {
           delete (query as any)[name];
         } else if ((queryParams as any)[name]) {
           (query as any)[name] = (queryParams as any)[name];
@@ -96,7 +107,9 @@ export const replaceRoute = <T>({queryParams, pathname}: IUrlProps<T>, RouteProp
     search = queryObjectToString(query);
   }
 
-  search && pathname ? replace({search, pathname}) :
-    pathname ? replace({pathname}) :
-      search && replace({search});
+  search && pathname
+    ? replace({ search, pathname })
+    : pathname
+    ? replace({ pathname })
+    : search && replace({ search });
 };

@@ -47,6 +47,7 @@ const client = {
     compress: true,
     historyApiFallback: true,
     hot: true,
+    open: true,
     noInfo: false,
     proxy: proxy,
   },

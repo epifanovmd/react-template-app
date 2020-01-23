@@ -23,7 +23,8 @@
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d build",
     "lint": "tslint \"src/**/*{.ts,.tsx}\"",
-    "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\""
+    "lint:fix": "tslint --fix \"src/**/*{.ts,.tsx}\"",
+    "prettier:fix": "prettier --parser typescript --write src/**/*.{json,ts,tsx}"
   },
   "dependencies": {
     "@loadable/component": "^5.11.0",
@@ -56,7 +57,6 @@
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.1"
   },
-  "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@loadable/babel-plugin": "^5.11.0",
@@ -96,19 +96,23 @@
     "file-loader": "^5.0.2",
     "gh-pages": "^2.1.1",
     "http-proxy-middleware": "^0.20.0",
+    "husky": "1.0.1",
     "isomorphic-unfetch": "^3.0.0",
+    "lint-staged": "^10.0.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node": "^13.5.0",
     "node-sass": "^4.13.0",
     "null-loader": "^3.0.0",
     "postcss-loader": "^3.0.0",
+    "prettier": "^1.19.1",
     "redux-devtools-extension": "^2.13.8",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.1.2",
     "terser-webpack-plugin": "^2.3.1",
     "ts-loader": "^6.2.1",
-    "tslint": "^5.20.1",
-    "tslint-react": "^4.1.0",
+    "tslint": "^6.0.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.2.0",
     "tslint-react-hooks": "^2.2.1",
     "typescript": "^3.7.4",
     "typescript-plugin-css-modules": "^2.1.2",
@@ -118,5 +122,18 @@
     "webpack-dev-server": "^3.10.1",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-node-externals": "^1.7.2"
+  },
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "tslint --fix \"src/**/*{.ts,.tsx}\"",
+      "prettier --parser typescript --write src/**/*.{json,ts,tsx}",
+      "git add"
+    ]
   }
 }

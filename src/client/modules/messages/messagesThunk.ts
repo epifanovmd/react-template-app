@@ -3,8 +3,8 @@ import { popup } from "../../common/popup";
 import { SimpleThunk } from "../../common/simpleThunk";
 import { IMessage } from "./IMessagesState";
 
-export class MessagesThunk {
-  static getMessages(callback?: (messages: IMessage[]) => void): SimpleThunk {
+export const MessagesThunk = {
+  getMessages: (callback?: (messages: IMessage[]) => void): SimpleThunk => {
     return async (dispatch, {}, { i18next }) => {
       const params = {};
       dispatch(MessagesActions.getMessages.started(params));
@@ -24,12 +24,12 @@ export class MessagesThunk {
         dispatch(MessagesActions.getMessages.failed({ params, error }));
       }
     };
-  }
+  },
 
-  static getMessage(
+  getMessage: (
     message: IMessage,
     callback?: (messages: IMessage) => void,
-  ): SimpleThunk {
+  ): SimpleThunk => {
     return async (dispatch, {}, { i18next }) => {
       const params = {};
       dispatch(MessagesActions.insertMessage.started(params));
@@ -44,12 +44,12 @@ export class MessagesThunk {
         dispatch(MessagesActions.insertMessage.failed({ params, error }));
       }
     };
-  }
+  },
 
-  static sendMessage(
+  sendMessage: (
     message: IMessage,
     callback?: (messages: IMessage) => void,
-  ): SimpleThunk {
+  ): SimpleThunk => {
     return async (dispatch, {}, { i18next, socket }) => {
       const params = {};
       dispatch(MessagesActions.insertMessage.started(params));
@@ -65,5 +65,5 @@ export class MessagesThunk {
         dispatch(MessagesActions.insertMessage.failed({ params, error }));
       }
     };
-  }
-}
+  },
+};

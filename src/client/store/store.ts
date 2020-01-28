@@ -8,13 +8,24 @@ import { initSocket } from "../socket/initSocket";
 import { SocketThunk } from "../socket/socketThunk";
 
 export const socket: SocketIOClient.Socket = initSocket();
+export interface IExtraArguments {
+  i18next: typeof i18next;
+  socket: SocketIOClient.Socket;
+}
 
 const middleware =
   process.env.NODE_ENV === "development"
     ? composeWithDevTools(
-        applyMiddleware(thunkMiddleware.withExtraArgument({ i18next, socket })),
+        applyMiddleware(
+          thunkMiddleware.withExtraArgument<IExtraArguments>({
+            i18next,
+            socket,
+          }),
+        ),
       )
-    : applyMiddleware(thunkMiddleware.withExtraArgument({ i18next, socket }));
+    : applyMiddleware(
+        thunkMiddleware.withExtraArgument<IExtraArguments>({ i18next, socket }),
+      );
 
 const reducers = createMainReduce();
 

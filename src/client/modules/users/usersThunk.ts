@@ -1,23 +1,23 @@
 import { UsersActions } from "./usersActions";
-import { requestRepository } from "../../api/RequestsRepository.g";
 import { popup } from "../../common/popup";
 import { IUser } from "../../api/dto/Users.g";
 import { SimpleThunk } from "../../common/simpleThunk";
+import { callApi } from "../../store/common/apiActionsAsync";
+import { RequestType } from "../../common/requestType";
 
-export class UsersThunk {
-  static getUsers(callback?: (users: IUser[]) => void): SimpleThunk {
-    return async (dispatch, {}, { i18next }) => {
-      const params = {};
-      dispatch(UsersActions.getUsers.started(params));
-      try {
-        const result = await requestRepository.usersApiRequest.get();
+export const UsersThunk = {
+  getUsers: (callback?: (users: IUser[]) => void): SimpleThunk => {
+    return callApi({
+      url: "users",
+      method: RequestType.GET,
+      params: {},
+      actions: UsersActions.getUsers,
+      onSuccess: ({}, result) => {
         callback && callback(result.data);
-        dispatch(UsersActions.getUsers.done({ params, result }));
-      } catch (error) {
-        popup.error(i18next.t("error"), i18next.t(error.error?.type));
-        console.log("error", error);
-        dispatch(UsersActions.getUsers.failed({ params, error }));
-      }
-    };
-  }
-}
+      },
+      onFail: ({}, {}, { i18next }) => {
+        popup.error(i18next.t("error"), i18next.t("auth_error"));
+      },
+    });
+  },
+};

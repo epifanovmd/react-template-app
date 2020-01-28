@@ -1,16 +1,12 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
 import { IAppState } from "../store/IAppState";
-import i18next from "i18next";
+import { IExtraArguments } from "../store/store";
 
 export type SimpleThunk = ThunkAction<
   Promise<void>,
   IAppState,
-  { i18next: typeof i18next; socket: SocketIOClient.Socket },
+  IExtraArguments,
   Action
 >;
-export type SimpleDispatch = ThunkDispatch<
-  IAppState,
-  { i18next: typeof i18next; socket: SocketIOClient.Socket },
-  Action
->;
+export type SimpleDispatch = ThunkDispatch<IAppState, IExtraArguments, Action>;

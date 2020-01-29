@@ -6,8 +6,8 @@ import { IUser } from "../../api/dto/Users.g";
 import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";
 
-export class AuthThunk {
-  static auth(params: Login, callback?: (user?: IUser) => void): SimpleThunk {
+export const AuthThunk = {
+  auth(params: Login, callback?: (user?: IUser) => void): SimpleThunk {
     return callApi({
       url: "auth/login",
       method: RequestType.POST,
@@ -21,9 +21,9 @@ export class AuthThunk {
         popup.error(i18next.t("error"), i18next.t("auth_error"));
       },
     });
-  }
+  },
 
-  static registration(
+  registration(
     params: Registration,
     callback?: (token: IUser) => void,
   ): SimpleThunk {
@@ -40,5 +40,5 @@ export class AuthThunk {
         popup.error(i18next.t("error"), i18next.t(error.name));
       },
     });
-  }
-}
+  },
+};

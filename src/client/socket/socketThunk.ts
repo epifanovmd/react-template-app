@@ -1,8 +1,8 @@
 import { SimpleThunk } from "../common/simpleThunk";
 import { MessagesThunk } from "../modules/messages/messagesThunk";
 
-export class SocketThunk {
-  static connect(): SimpleThunk {
+export const SocketThunk = {
+  connect(): SimpleThunk {
     return async (dispatch, {}, { socket }) => {
       socket.on("message", (data: any) => {
         console.log(data);
@@ -11,5 +11,5 @@ export class SocketThunk {
         return dispatch(MessagesThunk.getMessage(message));
       });
     };
-  }
-}
+  },
+};

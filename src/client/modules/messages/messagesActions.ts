@@ -2,11 +2,11 @@ import { actionCreator } from "../../store/common/actionCreator";
 import { IEmpty } from "../../common/IEmpty";
 import { IMessage } from "./IMessagesState";
 
-export class MessagesActions {
-  static getMessages = actionCreator.async<IEmpty, IMessage[], Error>(
+export const MessagesActions = {
+  getMessages: actionCreator.async<IEmpty, IMessage[], Error>(
     "MESSAGES/GET_MESSAGES",
-  );
-  static insertMessage = actionCreator.async<IEmpty, IMessage, Error>(
+  ),
+  insertMessage: actionCreator.async<IEmpty, IMessage, Error>(
     "MESSAGES/INSERT_MESSAGES",
-  );
-}
+  ),
+};

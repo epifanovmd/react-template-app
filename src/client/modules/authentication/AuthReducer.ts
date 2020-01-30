@@ -7,6 +7,7 @@ import { LoadState } from "../../common/loadState";
 import { Login } from "../../api/dto/Auth.g";
 import { IUser } from "../../api/dto/Users.g";
 import Cookies from "react-cookies";
+import { IResponse } from "../../api";
 
 function AuthStartedHandler(state: IAuthState): IAuthState {
   return newState(state, {
@@ -20,12 +21,12 @@ function AuthStartedHandler(state: IAuthState): IAuthState {
 
 function AuthDoneHandler(
   state: IAuthState,
-  success: Success<Login, IUser>,
+  { result }: Success<Login, IResponse<IUser>>,
 ): IAuthState {
   return newState(state, {
     token: Cookies.load("token"),
     user: {
-      data: success.result,
+      data: result.data,
       loadState: LoadState.refreshing,
     },
   });

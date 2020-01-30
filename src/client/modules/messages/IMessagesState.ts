@@ -1,5 +1,5 @@
 import { LoadState } from "../../common/loadState";
-import { IResponse } from "../../common/response";
+import { IReduxData } from "../../store/IAppState";
 
 export interface IMessage {
   recipientId: string;
@@ -8,7 +8,7 @@ export interface IMessage {
 }
 
 export interface IMessagesState {
-  messages: IResponse<IMessage[]>;
+  messages: IReduxData<IMessage[]>;
 }
 
 export const messagesInitialState: IMessagesState = {

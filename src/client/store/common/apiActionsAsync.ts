@@ -35,25 +35,24 @@ export const callApi = <P, R>({
   return async (dispatch, getState, extraArguments) => {
     dispatch(actions.started(params));
 
-    const { result, status, message } = await baseFetch<P, R>(
+    const { data, status, message } = await baseFetch<P, R>(
       url,
       params,
       method,
       headers,
     );
 
-    if (status >= 400 || result == null) {
+    if (status >= 400 || data == null) {
       const error = {
         name: status.toString(),
-        message:
-          ({ ...result } as Error).message || message || status.toString(),
+        message: message || status.toString(),
       };
 
       dispatch(actions.failed({ params, error }));
       onFail && onFail(error, getState, extraArguments);
     } else {
-      dispatch(actions.done({ params, result }));
-      onSuccess && onSuccess(getState, result, extraArguments);
+      dispatch(actions.done({ params, result: data }));
+      onSuccess && onSuccess(getState, data, extraArguments);
     }
   };
 };

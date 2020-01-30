@@ -7,7 +7,7 @@ import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";
 
 export const AuthThunk = {
-  auth(params: Login, callback?: (user?: IUser) => void): SimpleThunk {
+  auth(params: Login, callback?: (user: IUser) => void): SimpleThunk {
     return callApi({
       url: "auth/login",
       method: RequestType.POST,
@@ -15,7 +15,7 @@ export const AuthThunk = {
       actions: AuthActions.auth,
       onSuccess: ({}, result, { socket }) => {
         socket.open();
-        callback && callback(result);
+        callback && callback(result.data);
       },
       onFail: ({}, {}, { i18next }) => {
         popup.error(i18next.t("error"), i18next.t("auth_error"));
@@ -34,7 +34,7 @@ export const AuthThunk = {
       actions: AuthActions.registration,
       onSuccess: ({}, result, { socket }) => {
         socket.open();
-        callback && callback(result);
+        callback && callback(result.data);
       },
       onFail: (error, {}, { i18next }) => {
         popup.error(i18next.t("error"), i18next.t(error.name));

@@ -2,10 +2,10 @@ import querystring from "query-string";
 import { RequestType } from "../common/requestType";
 
 export interface IResponse<R> {
-  result: R | null;
+  data: R;
   status: number;
-  error: Error | null;
-  message: string | null;
+  error?: Error;
+  message?: string;
 }
 
 export const baseFetch = async <P, R>(
@@ -37,10 +37,10 @@ export const baseFetch = async <P, R>(
     const json = (await res?.json()) || {};
     const status = res.status;
 
-    return { result: json as R, status, error: null, message: null };
+    return { data: json as R, status };
   } catch (error) {
     return {
-      result: null,
+      data: {} as R,
       status: 500,
       error: error as Error,
       message: error.message,

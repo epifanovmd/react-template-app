@@ -1,10 +1,10 @@
 import Cookies from "react-cookies";
-import { IResponse } from "../../common/response";
 import { LoadState } from "../../common/loadState";
 import { IUser } from "../../api/dto/Users.g";
+import { IReduxData } from "../../store/IAppState";
 
 export interface IAuthState {
-  user: IResponse<IUser | {}>;
+  user: IReduxData<IUser | {}>;
   token: string;
 }
 

@@ -21,7 +21,7 @@
     "no-import-side-effect": [
       true,
       {
-        "ignore-module": "(\\.html|\\.css|\\.scss|bootstrap|moment/locale/ka|i18next)$"
+        "ignore-module": "(\\.html|\\.css|\\.scss|\\.less|bootstrap|moment/locale/ka|i18next)$"
       }
     ],
     "no-internal-module": true,

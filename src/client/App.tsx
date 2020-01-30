@@ -6,9 +6,11 @@ import { Header } from "./components/layouts/header/header";
 import { useTranslation } from "react-i18next";
 import loadable from "@loadable/component";
 import { AuthorizationMiddleware } from "./middlewares/authorization";
+import { Spin } from "antd";
 const Authorization = loadable(() =>
   import("./modules/authentication/authorization/Authorization"),
 );
+import "../../node_modules/antd/dist/antd.css";
 
 const App = () => {
   const { i18n } = useTranslation();
@@ -17,6 +19,7 @@ const App = () => {
     <div key={i18n.language} className="container">
       <PopupNotification />
       <Header />
+      <Spin />
       <br />
       <Switch>
         {routes.map((route) => (

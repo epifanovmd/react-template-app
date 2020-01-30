@@ -16,20 +16,20 @@ const baseConfigClient = {
   },
   output: {
     path: path.resolve(__dirname, "build"),
-    filename: IS_SSR ?
-      IS_PRODUCTION ?
-        "client/[contenthash].js" :
-        "client/[name].js" :
-      IS_PRODUCTION ?
-        "[contenthash].js" :
-        "[name].js",
-    chunkFilename: IS_SSR ?
-      IS_PRODUCTION ?
-        "client/[contenthash].chunk.js" :
-        "client/[name].chunk.js" :
-      IS_PRODUCTION ?
-        "[contenthash].chunk.js" :
-        "[name].chunk.js",
+    filename: IS_SSR
+      ? IS_PRODUCTION
+        ? "client/[contenthash].js"
+        : "client/[name].js"
+      : IS_PRODUCTION
+      ? "[contenthash].js"
+      : "[name].js",
+    chunkFilename: IS_SSR
+      ? IS_PRODUCTION
+        ? "client/[contenthash].chunk.js"
+        : "client/[name].chunk.js"
+      : IS_PRODUCTION
+      ? "[contenthash].chunk.js"
+      : "[name].chunk.js",
     publicPath: "/",
   },
   node: {
@@ -66,10 +66,7 @@ const baseLoaders = {
   ts: {
     test: /\.tsx?$/,
     exclude: /node_modules/,
-    use: [
-      'babel-loader',
-      'ts-loader'
-    ],
+    use: ["babel-loader", "ts-loader"],
   },
   url: {
     test: /\.(pdf|jpg|png|gif|svg|ico)$/,
@@ -87,24 +84,33 @@ const baseLoaders = {
     },
   },
   font: [
-    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff" },
-    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff" },
-    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream" },
+    {
+      test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+      loader: "file-loader?mimetype=application/font-woff",
+    },
+    {
+      test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+      loader: "file-loader?mimetype=application/font-woff",
+    },
+    {
+      test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+      loader: "file-loader?mimetype=application/octet-stream",
+    },
     { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
   ],
   scss: {
-    test: /\.(sa|sc|c)ss$/,
+    test: /\.(sa|sc)ss$/,
     use: [
       {
-        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : 'style-loader',
+        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
       },
       {
         loader: "css-loader",
         options: {
-          sourceMap: true,
           modules: {
             localIdentName: "[local]--[hash:base64:5]",
           },
+          sourceMap: true,
         },
       },
       {
@@ -126,6 +132,62 @@ const baseLoaders = {
       },
     ],
   },
+  less: {
+    test: /\.less$/,
+    use: [
+      {
+        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+      },
+      {
+        loader: "css-loader",
+        options: {
+          sourceMap: true,
+        },
+      },
+      {
+        loader: "postcss-loader",
+        options: {
+          plugins: [
+            autoprefixer({
+              overrideBrowserslist: ["cover 99.5%"],
+            }),
+          ],
+          sourceMap: true,
+        },
+      },
+      {
+        loader: "less-loader", // compiles Less to CSS,
+        options: {
+          javascriptEnabled: true,
+        },
+      },
+    ],
+  },
+  css: {
+    test: /\.css$/,
+    use: [
+      {
+        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+      },
+      {
+        loader: "css-loader",
+        options: {
+          sourceMap: true,
+        },
+      },
+      {
+        loader: "postcss-loader",
+        options: {
+          plugins: [
+            autoprefixer({
+              overrideBrowserslist: ["cover 99.5%"],
+            }),
+          ],
+          sourceMap: true,
+        },
+      },
+    ],
+  },
   scss_null_loader: {
     test: /\.(sa|sc|c)ss$/,
     loader: "null-loader",
@@ -133,15 +195,19 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  ...(
-    IS_PRODUCTION ?
-      [new MiniCssExtractPlugin({
-        filename: IS_SSR ? "client/styles/[contenthash].css" : "styles/[contenthash].css",
-        chunkFilename: IS_SSR ? "client/styles/[contenthash].chunk.css" : "styles/[contenthash].chunk.css",
-        ignoreOrder: false,
-      })] :
-      []
-  ),
+  ...(IS_PRODUCTION
+    ? [
+        new MiniCssExtractPlugin({
+          filename: IS_SSR
+            ? "client/styles/[contenthash].css"
+            : "styles/[contenthash].css",
+          chunkFilename: IS_SSR
+            ? "client/styles/[contenthash].chunk.css"
+            : "styles/[contenthash].chunk.css",
+          ignoreOrder: false,
+        }),
+      ]
+    : []),
   new webpack.DefinePlugin({
     "process.env.SSR": JSON.stringify(process.env.SSR),
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),

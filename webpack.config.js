@@ -24,6 +24,8 @@ const client = {
     rules: [
       baseLoaders.ts,
       baseLoaders.scss,
+      baseLoaders.less,
+      baseLoaders.css,
       ...baseLoaders.font,
       baseLoaders.file,
     ],

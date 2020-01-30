@@ -5,10 +5,10 @@ import { CustomInput } from "../../../components/controls/customInput/customInpu
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import { AuthThunk } from "../AuthThunk";
-import { queryStringToObject } from "../../../common/query";
 import { checkAuthorization } from "../../../common/checkAuthorization";
 import { IAppState } from "../../../store/IAppState";
 import { useHistory, useLocation } from "react-router";
+import { QueryString } from "../../../common/query";
 
 const Authorization: FC = memo(() => {
   const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ const Authorization: FC = memo(() => {
 
   useEffect(() => {
     if (checkAuthorization(token)) {
-      const query = queryStringToObject<{ redirect: string }>(search);
+      const query = QueryString.parse<{ redirect: string }>(search);
       query.redirect
         ? history.replace(`${query.redirect}`)
         : history.replace("/");

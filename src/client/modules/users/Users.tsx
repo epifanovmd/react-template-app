@@ -1,15 +1,16 @@
 import React, { FC, memo, useEffect } from "react";
 import { UserList } from "../../components/userList/userList";
 import { useHistory, useLocation, useRouteMatch } from "react-router";
-import { pushRoute, queryStringToObject } from "../../common/query";
 import Helmet from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { UsersThunk } from "./usersThunk";
 import { IAppState } from "../../store/IAppState";
 import { useTranslation } from "react-i18next";
+import { QueryString } from "../../common/query";
+import { useRoute } from "../../common/useRoute";
 
 export interface IUsersQuery {
-  search: string;
+  search?: string;
 }
 
 interface IProps {}
@@ -18,7 +19,7 @@ interface IRouteParams {
   id: string;
 }
 
-const UsersStatic: FC<IProps> = memo(() => {
+const Users: FC<IProps> = memo(() => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,20 +33,16 @@ const UsersStatic: FC<IProps> = memo(() => {
   }, []);
 
   const { t } = useTranslation();
-  const location = useLocation();
-  const history = useHistory();
   const match = useRouteMatch<IRouteParams>();
+  const { push } = useRoute<IUsersQuery>();
 
-  const query = queryStringToObject<IUsersQuery>(location.search);
+  const query = QueryString.parse<IUsersQuery>(location.search);
 
   console.log("query", query.search);
   match && console.log("match id", match.params.id);
 
   const setQuery = (): void => {
-    pushRoute<IUsersQuery>(
-      { queryParams: { search: "22" } },
-      { history, location },
-    );
+    push({ queryParams: { search: "22" }, pathname: "111" });
   };
   const users = useSelector((state: IAppState) => state.usersPage.users);
 
@@ -61,4 +58,4 @@ const UsersStatic: FC<IProps> = memo(() => {
   );
 });
 
-export default UsersStatic;
+export default Users;

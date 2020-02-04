@@ -1,10 +1,10 @@
 import { actionCreator } from "../../store/common/actionCreator";
 import { IEmpty } from "../../common/IEmpty";
-import { IUser } from "../../api/dto/Users.g";
+import { IUserDto } from "../../api/dto/Users.g";
 import { IResponse } from "../../api";
 
 export const UsersActions = {
-  getUsers: actionCreator.async<IEmpty, IResponse<IUser[]>, Error>(
+  getUsers: actionCreator.async<IEmpty, IResponse<IUserDto>, Error>(
     "Users/GET_USERS",
   ),
 };

@@ -1,5 +1,5 @@
 import { LoadState } from "../../common/loadState";
-import { IUser } from "../../api/dto/Users.g";
+import {IUser} from "../../api/dto/Users.g";
 import { IReduxData } from "../../store/IAppState";
 
 export interface IUsersState {

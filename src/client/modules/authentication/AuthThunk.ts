@@ -2,12 +2,12 @@ import { SimpleThunk } from "../../common/simpleThunk";
 import { popup } from "../../common/popup";
 import { Login, Registration } from "../../api/dto/Auth.g";
 import { AuthActions } from "./AuthActions";
-import { IUser } from "../../api/dto/Users.g";
+import { IUserDto } from "../../api/dto/Users.g";
 import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";
 
 export const AuthThunk = {
-  auth(params: Login, callback?: (user: IUser) => void): SimpleThunk {
+  auth(params: Login, callback?: (user: IUserDto) => void): SimpleThunk {
     return callApi({
       url: "auth/login",
       method: RequestType.POST,
@@ -25,7 +25,7 @@ export const AuthThunk = {
 
   registration(
     params: Registration,
-    callback?: (token: IUser) => void,
+    callback?: (token: IUserDto) => void,
   ): SimpleThunk {
     return callApi({
       url: "auth/registration",

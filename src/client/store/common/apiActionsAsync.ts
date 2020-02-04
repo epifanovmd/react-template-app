@@ -2,7 +2,7 @@ import { AsyncActionCreators } from "typescript-fsa";
 import { IAppState } from "../IAppState";
 import { RequestType } from "../../common/requestType";
 import { SimpleThunk } from "../../common/simpleThunk";
-import { baseFetch } from "../../api";
+import {baseFetch, IResponse} from "../../api";
 import { IExtraArguments } from "../store";
 
 export interface IFetchParams<P, R> {
@@ -10,10 +10,10 @@ export interface IFetchParams<P, R> {
   url: string;
   method: RequestType;
   headers?: { [key: string]: string };
-  actions: AsyncActionCreators<P, R, Error>;
+  actions: AsyncActionCreators<P, IResponse<R>, Error>;
   onSuccess?: (
     getState: () => IAppState,
-    result: R,
+    result: IResponse<R>,
     extraArguments: IExtraArguments,
   ) => void;
   onFail?: (
@@ -51,8 +51,8 @@ export const callApi = <P, R>({
       dispatch(actions.failed({ params, error }));
       onFail && onFail(error, getState, extraArguments);
     } else {
-      dispatch(actions.done({ params, result: data }));
-      onSuccess && onSuccess(getState, data, extraArguments);
+      dispatch(actions.done({ params, result: {data, message, status} }));
+      onSuccess && onSuccess(getState, {data, message, status}, extraArguments);
     }
   };
 };

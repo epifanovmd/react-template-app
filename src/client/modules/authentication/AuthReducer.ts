@@ -5,7 +5,7 @@ import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { authInitialState, IAuthState } from "./IAuthState";
 import { LoadState } from "../../common/loadState";
 import { Login } from "../../api/dto/Auth.g";
-import { IUser } from "../../api/dto/Users.g";
+import { IUserDto } from "../../api/dto/Users.g";
 import Cookies from "react-cookies";
 import { IResponse } from "../../api";
 
@@ -21,7 +21,7 @@ function AuthStartedHandler(state: IAuthState): IAuthState {
 
 function AuthDoneHandler(
   state: IAuthState,
-  { result }: Success<Login, IResponse<IUser>>,
+  { result }: Success<Login, IResponse<IUserDto>>,
 ): IAuthState {
   return newState(state, {
     token: Cookies.load("token"),

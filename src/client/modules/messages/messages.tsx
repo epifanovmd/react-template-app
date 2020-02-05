@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { IAppState } from "../../store/IAppState";
 import { useTranslation } from "react-i18next";
 import Helmet from "react-helmet";
-import { MessagesThunk } from "./messagesThunk";
+import { MessagesAsyncActions } from "./messagesAsyncActions";
 
 interface IProps {}
 
@@ -27,7 +27,7 @@ const Messages: FC<IProps> = memo(() => {
         message: messageString,
       };
 
-      dispatch(MessagesThunk.sendMessage(message));
+      dispatch(MessagesAsyncActions.sendMessage(message));
     },
     [state.name],
   );

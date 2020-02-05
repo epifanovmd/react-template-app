@@ -5,7 +5,7 @@ import { IAppState } from "./IAppState";
 import { composeWithDevTools } from "redux-devtools-extension";
 import i18next from "i18next";
 import { initSocket } from "../socket/initSocket";
-import { SocketThunk } from "../socket/socketThunk";
+import { SocketAsyncActions } from "../socket/socketAsyncActions";
 
 export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {
@@ -35,7 +35,7 @@ export const createSimpleStore = (initialState?: IAppState) => {
     initialState,
     middleware,
   );
-  store.dispatch(SocketThunk.connect());
+  store.dispatch(SocketAsyncActions.connect());
 
   return store;
 };

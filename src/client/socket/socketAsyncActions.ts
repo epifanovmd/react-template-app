@@ -1,14 +1,14 @@
 import { SimpleThunk } from "../common/simpleThunk";
-import { MessagesThunk } from "../modules/messages/messagesThunk";
+import { MessagesAsyncActions } from "../modules/messages/messagesAsyncActions";
 
-export const SocketThunk = {
+export const SocketAsyncActions = {
   connect(): SimpleThunk {
     return async (dispatch, {}, { socket }) => {
       socket.on("message", (data: any) => {
         console.log(data);
         const message = JSON.parse(data);
 
-        return dispatch(MessagesThunk.getMessage(message));
+        return dispatch(MessagesAsyncActions.getMessage(message));
       });
     };
   },

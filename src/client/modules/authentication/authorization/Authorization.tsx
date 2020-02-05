@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CustomInput } from "../../../components/controls/customInput/customInput";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
-import { AuthThunk } from "../AuthThunk";
+import { AuthAsyncActions } from "../AuthAsyncActions";
 import { checkAuthorization } from "../../../common/checkAuthorization";
 import { IAppState } from "../../../store/IAppState";
 import { useHistory, useLocation } from "react-router";
@@ -42,7 +42,7 @@ const Authorization: FC = memo(() => {
     },
     onSubmit: (submitValues): void => {
       console.log(submitValues);
-      dispatch(AuthThunk.auth(submitValues, () => {}));
+      dispatch(AuthAsyncActions.auth(submitValues, () => {}));
     },
     validate: (validateValues): Partial<typeof validateValues> => {
       const validateErrors: Partial<typeof validateValues> = {};

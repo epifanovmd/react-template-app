@@ -6,7 +6,7 @@ import { IUserDto } from "../../api/dto/Users.g";
 import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";
 
-export const AuthThunk = {
+export const AuthAsyncActions = {
   auth(params: Login, callback?: (user: IUserDto) => void): SimpleThunk {
     return callApi({
       url: "auth/login",

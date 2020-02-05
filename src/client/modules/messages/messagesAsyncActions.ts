@@ -3,7 +3,7 @@ import { popup } from "../../common/popup";
 import { SimpleThunk } from "../../common/simpleThunk";
 import { IMessage } from "./IMessagesState";
 
-export const MessagesThunk = {
+export const MessagesAsyncActions = {
   getMessages: (callback?: (messages: IMessage[]) => void): SimpleThunk => {
     return async (dispatch, {}, { i18next }) => {
       const params = {};

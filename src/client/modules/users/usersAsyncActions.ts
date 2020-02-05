@@ -5,7 +5,7 @@ import { SimpleThunk } from "../../common/simpleThunk";
 import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";
 
-export const UsersThunk = {
+export const UsersAsyncActions = {
   getUsers: (callback?: (users: IUser[]) => void): SimpleThunk => {
     return callApi({
       url: "users",

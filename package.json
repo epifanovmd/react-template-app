@@ -40,6 +40,7 @@
     "i18next-xhr-backend": "^3.2.2",
     "jsonwebtoken": "^8.5.1",
     "luxon": "^1.21.3",
+    "query-string": "^6.10.1",
     "react": "^16.12.0",
     "react-cookie": "^4.0.1",
     "react-cookies": "^0.1.1",

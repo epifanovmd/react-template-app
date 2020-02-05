@@ -1,5 +1,5 @@
 import { RequestType } from "../common/requestType";
-import { QueryString } from "../common/query";
+import querystring from "query-string";
 
 export interface IResponse<R> {
   data: R;
@@ -21,7 +21,7 @@ export const baseFetch = async <P, R>(
   const urlResult =
     method !== RequestType.GET
       ? `/api/${url}`
-      : `/api/${url}${hasParams ? "?" : ""}${QueryString.stringify(params)}`;
+      : `/api/${url}${hasParams ? "?" : ""}${querystring.stringify(params)}`;
 
   try {
     const res = await fetch(urlResult, {

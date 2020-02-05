@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { SimpleThunk } from "./common/simpleThunk";
-import { UsersThunk } from "./modules/users/usersThunk";
+import { UsersAsyncActions } from "./modules/users/usersAsyncActions";
 import loadable from "@loadable/component";
 
 const Users = loadable(() => import("./modules/users/Users"));
@@ -27,7 +27,7 @@ export const routes: IRoute[] = [
     path: "/",
     component: Users,
     exact: true,
-    getInitialData: UsersThunk.getUsers(),
+    getInitialData: UsersAsyncActions.getUsers(),
   },
   {
     path: "/messages",

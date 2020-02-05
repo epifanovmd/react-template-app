@@ -8,7 +8,7 @@ import { AuthThunk } from "../AuthThunk";
 import { checkAuthorization } from "../../../common/checkAuthorization";
 import { IAppState } from "../../../store/IAppState";
 import { useHistory, useLocation } from "react-router";
-import { QueryString } from "../../../common/query";
+import querystring from "query-string";
 
 const Authorization: FC = memo(() => {
   const { t, i18n } = useTranslation();
@@ -19,7 +19,7 @@ const Authorization: FC = memo(() => {
 
   useEffect(() => {
     if (checkAuthorization(token)) {
-      const query = QueryString.parse<{ redirect: string }>(search);
+      const query = querystring.parse(search);
       query.redirect
         ? history.replace(`${query.redirect}`)
         : history.replace("/");

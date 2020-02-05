@@ -1,6 +1,6 @@
 import { UsersActions } from "./usersActions";
 import { popup } from "../../common/popup";
-import {IUser, IUserDto} from "../../api/dto/Users.g";
+import { IUser, IUserDto } from "../../api/dto/Users.g";
 import { SimpleThunk } from "../../common/simpleThunk";
 import { callApi } from "../../store/common/apiActionsAsync";
 import { RequestType } from "../../common/requestType";

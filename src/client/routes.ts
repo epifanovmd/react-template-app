@@ -1,7 +1,7 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { SimpleThunk } from "./common/simpleThunk";
-import { UsersAsyncActions } from "./modules/users/usersAsyncActions";
+import { SimpleThunk } from "Common/simpleThunk";
+import { UsersAsyncActions } from "Modules/users/usersAsyncActions";
 import loadable from "@loadable/component";
 
 const Users = loadable(() => import("./modules/users/Users"));

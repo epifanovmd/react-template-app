@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react";
-import { IUser, IUserDto } from "../../api/dto/Users.g";
+import { IUser } from "Api/dto/Users.g";
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";
 import { TableRow } from "../table/tableRow";

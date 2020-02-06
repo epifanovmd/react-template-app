@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
     "plugins": [{ "name": "typescript-plugin-css-modules" }],
+    "paths": {
+      "@/*": ["src/client/*"],
+      "Store/*": ["src/client/store/*"],
+      "Components/*": ["src/client/components/*"],
+      "Api/*": ["src/client/api/*"],
+      "Modules/*": ["src/client/modules/*"],
+      "Common/*": ["src/client/common/*"]
+    },
     "target": "es5",
     "module": "esnext",
     "lib": [

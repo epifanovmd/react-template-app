@@ -1,17 +1,17 @@
 import React, { FC, memo, useEffect } from "react";
-import { useForm } from "../../../common/useForm";
+import { useForm } from "Common/useForm";
 import { useDispatch, useSelector } from "react-redux";
-import { CustomInput } from "../../../components/controls/customInput/customInput";
 import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 import { AuthAsyncActions } from "../AuthAsyncActions";
-import { checkAuthorization } from "../../../common/checkAuthorization";
-import { IAppState } from "../../../store/IAppState";
+import { checkAuthorization } from "Common/checkAuthorization";
+import { IAppState } from "Store/IAppState";
 import { useHistory, useLocation } from "react-router";
 import querystring from "query-string";
+import { CustomInput } from "Components/controls/customInput/customInput";
 
 const Authorization: FC = memo(() => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { search } = useLocation();
   const history = useHistory();
 

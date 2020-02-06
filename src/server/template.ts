@@ -1,5 +1,5 @@
 import serialize from "serialize-javascript";
-import { IAppState } from "../client/store/IAppState";
+import { IAppState } from "Store/IAppState";
 import { HelmetData } from "react-helmet";
 import { ChunkExtractor } from "@loadable/server";
 
@@ -11,7 +11,7 @@ export const template = (
 ) => {
   return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -8,6 +8,15 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 const IS_SSR = process.env.SSR;
 
+const alias = {
+  "@": path.resolve(__dirname, `src/client`),
+  Store: path.resolve(__dirname, `src/client/store`),
+  Api: path.resolve(__dirname, `src/client/api`),
+  Modules: path.resolve(__dirname, `src/client/modules`),
+  Common: path.resolve(__dirname, `src/client/common`),
+  Components: path.resolve(__dirname, `src/client/components`),
+};
+
 const baseConfigClient = {
   name: "client",
   target: "web",
@@ -21,15 +30,15 @@ const baseConfigClient = {
         ? "client/[contenthash].js"
         : "client/[name].js"
       : IS_PRODUCTION
-      ? "[contenthash].js"
-      : "[name].js",
+        ? "[contenthash].js"
+        : "[name].js",
     chunkFilename: IS_SSR
       ? IS_PRODUCTION
         ? "client/[contenthash].chunk.js"
         : "client/[name].chunk.js"
       : IS_PRODUCTION
-      ? "[contenthash].chunk.js"
-      : "[name].chunk.js",
+        ? "[contenthash].chunk.js"
+        : "[name].chunk.js",
     publicPath: "/",
   },
   node: {
@@ -38,6 +47,7 @@ const baseConfigClient = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
+    alias
   },
   externals: "node_modules",
 };
@@ -58,6 +68,7 @@ const baseConfigServer = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
+    alias
   },
   externals: [nodeExternals()],
 };
@@ -197,16 +208,16 @@ const baseLoaders = {
 const basePlugins = [
   ...(IS_PRODUCTION
     ? [
-        new MiniCssExtractPlugin({
-          filename: IS_SSR
-            ? "client/styles/[contenthash].css"
-            : "styles/[contenthash].css",
-          chunkFilename: IS_SSR
-            ? "client/styles/[contenthash].chunk.css"
-            : "styles/[contenthash].chunk.css",
-          ignoreOrder: false,
-        }),
-      ]
+      new MiniCssExtractPlugin({
+        filename: IS_SSR
+          ? "client/styles/[contenthash].css"
+          : "styles/[contenthash].css",
+        chunkFilename: IS_SSR
+          ? "client/styles/[contenthash].chunk.css"
+          : "styles/[contenthash].chunk.css",
+        ignoreOrder: false,
+      }),
+    ]
     : []),
   new webpack.DefinePlugin({
     "process.env.SSR": JSON.stringify(process.env.SSR),

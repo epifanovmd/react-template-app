@@ -1,5 +1,5 @@
-import { LoadState } from "../../common/loadState";
-import { IReduxData } from "../../store/IAppState";
+import { LoadState } from "Common/loadState";
+import { IReduxData } from "Store/IAppState";
 
 export interface IMessage {
   recipientId: string;

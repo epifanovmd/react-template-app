@@ -1,7 +1,7 @@
-import { actionCreator } from "../../store/common/actionCreator";
-import { IEmpty } from "../../common/IEmpty";
-import { IUserDto } from "../../api/dto/Users.g";
-import { IResponse } from "../../api";
+import { actionCreator } from "Store/common/actionCreator";
+import { IEmpty } from "Common/IEmpty";
+import { IUserDto } from "Api/dto/Users.g";
+import { IResponse } from "@/api";
 
 export const UsersActions = {
   getUsers: actionCreator.async<IEmpty, IResponse<IUserDto>, Error>(

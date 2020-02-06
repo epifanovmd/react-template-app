@@ -5,10 +5,10 @@ import {
   messagesInitialState,
 } from "./IMessagesState";
 import { MessagesActions } from "./messagesActions";
-import { newState } from "../../store/common/newState";
-import { LoadState } from "../../common/loadState";
+import { newState } from "Store/common/newState";
+import { LoadState } from "Common/loadState";
 import { Success } from "typescript-fsa";
-import { IEmpty } from "../../common/IEmpty";
+import { IEmpty } from "Common/IEmpty";
 
 function getMessagesStartedHandler(state: IMessagesState) {
   return newState(state, {

@@ -6,17 +6,17 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { ChatMessage } from "../../components/messages/message/chatMessage";
-import { ChatInput } from "../../components/messages/messageInput/chatInput";
+import { ChatMessage } from "Components/messages/message/chatMessage";
+import { ChatInput } from "Components/messages/messageInput/chatInput";
 import { useDispatch, useSelector } from "react-redux";
-import { IAppState } from "../../store/IAppState";
+import { IAppState } from "Store/IAppState";
 import { useTranslation } from "react-i18next";
 import Helmet from "react-helmet";
 import { MessagesAsyncActions } from "./messagesAsyncActions";
-import { Table } from "../../components/table/table";
-import { TableHeader } from "../../components/table/tableHeader";
-import { TableRowCell } from "../../components/table/tableRowCell";
-import { TableRow } from "../../components/table/tableRow";
+import { Table } from "Components/table/table";
+import { TableHeader } from "Components/table/tableHeader";
+import { TableRowCell } from "Components/table/tableRowCell";
+import { TableRow } from "Components/table/tableRow";
 
 import styles from "./styles.module.scss";
 import { UsersAsyncActions } from "../users/usersAsyncActions";

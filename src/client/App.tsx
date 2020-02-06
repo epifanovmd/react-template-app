@@ -1,8 +1,8 @@
-import { PopupNotification } from "./components/popupNotification/popupNotification";
+import { PopupNotification } from "Components/popupNotification/popupNotification";
 import { Route, Switch } from "react-router-dom";
-import React, { FC } from "react";
+import React from "react";
 import { routes } from "./routes";
-import { Header } from "./components/layouts/header/header";
+import { Header } from "Components/layouts/header/header";
 import { useTranslation } from "react-i18next";
 import loadable from "@loadable/component";
 import { AuthorizationMiddleware } from "./middlewares/authorization";

@@ -1,4 +1,4 @@
-import { RequestType } from "../common/requestType";
+import { RequestType } from "Common/requestType";
 import querystring from "query-string";
 
 export interface IResponse<R> {

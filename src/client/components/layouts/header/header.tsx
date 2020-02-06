@@ -3,9 +3,9 @@ import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import styles from "./styles.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthActions } from "../../../modules/authentication/AuthActions";
-import { checkAuthorization } from "../../../common/checkAuthorization";
-import { IAppState } from "../../../store/IAppState";
+import { AuthActions } from "Modules/authentication/AuthActions";
+import { checkAuthorization } from "Common/checkAuthorization";
+import { IAppState } from "Store/IAppState";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();

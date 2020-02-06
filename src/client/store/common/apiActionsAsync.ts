@@ -1,7 +1,7 @@
 import { AsyncActionCreators } from "typescript-fsa";
 import { IAppState } from "../IAppState";
-import { RequestType } from "../../common/requestType";
-import { SimpleThunk } from "../../common/simpleThunk";
+import { RequestType } from "Common/requestType";
+import { SimpleThunk } from "Common/simpleThunk";
 import { baseFetch, IResponse } from "../../api";
 import { IExtraArguments } from "../store";
 

@@ -1,10 +1,10 @@
-import { SimpleThunk } from "../../common/simpleThunk";
-import { popup } from "../../common/popup";
-import { Login, Registration } from "../../api/dto/Auth.g";
+import { SimpleThunk } from "Common/simpleThunk";
+import { popup } from "Common/popup";
+import { Login, Registration } from "Api/dto/Auth.g";
 import { AuthActions } from "./AuthActions";
-import { IUserDto } from "../../api/dto/Users.g";
-import { callApi } from "../../store/common/apiActionsAsync";
-import { RequestType } from "../../common/requestType";
+import { IUserDto } from "Api/dto/Users.g";
+import { callApi } from "Store/common/apiActionsAsync";
+import { RequestType } from "Common/requestType";
 
 export const AuthAsyncActions = {
   auth(params: Login, callback?: (user: IUserDto) => void): SimpleThunk {

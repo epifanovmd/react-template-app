@@ -1,6 +1,6 @@
 import { MessagesActions } from "./messagesActions";
-import { popup } from "../../common/popup";
-import { SimpleThunk } from "../../common/simpleThunk";
+import { popup } from "Common/popup";
+import { SimpleThunk } from "Common/simpleThunk";
 import { IMessage } from "./IMessagesState";
 
 export const MessagesAsyncActions = {

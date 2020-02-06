@@ -1,5 +1,5 @@
-import { SimpleThunk } from "../common/simpleThunk";
-import { MessagesAsyncActions } from "../modules/messages/messagesAsyncActions";
+import { SimpleThunk } from "Common/simpleThunk";
+import { MessagesAsyncActions } from "Modules/messages/messagesAsyncActions";
 
 export const SocketAsyncActions = {
   connect(): SimpleThunk {

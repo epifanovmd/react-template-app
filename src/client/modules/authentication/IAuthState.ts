@@ -1,7 +1,7 @@
 import Cookies from "react-cookies";
-import { LoadState } from "../../common/loadState";
-import { IUserDto } from "../../api/dto/Users.g";
-import { IReduxData } from "../../store/IAppState";
+import { LoadState } from "Common/loadState";
+import { IUserDto } from "Api/dto/Users.g";
+import { IReduxData } from "Store/IAppState";
 
 export interface IAuthState {
   user: IReduxData<IUserDto | {}>;

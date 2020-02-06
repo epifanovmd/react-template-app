@@ -1,8 +1,8 @@
 import { Request, Response } from "express-serve-static-core";
-import { createSimpleStore } from "../client/store/store";
-import { SimpleDispatch, SimpleThunk } from "../client/common/simpleThunk";
-import { routes } from "../client/routes";
-import { initLocalization } from "../client/localization/localization";
+import { createSimpleStore } from "Store/store";
+import { SimpleDispatch, SimpleThunk } from "Common/simpleThunk";
+import { routes } from "@/routes";
+import { initLocalization } from "@/localization/localization";
 import { I18nextProvider } from "react-i18next";
 import i18next from "i18next";
 import { Provider as ReduxProvider } from "react-redux";
@@ -15,7 +15,7 @@ import { StaticRouter } from "react-router-dom";
 import { matchPath } from "react-router";
 import path from "path";
 import { ChunkExtractor } from "@loadable/server";
-import { checkAuthorization } from "../client/common/checkAuthorization";
+import { checkAuthorization } from "Common/checkAuthorization";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];

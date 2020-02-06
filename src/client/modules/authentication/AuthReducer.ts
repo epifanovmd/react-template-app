@@ -1,13 +1,13 @@
 import { AuthActions } from "./AuthActions";
 import { Success } from "typescript-fsa";
-import { newState } from "../../store/common/newState";
+import { newState } from "Store/common/newState";
 import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { authInitialState, IAuthState } from "./IAuthState";
-import { LoadState } from "../../common/loadState";
-import { Login } from "../../api/dto/Auth.g";
-import { IUserDto } from "../../api/dto/Users.g";
+import { LoadState } from "Common/loadState";
+import { Login } from "Api/dto/Auth.g";
+import { IUserDto } from "Api/dto/Users.g";
 import Cookies from "react-cookies";
-import { IResponse } from "../../api";
+import { IResponse } from "@/api";
 
 function AuthStartedHandler(state: IAuthState): IAuthState {
   return newState(state, {

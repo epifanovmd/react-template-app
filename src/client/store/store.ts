@@ -4,8 +4,8 @@ import { createMainReduce } from "./reducers";
 import { IAppState } from "./IAppState";
 import { composeWithDevTools } from "redux-devtools-extension";
 import i18next from "i18next";
-import { initSocket } from "../socket/initSocket";
-import { SocketAsyncActions } from "../socket/socketAsyncActions";
+import { initSocket } from "@/socket/initSocket";
+import { SocketAsyncActions } from "@/socket/socketAsyncActions";
 
 export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {

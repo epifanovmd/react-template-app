@@ -1,5 +1,5 @@
-import { actionCreator } from "../../store/common/actionCreator";
-import { IEmpty } from "../../common/IEmpty";
+import { actionCreator } from "Store/common/actionCreator";
+import { IEmpty } from "Common/IEmpty";
 import { IMessage } from "./IMessagesState";
 
 export const MessagesActions = {

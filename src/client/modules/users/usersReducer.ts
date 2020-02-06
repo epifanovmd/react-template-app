@@ -1,12 +1,12 @@
 import { reducerWithInitialState } from "typescript-fsa-reducers";
 import { IUsersState, usersInitialState } from "./IUsersState";
 import { UsersActions } from "./usersActions";
-import { newState } from "../../store/common/newState";
-import { LoadState } from "../../common/loadState";
+import { newState } from "Store/common/newState";
+import { LoadState } from "Common/loadState";
 import { Success } from "typescript-fsa";
-import { IEmpty } from "../../common/IEmpty";
-import { IUserDto } from "../../api/dto/Users.g";
-import { IResponse } from "../../api";
+import { IEmpty } from "Common/IEmpty";
+import { IUserDto } from "Api/dto/Users.g";
+import { IResponse } from "@/api";
 
 function getUsersStartedHandler(state: IUsersState) {
   return newState(state, {

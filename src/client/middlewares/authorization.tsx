@@ -1,8 +1,8 @@
 import React, { FC } from "react";
 import { withRouter } from "react-router-dom";
-import { checkAuthorization } from "../common/checkAuthorization";
+import { checkAuthorization } from "Common/checkAuthorization";
 import { useSelector } from "react-redux";
-import { IAppState } from "../store/IAppState";
+import { IAppState } from "Store/IAppState";
 import { RouteComponentProps } from "react-router";
 
 export const AuthorizationMiddleware = (Component: any) => {

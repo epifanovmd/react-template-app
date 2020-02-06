@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.user {
+  cursor: pointer;
+}
+
+.active-user {
+  background: gray;
+  border-radius: 5px;
+}

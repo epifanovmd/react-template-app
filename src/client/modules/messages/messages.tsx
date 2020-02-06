@@ -1,4 +1,11 @@
-import React, { ChangeEvent, FC, memo, useCallback, useState } from "react";
+import React, {
+  ChangeEvent,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { ChatMessage } from "../../components/messages/message/chatMessage";
 import { ChatInput } from "../../components/messages/messageInput/chatInput";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +13,14 @@ import { IAppState } from "../../store/IAppState";
 import { useTranslation } from "react-i18next";
 import Helmet from "react-helmet";
 import { MessagesAsyncActions } from "./messagesAsyncActions";
+import { Table } from "../../components/table/table";
+import { TableHeader } from "../../components/table/tableHeader";
+import { TableRowCell } from "../../components/table/tableRowCell";
+import { TableRow } from "../../components/table/tableRow";
+
+import styles from "./styles.module.scss";
+import { UsersAsyncActions } from "../users/usersAsyncActions";
+import classNames from "classnames";
 
 interface IProps {}
 
@@ -14,35 +29,52 @@ const Messages: FC<IProps> = memo(() => {
 
   const dispatch = useDispatch();
 
-  const [state, setState] = useState({ name: "Bob" });
+  useEffect(() => {
+    dispatch(UsersAsyncActions.getUsers());
+  }, []);
+
+  const [name, setName] = useState("Bob");
+  const [recipientId, setRecipientId] = useState("");
 
   const setValue = (event: ChangeEvent<HTMLInputElement>) =>
-    setState({ name: event.target.value });
+    setName(event.target.value);
 
   const submitMessage = useCallback(
     (messageString: string) => {
       const message = {
-        recipientId: "7d429613-ecf3-4e85-8fd3-928cb4f18653",
-        name: state.name,
+        recipientId,
+        name,
         message: messageString,
       };
 
       dispatch(MessagesAsyncActions.sendMessage(message));
     },
-    [state.name],
+    [dispatch, name, recipientId],
   );
 
   const onSubmit = useCallback(
-    (messageString: string) => submitMessage(messageString),
-    [submitMessage],
+    (messageString: string) => {
+      if (recipientId && name) {
+        submitMessage(messageString);
+      }
+    },
+    [submitMessage, recipientId, name],
   );
 
   const messages = useSelector(
     ({ messagesPage }: IAppState) => messagesPage.messages,
   );
+  const users = useSelector(({ usersPage }: IAppState) => usersPage.users);
+
+  const onSetRecipientId = useCallback(
+    (id: string) => () => {
+      setRecipientId(id);
+    },
+    [setRecipientId],
+  );
 
   return (
-    <>
+    <div className={styles.container}>
       <Helmet>
         <title>{t("messages")}</title>
       </Helmet>
@@ -53,7 +85,7 @@ const Messages: FC<IProps> = memo(() => {
             type="text"
             id={"name"}
             placeholder={t("enter_name")}
-            value={state.name}
+            value={name}
             onChange={setValue}
           />
         </label>
@@ -66,7 +98,26 @@ const Messages: FC<IProps> = memo(() => {
           />
         ))}
       </div>
-    </>
+      <div>
+        <Table>
+          <TableHeader>
+            <TableRowCell>Пользователи</TableRowCell>
+          </TableHeader>
+          {users.data.map((item) => (
+            <TableRow
+              className={classNames(styles.user, {
+                [styles["active-user"]]: item.id === recipientId,
+              })}
+              key={item.id}
+            >
+              <TableRowCell onClick={onSetRecipientId(item.id)}>
+                {item.username}
+              </TableRowCell>
+            </TableRow>
+          ))}
+        </Table>
+      </div>
+    </div>
   );
 });
 

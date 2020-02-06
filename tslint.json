@@ -9,6 +9,7 @@
     "trailing-comma": [
       true,
       {
+        "esSpecCompliant": true,
         "singleline": "never",
         "multiline": {
           "objects": "always",

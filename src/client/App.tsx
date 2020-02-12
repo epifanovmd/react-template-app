@@ -11,9 +11,9 @@ const Authorization = loadable(() =>
   import("./modules/authentication/authorization/Authorization"),
 );
 import "../../node_modules/antd/dist/antd.css";
-import { ContextReactHooks } from "./components/Context/contextReactHooks";
+import { ContextReactHooks } from "Components/Context/contextReactHooks";
 import { StoreProvider } from "./reactHooksStore/store";
-import { ContextMobx } from "./components/Context/contextMobx";
+import { ContextMobx } from "Components/Context/contextMobx";
 
 const App = () => {
   const { i18n } = useTranslation();

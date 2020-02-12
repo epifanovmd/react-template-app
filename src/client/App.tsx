@@ -1,6 +1,6 @@
 import { PopupNotification } from "Components/popupNotification/popupNotification";
 import { Route, Switch } from "react-router-dom";
-import React from "react";
+import React, { FC, Provider } from "react";
 import { routes } from "./routes";
 import { Header } from "Components/layouts/header/header";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,9 @@ const Authorization = loadable(() =>
   import("./modules/authentication/authorization/Authorization"),
 );
 import "../../node_modules/antd/dist/antd.css";
+import { ContextReactHooks } from "./components/Context/contextReactHooks";
+import { StoreProvider } from "./reactHooksStore/store";
+import { ContextMobx } from "./components/Context/contextMobx";
 
 const App = () => {
   const { i18n } = useTranslation();
@@ -30,6 +33,14 @@ const App = () => {
           />
         ))}
         <Route exact={true} path={"/authorization"} component={Authorization} />
+        <Route exact={true} path={"/contextMobx"} component={ContextMobx} />
+        <StoreProvider>
+          <Route
+            exact={true}
+            path={"/contextReactHooks"}
+            component={ContextReactHooks}
+          />
+        </StoreProvider>
       </Switch>
     </div>
   );

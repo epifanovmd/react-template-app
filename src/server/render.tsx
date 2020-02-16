@@ -25,7 +25,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     "en";
   const context = {};
   const store = createSimpleStore();
-  const getData = (thunk: SimpleThunk): any => (dispatch: SimpleDispatch) =>
+  const getData = (thunk: SimpleThunk) => (dispatch: SimpleDispatch) =>
     dispatch(thunk);
 
   const webStats = path.resolve("./build/loadable-stats.json");

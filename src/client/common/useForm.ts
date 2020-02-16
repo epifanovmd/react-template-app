@@ -17,7 +17,7 @@ export const useForm = <T>({
   >({});
   const [errors, setErrors] = React.useState<Partial<T>>({});
 
-  const setFieldValue = <K extends keyof T>(name: K, value: T[K]): void => {
+  const setFieldValue = <K extends keyof T>(name: K, value: T[K]) => {
     const e = (validate && validate({ ...values, [name]: value })) || {};
     setErrors({
       ...e,
@@ -28,7 +28,7 @@ export const useForm = <T>({
     });
   };
 
-  const handleChange = (event: any): void => {
+  const handleChange = (event: any) => {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
@@ -42,7 +42,7 @@ export const useForm = <T>({
     });
   };
 
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     const target = event.target;
     const name = target.name;
     setTouchedValues({
@@ -55,7 +55,7 @@ export const useForm = <T>({
     });
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const e = (validate && validate(values)) || {};
     setErrors({

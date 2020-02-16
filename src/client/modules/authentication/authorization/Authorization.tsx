@@ -40,11 +40,11 @@ const Authorization: FC = memo(() => {
       username: "",
       password: "",
     },
-    onSubmit: (submitValues): void => {
+    onSubmit: (submitValues) => {
       console.log(submitValues);
       dispatch(AuthAsyncActions.auth(submitValues, () => {}));
     },
-    validate: (validateValues): Partial<typeof validateValues> => {
+    validate: (validateValues) => {
       const validateErrors: Partial<typeof validateValues> = {};
       if (validateValues.username == "") {
         validateErrors.username = t("enter_username");

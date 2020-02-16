@@ -20,7 +20,7 @@ export const PopupNotification: FC = memo(() => {
   useEffect(() => {
     listenerId = eventRegister.addEventListener(
       EventNames.notification,
-      (data: INotificationPopupData): void => {
+      (data: INotificationPopupData) => {
         setState({ ...data, isOpen: true });
       },
     );

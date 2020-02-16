@@ -9,7 +9,7 @@ export const EventNames = {
 };
 
 class EventRegister {
-  addEventListener(eventName: string, callback: (data: any) => void): string {
+  addEventListener(eventName: string, callback: (data: any) => void) {
     const callbacks = this.getOrCreateListeners(eventName);
     const listenerId = eventName + callbacks.length;
 
@@ -22,7 +22,7 @@ class EventRegister {
     return listenerId;
   }
 
-  removeEventListener(listenerId: string): void {
+  removeEventListener(listenerId: string) {
     const eventName = this.listenersToEvent.get(listenerId);
     if (eventName != null) {
       const listeners = this.getOrCreateListeners(eventName);
@@ -33,18 +33,18 @@ class EventRegister {
     }
   }
 
-  removeAllListeners(eventName: string): void {
+  removeAllListeners(eventName: string) {
     this.listeners.delete(eventName);
   }
 
-  emitEvent(eventName: string, data?: any): void {
+  emitEvent(eventName: string, data?: any) {
     const listeners = this.listeners.get(eventName);
     if (listeners != null) {
       listeners.forEach((i) => i.callback(data));
     }
   }
 
-  private getOrCreateListeners(eventName: string): IListenerHandler[] {
+  private getOrCreateListeners(eventName: string) {
     let listeners = this.listeners.get(eventName);
     if (listeners == null) {
       listeners = [];

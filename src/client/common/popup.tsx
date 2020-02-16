@@ -2,7 +2,7 @@ import { EventNames, eventRegister } from "./eventRegister";
 import { INotificationPopupData } from "Components/popupNotification/popupNotification";
 
 export const popup = {
-  error(title: string, message: string): void {
+  error(title: string, message: string) {
     eventRegister.emitEvent(EventNames.notification, {
       title: title,
       subtitle: message,
@@ -10,7 +10,7 @@ export const popup = {
     } as INotificationPopupData);
   },
 
-  success(title: string, message: string): void {
+  success(title: string, message: string) {
     eventRegister.emitEvent(EventNames.notification, {
       title: title,
       subtitle: message,

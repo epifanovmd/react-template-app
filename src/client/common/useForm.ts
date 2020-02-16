@@ -6,25 +6,27 @@ interface IUseForm<T> {
   validate?: (values: T) => Partial<T>;
 }
 
-interface IUseFormReturn<T> {
-  values: T;
-  touchedValues: Partial<Record<keyof T, boolean>>;
-  errors: Partial<T>;
-  handleChange: (event: any) => void;
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  handleBlur: (event: React.FocusEvent<HTMLInputElement>) => void;
-}
-
-export const useForm = <T extends {}>({
+export const useForm = <T>({
   initialValues,
   onSubmit,
   validate,
-}: IUseForm<T>): IUseFormReturn<T> => {
+}: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T, boolean>>
   >({});
-  const [errors, setErrors] = React.useState<T | {}>({});
+  const [errors, setErrors] = React.useState<Partial<T>>({});
+
+  const setFieldValue = <K extends keyof T>(name: K, value: T[K]): void => {
+    const e = (validate && validate({ ...values, [name]: value })) || {};
+    setErrors({
+      ...e,
+    });
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
 
   const handleChange = (event: any): void => {
     const target = event.target;
@@ -74,5 +76,6 @@ export const useForm = <T extends {}>({
     handleChange,
     handleSubmit,
     handleBlur,
+    setFieldValue,
   };
 };

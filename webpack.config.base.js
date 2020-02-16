@@ -3,6 +3,7 @@ const path = require("path");
 const autoprefixer = require("autoprefixer");
 const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -219,6 +220,11 @@ const basePlugins = [
       }),
     ]
     : []),
+  ...(!IS_SSR ? [
+    new HtmlWebpackPlugin({
+      template: 'public/index.html'
+    }),
+  ] : []),
   new webpack.DefinePlugin({
     "process.env.SSR": JSON.stringify(process.env.SSR),
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),

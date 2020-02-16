@@ -38,7 +38,7 @@ const client = {
         "asset-manifest.json",
     }),
     new CopyPlugin([
-      { from: "public", to: IS_SSR ? "client" : "", ignore: IS_SSR ? ["*.html"] : [] },
+      { from: "public", to: IS_SSR ? "client" : "", ignore: ["*.html"] },
     ]),
     new LoadablePlugin(),
     new webpack.NamedModulesPlugin(),

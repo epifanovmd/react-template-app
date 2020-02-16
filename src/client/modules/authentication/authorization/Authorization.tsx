@@ -8,6 +8,7 @@ import { checkAuthorization } from "Common/checkAuthorization";
 import { IAppState } from "Store/IAppState";
 import { useHistory, useLocation } from "react-router";
 import querystring from "query-string";
+import { string, object } from "yup";
 import { CustomInput } from "Components/controls/customInput/customInput";
 
 const Authorization: FC = memo(() => {
@@ -28,6 +29,11 @@ const Authorization: FC = memo(() => {
 
   const dispatch = useDispatch();
 
+  const schema = object().shape({
+    username: string().required(t("enter_username")),
+    password: string().required(t("enter_password")),
+  });
+
   const {
     values,
     errors,
@@ -40,22 +46,23 @@ const Authorization: FC = memo(() => {
       username: "",
       password: "",
     },
+    validateSchema: schema,
     onSubmit: (submitValues) => {
       console.log(submitValues);
       dispatch(AuthAsyncActions.auth(submitValues, () => {}));
     },
-    validate: (validateValues) => {
-      const validateErrors: Partial<typeof validateValues> = {};
-      if (validateValues.username == "") {
-        validateErrors.username = t("enter_username");
-      }
-
-      if (validateValues.password == "") {
-        validateErrors.password = t("enter_password");
-      }
-
-      return validateErrors;
-    },
+    // validate: (validateValues) => {
+    //   const validateErrors: Partial<typeof validateValues> = {};
+    //   if (validateValues.username == "") {
+    //     validateErrors.username = t("enter_username");
+    //   }
+    //
+    //   if (validateValues.password == "") {
+    //     validateErrors.password = t("enter_password");
+    //   }
+    //
+    //   return validateErrors;
+    // },
   });
 
   return (

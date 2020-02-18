@@ -120,7 +120,7 @@ const baseLoaders = {
         loader: "css-loader",
         options: {
           modules: {
-            localIdentName: "[local]--[hash:base64:5]",
+            localIdentName: IS_PRODUCTION ? "[contenthash]" : "[local]--[hash:base64:5]",
           },
           sourceMap: true,
         },

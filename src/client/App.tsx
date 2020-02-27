@@ -1,4 +1,4 @@
-import { PopupNotification } from "Components/popupNotification/popupNotification";
+import { Popup } from "Components/popup/popup";
 import { Route, Switch } from "react-router-dom";
 import React, { FC, Provider } from "react";
 import { routes } from "./routes";
@@ -20,7 +20,7 @@ const App = () => {
 
   return (
     <div key={i18n.language} className="container">
-      <PopupNotification />
+      <Popup />
       <Header />
       <Spin />
       <br />

@@ -20,7 +20,10 @@ export const MessagesAsyncActions = {
         callback && callback(result);
         dispatch(MessagesActions.getMessages.done({ params, result }));
       } catch (error) {
-        popup.error(i18next.t("error"), i18next.t(error.error?.type));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t(error.error?.type),
+        });
         dispatch(MessagesActions.getMessages.failed({ params, error }));
       }
     };
@@ -40,7 +43,10 @@ export const MessagesAsyncActions = {
         );
         callback && callback(message);
       } catch (error) {
-        popup.error(i18next.t("error"), i18next.t(error.error?.type));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t(error.error?.type),
+        });
         dispatch(MessagesActions.insertMessage.failed({ params, error }));
       }
     };
@@ -61,7 +67,10 @@ export const MessagesAsyncActions = {
         );
         callback && callback(message);
       } catch (error) {
-        popup.error(i18next.t("error"), i18next.t(error.error?.type));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t(error.error?.type),
+        });
         dispatch(MessagesActions.insertMessage.failed({ params, error }));
       }
     };

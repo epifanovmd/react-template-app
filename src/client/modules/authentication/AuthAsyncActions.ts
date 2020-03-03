@@ -18,7 +18,10 @@ export const AuthAsyncActions = {
         callback && callback(result.data);
       },
       onFail: ({}, {}, { i18next }) => {
-        popup.error(i18next.t("error"), i18next.t("auth_error"));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t("auth_error"),
+        });
       },
     });
   },
@@ -37,7 +40,10 @@ export const AuthAsyncActions = {
         callback && callback(result.data);
       },
       onFail: (error, {}, { i18next }) => {
-        popup.error(i18next.t("error"), i18next.t(error.name));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t(error.name),
+        });
       },
     });
   },

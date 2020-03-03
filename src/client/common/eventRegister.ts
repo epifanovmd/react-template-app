@@ -4,8 +4,7 @@ interface IListenerHandler {
 }
 
 export const EventNames = {
-  notification: "notification",
-  question: "question",
+  modal: "actions",
 };
 
 class EventRegister {

@@ -16,7 +16,10 @@ export const UsersAsyncActions = {
         callback && callback(result.data.data);
       },
       onFail: ({}, {}, { i18next }) => {
-        popup.error(i18next.t("error"), i18next.t("auth_error"));
+        popup.notification.error({
+          message: i18next.t("error"),
+          description: i18next.t("auth_error"),
+        });
       },
     });
   },

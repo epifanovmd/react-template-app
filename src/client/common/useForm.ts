@@ -3,6 +3,7 @@ import { ObjectSchema, Shape } from "yup";
 
 interface IUseForm<T> {
   initialValues: T;
+  data?: T;
   onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
   validateSchema?: ObjectSchema<Shape<object, Record<keyof T, string>>>;
@@ -10,11 +11,15 @@ interface IUseForm<T> {
 
 export const useForm = <T>({
   initialValues,
+  data,
   onSubmit,
   validate,
   validateSchema,
 }: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
+  useEffect(() => {
+    data && setValues(data);
+  }, [data]);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T, boolean>>
   >({});

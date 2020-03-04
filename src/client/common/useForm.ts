@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
 
-interface IUseForm<T> {
+interface IUseForm<T extends object> {
   initialValues: T;
   data?: T;
   onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
-  validateSchema?: ObjectSchema<Shape<object, Record<keyof T, string>>>;
+  validateSchema?: ObjectSchema<Shape<object, T>>;
 }
 
-export const useForm = <T>({
+export const useForm = <T extends object>({
   initialValues,
   data,
   onSubmit,

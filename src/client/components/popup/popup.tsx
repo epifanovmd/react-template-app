@@ -1,4 +1,11 @@
-import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { EventNames, eventRegister } from "Common/eventRegister";
 import { Modal } from "antd";
 import { ModalProps } from "antd/lib/modal/Modal";
@@ -23,12 +30,12 @@ export const Popup: FC = memo(() => {
     listenerId = eventRegister.addEventListener(
       EventNames.modal,
       (data: IModalProps) => {
-        setState({
+        setState((_state) => ({
           modals: [
-            ...state.modals,
+            ..._state.modals,
             { id: Math.random().toString(), isOpen: true, ...data },
           ],
-        });
+        }));
       },
     );
 
@@ -39,10 +46,22 @@ export const Popup: FC = memo(() => {
 
   const { modals } = state;
 
+  const closeModalById = useCallback(
+    (id: string) => {
+      setState({
+        ...state,
+        modals: modals.map((item) =>
+          item.id === id ? { ...item, isOpen: false } : item,
+        ),
+      });
+    },
+    [state.modals],
+  );
+
   const onClose = useCallback(
     (id, onFailure) => () => {
       onFailure && onFailure();
-      setState({ ...state, modals: modals.filter((item) => item.id !== id) });
+      closeModalById(id);
     },
     [state.modals],
   );
@@ -50,10 +69,20 @@ export const Popup: FC = memo(() => {
   const onOk = useCallback(
     (id, onSuccess) => () => {
       onSuccess && onSuccess();
-      setState({ ...state, modals: modals.filter((item) => item.id !== id) });
+      closeModalById(id);
     },
     [state.modals],
   );
+
+  useEffect(() => {
+    const timoutId = setTimeout(() => {
+      setState({ ...state, modals: modals.filter((item) => item.isOpen) });
+    }, 300);
+
+    return () => clearTimeout(timoutId);
+  }, [
+    useMemo(() => state.modals.some((item) => !item.isOpen), [state.modals]),
+  ]);
 
   return (
     <>

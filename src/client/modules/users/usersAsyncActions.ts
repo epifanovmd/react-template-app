@@ -16,10 +16,6 @@ export const UsersAsyncActions = {
         callback && callback(result.data.data);
       },
       onFail: ({}, {}, { i18next }) => {
-        popup.modal({ title: "1", render: () => "123" });
-        setTimeout(() => {
-          popup.modal({ title: "2", render: () => "123" });
-        });
         popup.notification.error({
           message: i18next.t("error"),
           description: i18next.t("auth_error"),

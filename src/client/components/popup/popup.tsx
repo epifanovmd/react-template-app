@@ -51,9 +51,8 @@ export const Popup: FC = memo(() => {
     (id, onSuccess) => () => {
       onSuccess && onSuccess();
       setState({ ...state, modals: modals.filter((item) => item.id !== id) });
-      setTimeout(() => {}, 1000);
     },
-    [],
+    [state.modals],
   );
 
   return (

@@ -2,10 +2,11 @@ import React, { FC, memo, useCallback, useEffect, useState } from "react";
 import { EventNames, eventRegister } from "Common/eventRegister";
 import { Modal } from "antd";
 import { ModalProps } from "antd/lib/modal/Modal";
+import { bool, boolean } from "yup";
 
 export interface IModalProps extends ModalProps {
   title: string;
-  jsx: JSX.Element;
+  render: (onClose: () => void, onOk: () => void) => JSX.Element;
   onSuccess?: () => void;
   onFailure?: () => void;
 }
@@ -58,7 +59,7 @@ export const Popup: FC = memo(() => {
   return (
     <>
       {modals.map(
-        ({ id, title, jsx, isOpen, onFailure, onSuccess, ...rest }) => (
+        ({ id, title, render, isOpen, onFailure, onSuccess, ...rest }) => (
           <Modal
             {...rest}
             key={id}
@@ -67,7 +68,7 @@ export const Popup: FC = memo(() => {
             onCancel={onClose(id, onFailure)}
             onOk={onOk(id, onSuccess)}
           >
-            {jsx}
+            {render(onOk(id, onSuccess), onClose(id, onFailure))}
           </Modal>
         ),
       )}

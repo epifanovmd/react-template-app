@@ -1,28 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
 
 interface IUseForm<T> {
   initialValues: T;
-  onSubmit?: (values: T, errors: Partial<T>) => void;
+  data?: T;
+  onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
   validateSchema?: ObjectSchema<Shape<object, Record<keyof T, string>>>;
 }
 
 export const useForm = <T>({
   initialValues,
+  data,
   onSubmit,
   validate,
   validateSchema,
 }: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
+  useEffect(() => {
+    data && setValues(data);
+  }, [data]);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T, boolean>>
   >({});
-  const [errors, setErrors] = React.useState<Partial<T>>({});
+  const [errors, setErrors] = React.useState<Partial<Record<keyof T, string>>>(
+    {},
+  );
 
   const _validate = async (
     _values: T,
-    _finally?: (_values: Partial<T>, errors: Partial<T>) => void,
+    _finally?: (
+      _values: Partial<T>,
+      errors: Partial<Record<keyof T, string>>,
+    ) => void,
   ) => {
     if (validateSchema) {
       validateSchema
@@ -32,7 +42,7 @@ export const useForm = <T>({
           _finally && _finally(_values, {});
         })
         .catch((err) => {
-          const e: Partial<T> = {};
+          const e: Partial<Record<keyof T, string>> = {};
           err.inner.map((item: { path: keyof T }, index: number) => {
             e[item.path] = err.errors[index];
           }); // => 'ValidationError'
@@ -50,11 +60,12 @@ export const useForm = <T>({
     }
   };
 
+  const handleClear = () => {
+    setValues(initialValues);
+    setErrors(initialValues);
+  };
+
   const setFieldValue = async <K extends keyof T>(name: K, value: T[K]) => {
-    // const e = (validate && validate({ ...values, [name]: value })) || {};
-    // setErrors({
-    //   ...e,
-    // });
     await _validate({ ...values, [name]: value }, () => {
       setValues({
         ...values,
@@ -64,15 +75,10 @@ export const useForm = <T>({
   };
 
   const handleChange = async (event: any) => {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    // const e = (validate && validate({ ...values, [name]: value })) || {};
-    // setErrors({
-    //   ...e,
-    // });
+    const target = event?.target;
+    const value = target?.type === "checkbox" ? target?.checked : target?.value;
+    const name = target?.name;
     await _validate({ ...values, [name]: value }, () => {
-      console.log(errors);
       setValues({
         ...values,
         [name]: value,
@@ -80,26 +86,20 @@ export const useForm = <T>({
     });
   };
 
-  const handleBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
-    const target = event.target;
-    const name = target.name;
-    setTouchedValues({
-      ...touchedValues,
-      [name]: true,
-    });
-    // const e = (validate && validate(values)) || {};
-    // setErrors({
-    //   ...e,
-    // });
+  const handleBlur = async (event: any) => {
+    const target = event?.target;
+    const name = target?.name;
+    name &&
+      setTouchedValues({
+        ...touchedValues,
+        [name]: true,
+      });
     await _validate(values);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await _validate(values, ({}, e) => {
-      // setErrors({
-      //   ...e,
-      // });
       const touched = Object.keys(values).reduce(
         (acc, el) => ({ ...acc, [el]: true }),
         {},
@@ -117,5 +117,6 @@ export const useForm = <T>({
     handleSubmit,
     handleBlur,
     setFieldValue,
+    handleClear,
   };
 };

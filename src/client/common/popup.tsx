@@ -29,17 +29,17 @@ export const popup = {
 
   modal({
     title,
-    jsx,
+    render,
     params,
   }: {
     title: string;
-    jsx: JSX.Element | string;
-    params?: Omit<Partial<IModalProps>, "title" | "jsx">;
+    render: (onOk: () => void, onClose: () => void) => JSX.Element | string;
+    params?: Omit<Partial<IModalProps>, "title" | "render">;
   }) {
     eventRegister.emitEvent(EventNames.modal, {
       ...params,
       title,
-      jsx,
+      render,
     } as IModalProps);
   },
 };

@@ -1,18 +1,20 @@
 import React, { useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
 
-interface IUseForm<T> {
+interface IUseForm<T extends object> {
   initialValues: T;
   data?: T;
+  onChange?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
-  validateSchema?: ObjectSchema<Shape<object, Record<keyof T, string>>>;
+  validateSchema?: ObjectSchema<Shape<object, T>>;
 }
 
-export const useForm = <T>({
+export const useForm = <T extends object>({
   initialValues,
   data,
   onSubmit,
+  onChange,
   validate,
   validateSchema,
 }: IUseForm<T>) => {
@@ -26,6 +28,10 @@ export const useForm = <T>({
   const [errors, setErrors] = React.useState<Partial<Record<keyof T, string>>>(
     {},
   );
+
+  useEffect(() => {
+    onChange && onChange(values, errors);
+  }, [values, errors]);
 
   const _validate = async (
     _values: T,
@@ -67,10 +73,14 @@ export const useForm = <T>({
 
   const setFieldValue = async <K extends keyof T>(name: K, value: T[K]) => {
     await _validate({ ...values, [name]: value }, () => {
-      setValues({
-        ...values,
+      setValues((state) => ({
+        ...state,
         [name]: value,
-      });
+      }));
+      setTouchedValues((state) => ({
+        ...state,
+        [name]: true,
+      }));
     });
   };
 
@@ -79,10 +89,10 @@ export const useForm = <T>({
     const value = target?.type === "checkbox" ? target?.checked : target?.value;
     const name = target?.name;
     await _validate({ ...values, [name]: value }, () => {
-      setValues({
-        ...values,
+      setValues((state) => ({
+        ...state,
         [name]: value,
-      });
+      }));
     });
   };
 
@@ -90,10 +100,10 @@ export const useForm = <T>({
     const target = event?.target;
     const name = target?.name;
     name &&
-      setTouchedValues({
-        ...touchedValues,
+      setTouchedValues((state) => ({
+        ...state,
         [name]: true,
-      });
+      }));
     await _validate(values);
   };
 

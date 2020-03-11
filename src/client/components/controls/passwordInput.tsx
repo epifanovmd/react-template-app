@@ -64,15 +64,6 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-const InputOverlay = styled(Input.Password)<{ isValid?: boolean }>`
-  ${({ isValid }) =>
-    isValid === false
-      ? css`
-          border: 1px solid red;
-        `
-      : ""};
-`;
-
 export const PasswordInput: FC<IProps> = memo((props) => {
   const {
     title,
@@ -102,7 +93,11 @@ export const PasswordInput: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <InputOverlay isValid={isValid} name={name} {...rest} />
+          <Input.Password
+            style={touch && isValid ? { border: "1px solid red" } : {}}
+            name={name}
+            {...rest}
+          />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </InputWrap>

@@ -66,15 +66,6 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-const TextAreaOverlay = styled(TextArea)<{ isValid?: boolean }>`
-  ${({ isValid }) =>
-    isValid === false
-      ? css`
-          border: 1px solid red;
-        `
-      : ""};
-`;
-
 export const CustomTextArea: FC<IProps> = memo((props) => {
   const {
     title,
@@ -104,7 +95,11 @@ export const CustomTextArea: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <TextAreaOverlay isValid={isValid} name={name} {...rest} />
+          <TextArea
+            style={touch && isValid ? { border: "1px solid red" } : {}}
+            name={name}
+            {...rest}
+          />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </InputWrap>

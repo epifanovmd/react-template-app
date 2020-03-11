@@ -65,15 +65,6 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-const InputOverlay = styled(Input)<{ isValid?: boolean }>`
-  ${({ isValid }) =>
-    isValid === false
-      ? css`
-          border: 1px solid red;
-        `
-      : ""};
-`;
-
 export const CustomInput: FC<IProps> = memo((props) => {
   const {
     title,
@@ -103,7 +94,11 @@ export const CustomInput: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <InputOverlay isValid={isValid} name={name} {...rest} />
+          <Input
+            style={touch && isValid ? { border: "1px solid red" } : {}}
+            name={name}
+            {...rest}
+          />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </InputWrap>

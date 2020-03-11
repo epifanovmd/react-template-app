@@ -15,7 +15,6 @@ interface IProps extends SelectProps {
   description?: string;
   maxWidth?: string;
   options: { label: string; value: string | number }[];
-  isValid?: boolean;
 }
 
 const Wrap = styled.div<{ maxWidth?: string }>`

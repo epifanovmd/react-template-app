@@ -11,7 +11,7 @@ interface IProps extends RangePickerProps {
   error?: string;
   touch?: boolean;
   title?: string;
-  name: string;
+  name?: string;
   positionTitle?: "top" | "left";
   requiredIcon?: boolean;
   minWidthTitle?: string;

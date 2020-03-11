@@ -9,7 +9,7 @@ import { IAppState } from "Store/IAppState";
 import { useHistory, useLocation } from "react-router";
 import querystring from "query-string";
 import { string, object } from "yup";
-import { CustomInput } from "Components/controls/customInput/customInput";
+import { CustomInput } from "Components/controls/customInput";
 
 const Authorization: FC = memo(() => {
   const { t } = useTranslation();

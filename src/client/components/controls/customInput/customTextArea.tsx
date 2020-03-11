@@ -1,9 +1,8 @@
 import React, { FC, memo } from "react";
-import { Input } from "antd";
-import { InputProps } from "antd/es/input";
 import styled from "styled-components";
+import TextArea, { TextAreaProps } from "antd/es/input/TextArea";
 
-interface IProps extends InputProps {
+interface IProps extends TextAreaProps {
   error?: string;
   touch?: boolean;
   title?: string;
@@ -62,7 +61,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomInput: FC<IProps> = memo((props) => {
+export const CustomTextArea: FC<IProps> = memo((props) => {
   const {
     title,
     touch,
@@ -90,7 +89,7 @@ export const CustomInput: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <Input name={name} {...rest} />
+          <TextArea name={name} {...rest} />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </InputWrap>

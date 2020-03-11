@@ -1,17 +1,19 @@
-import React, { FC, memo } from "react";
-import { Input } from "antd";
-import { InputProps } from "antd/es/input";
+import React, { FC, memo, useCallback } from "react";
+import { Select } from "antd";
 import styled from "styled-components";
+import { SelectProps } from "antd/es/select";
 
-interface IProps extends InputProps {
+interface IProps extends SelectProps {
   error?: string;
   touch?: boolean;
   title?: string;
+  name: string;
   positionTitle?: "top" | "left";
   requiredIcon?: boolean;
   minWidthTitle?: string;
   description?: string;
   maxWidth?: string;
+  options: { label: string; value: string | number }[];
 }
 
 const Wrap = styled.div`
@@ -62,7 +64,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomInput: FC<IProps> = memo((props) => {
+export const CustomSelect: FC<IProps> = memo((props) => {
   const {
     title,
     touch,
@@ -73,8 +75,14 @@ export const CustomInput: FC<IProps> = memo((props) => {
     minWidthTitle,
     description,
     maxWidth,
+    onChange,
+    options,
     ...rest
   } = props;
+  const onChangeHandler = useCallback((value: any) => {
+    const func: any = onChange;
+    func && func({ target: { value: value, name: name } });
+  }, []);
 
   return (
     <Wrap>
@@ -90,7 +98,13 @@ export const CustomInput: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <Input name={name} {...rest} />
+          <Select onChange={onChangeHandler} {...rest}>
+            {options.map((item, index) => (
+              <Select.Option key={index} value={item.value}>
+                {item.label}
+              </Select.Option>
+            ))}
+          </Select>
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </InputWrap>

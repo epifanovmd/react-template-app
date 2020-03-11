@@ -11,9 +11,11 @@ interface IProps extends InputProps {
   requiredIcon?: boolean;
   minWidthTitle?: string;
   description?: string;
+  maxWidth?: string;
 }
 
 const Wrap = styled.div`
+  width: 100%;
   padding: 8px;
   min-width: 256px;
   position: relative;
@@ -50,7 +52,8 @@ const Description = styled.div`
   color: #8c8c8c;
 `;
 
-const InputWrap = styled.div`
+const InputWrap = styled.div<{ maxWidth?: string }>`
+  ${({ maxWidth }) => (maxWidth ? `max-width : ${maxWidth}` : "")};
   width: 100%;
 `;
 
@@ -68,6 +71,7 @@ export const PasswordInput: FC<IProps> = memo((props) => {
     requiredIcon,
     minWidthTitle,
     description,
+    maxWidth,
     ...rest
   } = props;
 
@@ -84,7 +88,7 @@ export const PasswordInput: FC<IProps> = memo((props) => {
             {title}
           </Label>
         )}
-        <InputWrap>
+        <InputWrap maxWidth={maxWidth}>
           <Input.Password name={name} {...rest} />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}

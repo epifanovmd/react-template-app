@@ -95,7 +95,7 @@ export const CustomInput: FC<IProps> = memo((props) => {
         )}
         <InputWrap maxWidth={maxWidth}>
           <Input
-            style={touch && isValid ? { border: "1px solid red" } : {}}
+            style={touch && !isValid ? { border: "1px solid red" } : {}}
             name={name}
             {...rest}
           />

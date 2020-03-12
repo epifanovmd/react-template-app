@@ -96,7 +96,7 @@ export const CustomTextArea: FC<IProps> = memo((props) => {
         )}
         <InputWrap maxWidth={maxWidth}>
           <TextArea
-            style={touch && isValid ? { border: "1px solid red" } : {}}
+            style={touch && !isValid ? { border: "1px solid red" } : {}}
             name={name}
             {...rest}
           />

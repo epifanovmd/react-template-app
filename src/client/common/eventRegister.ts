@@ -45,7 +45,7 @@ class EventRegister {
 
   private getOrCreateListeners(eventName: string) {
     let listeners = this.listeners.get(eventName);
-    if (listeners == null) {
+    if (listeners === null) {
       listeners = [];
       this.listeners.set(eventName, listeners);
     }

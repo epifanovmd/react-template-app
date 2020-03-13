@@ -53,11 +53,11 @@ const Authorization: FC = memo(() => {
     },
     // validate: (validateValues) => {
     //   const validateErrors: Partial<typeof validateValues> = {};
-    //   if (validateValues.username == "") {
+    //   if (validateValues.username === "") {
     //     validateErrors.username = t("enter_username");
     //   }
     //
-    //   if (validateValues.password == "") {
+    //   if (validateValues.password === "") {
     //     validateErrors.password = t("enter_password");
     //   }
     //

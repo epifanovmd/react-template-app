@@ -42,7 +42,7 @@ export const callApi = <P, R>({
       headers,
     );
 
-    if (status >= 400 || data == null) {
+    if (status >= 400 || data === null) {
       const error = {
         name: status.toString(),
         message: message || status.toString(),

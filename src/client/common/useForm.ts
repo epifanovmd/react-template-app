@@ -215,7 +215,7 @@ export const useForm = <T extends object>({
         {},
       );
       setTouchedValues(touched);
-      Object.keys({ ...e }).length == 0 && onSubmit && onSubmit(values, e);
+      Object.keys({ ...e }).length === 0 && onSubmit && onSubmit(values, e);
     });
   };
 
@@ -230,6 +230,6 @@ export const useForm = <T extends object>({
     handleBlur,
     setFieldValue,
     setFieldBlur,
-    handleClear: handleClearForm,
+    handleClearForm,
   };
 };

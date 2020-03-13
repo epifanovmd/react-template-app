@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
 
+type TCheckArray<T> = T extends any[] ? T[number] : T;
 interface IUseForm<T extends object> {
   initialValues: T;
   data?: T;
@@ -57,72 +58,61 @@ export const useForm = <T extends object>({
         [name]: [...(state[name] as any), ...(value as any)],
       }));
     },
-    handleChange: async ({ target }: any) => {
+    handleChange: async ({ target }: React.ChangeEvent<any>) => {
       const name: keyof T = (target?.name || "").split("[")[0];
       const index = ((target?.name.match("\\[[0-9]{1,2}\\]") || [])[0] || -1)
         .split("]")[0]
         .split("[")[1];
       const key = (target?.name || "").split(".")[1];
       const value = target?.value;
-
-      const newValue = {
+      const _values = await _validate({
+        ...values,
         [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
           index && ind === +index ? { ...item, [key]: value } : item,
         ),
-      };
-
-      await _validate({ ...values, ...newValue }, () => {
-        setValues((state) => ({
-          ...state,
-          ...newValue,
-        }));
       });
+      setValues(_values);
     },
     setFieldValue: async <A extends T[keyof T]>(
       name: keyof T,
-      // @ts-ignore
-      key: keyof A[number],
-      // @ts-ignore
-      value: A[number][keyof A[number]],
+      key: keyof TCheckArray<A>,
+      value: TCheckArray<A>[keyof TCheckArray<A>],
       index: number,
     ) => {
-      const newValue = {
+      const _values = await _validate({
+        ...values,
         [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
           ind === index ? { ...item, [key]: value } : item,
         ),
-      };
-
-      await _validate({ ...values, ...newValue }, () => {
-        setValues((state) => ({
-          ...state,
-          ...newValue,
-        }));
       });
+      setValues(_values);
     },
   };
 
-  // @ts-ignore
-  const fieldsIterate = <A extends T[B][number], B extends keyof T>(
+  const fieldsIterate = <A extends TCheckArray<T[B]>, B extends keyof T>(
     name: B,
     fields: (val: {
-      value: { [key in keyof A]: A[keyof A] };
-      touched: { [key in keyof A]: boolean };
-      error: { [key in keyof A]: string };
+      value: A;
+      touched: Partial<{ [key in keyof A]: boolean }>;
+      error: Partial<{ [key in keyof A]: string }>;
       fieldsName: { [key in keyof A]: string };
       fieldsHelper: typeof fieldsHelper;
       index: number;
       array: A[];
-    }) => any,
+    }) => void,
   ) => {
     return (values[name] as any | []).map(
       (value: A, index: number, array: A[]) => {
-        const fieldsName: any = {};
-        const touched: any = {};
-        const error: any = {};
+        const touched: Partial<{ [key in keyof A]: boolean }> = {};
+        const error: Partial<{ [key in keyof A]: string }> = {};
+        const fieldsName: { [key in keyof A]: string } = {} as {
+          [key in keyof A]: string;
+        };
+
         Object.keys(value).forEach((item) => {
-          (fieldsName as any)[item] = `${name}[${index}].${item}`;
-          (touched as any)[item] = touchedValues[`${name}[${index}].${item}`];
-          (error as any)[item] = errors[`${name}[${index}].${item}`];
+          fieldsName[item as keyof A] = `${name}[${index}].${item}`;
+          touched[item as keyof A] = touchedValues[`${name}[${index}].${item}`];
+          error[item as keyof A] = errors[`${name}[${index}].${item}`];
         });
 
         return fields({
@@ -154,9 +144,11 @@ export const useForm = <T extends object>({
         })
         .catch((err) => {
           const e: Partial<Record<keyof T | string, string>> = {};
-          err.inner.map((item: { path: keyof T }, index: number) => {
-            e[item.path] = err.errors[index];
-          }); // => 'ValidationError'
+          (err.inner as { path: keyof T }[]).map(
+            (item: { path: keyof T }, index: number) => {
+              e[item.path] = err.errors[index];
+            },
+          );
           setErrors({
             ...e,
           });
@@ -169,6 +161,8 @@ export const useForm = <T extends object>({
       });
       _finally && _finally(_values, errors);
     }
+
+    return _values;
   };
 
   const handleClearForm = () => {
@@ -177,34 +171,26 @@ export const useForm = <T extends object>({
     setTouchedValues({});
   };
 
-  const handleChange = async (event: any) => {
+  const handleChange = async (event: React.ChangeEvent<any>) => {
     const target = event?.target;
     const value = target?.type === "checkbox" ? target?.checked : target?.value;
     const name = target?.name;
-    await _validate({ ...values, [name]: value }, () => {
-      setValues((state) => ({
-        ...state,
-        [name]: value,
-      }));
-    });
+    const _values = await _validate({ ...values, [name]: value });
+    setValues(_values);
   };
 
   const setFieldValue = async <K extends keyof T>(name: K, value: T[K]) => {
-    await _validate({ ...values, [name]: value }, () => {
-      setValues((state) => ({
-        ...state,
-        [name]: value,
-      }));
-      setTouchedValues((state) => ({
-        ...state,
-        [name]: true,
-      }));
-    });
+    const _values = await _validate({ ...values, [name]: value });
+    setValues(_values);
+    setTouchedValues((state) => ({
+      ...state,
+      [name]: true,
+    }));
   };
 
-  const handleBlur = async (event: any) => {
-    const target = event?.target;
-    const name = target?.name;
+  const handleBlur = async (event: React.FocusEvent<any>) => {
+    const target = event.target;
+    const name = target.name;
     name &&
       setTouchedValues((state) => ({
         ...state,

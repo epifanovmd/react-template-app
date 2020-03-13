@@ -4,7 +4,7 @@ import { InputProps } from "antd/es/input";
 import styled from "styled-components";
 import { SelectProps } from "antd/es/select";
 
-interface IProps extends SelectProps {
+interface IProps extends Omit<SelectProps, "onChange" | "onBlur"> {
   error?: string;
   touch?: boolean;
   title?: string;
@@ -15,6 +15,8 @@ interface IProps extends SelectProps {
   description?: string;
   maxWidth?: string;
   options: { label: string; value: string | number }[];
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void;
 }
 
 const Wrap = styled.div<{ maxWidth?: string }>`
@@ -79,13 +81,24 @@ export const CustomSelect: FC<IProps> = memo((props) => {
     description,
     maxWidth,
     onChange,
+    onBlur,
     options,
     ...rest
   } = props;
-  const onChangeHandler = useCallback((value: any) => {
-    const func: any = onChange;
-    func && func({ target: { value: value, name: name } });
-  }, []);
+  const onChangeHandler: SelectProps["onChange"] = useCallback(
+    (value) => {
+      const func: any = onChange;
+      func && func({ target: { value, name } });
+    },
+    [onChange],
+  );
+  const onBlurHandler: SelectProps["onBlur"] = useCallback(
+    (value) => {
+      const func: any = onBlur;
+      func && func({ target: { value, name } });
+    },
+    [onBlur],
+  );
 
   return (
     <Wrap maxWidth={maxWidth}>
@@ -101,7 +114,7 @@ export const CustomSelect: FC<IProps> = memo((props) => {
           </Label>
         )}
         <InputWrap maxWidth={maxWidth}>
-          <Select onChange={onChangeHandler} {...rest}>
+          <Select onBlur={onBlurHandler} onChange={onChangeHandler} {...rest}>
             {options.map((item, index) => (
               <Select.Option key={index} value={item.value}>
                 {item.label}

@@ -4,7 +4,6 @@ import { ObjectSchema, Shape } from "yup";
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 interface IUseForm<T extends object> {
   initialValues: T;
-  data?: T;
   onChange?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
@@ -13,16 +12,12 @@ interface IUseForm<T extends object> {
 
 export const useForm = <T extends object>({
   initialValues,
-  data,
   onSubmit,
   onChange,
   validate,
   validateSchema,
 }: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
-  useEffect(() => {
-    data && setValues(data);
-  }, [data]);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T | string, boolean>>
   >({});
@@ -33,6 +28,10 @@ export const useForm = <T extends object>({
   useEffect(() => {
     onChange && onChange(values, errors);
   }, [values, errors]);
+
+  const onSetValues = (_values: T) => {
+    setValues(_values);
+  };
 
   const fieldsHelper = {
     remove: (name: keyof T, index: number) => {
@@ -210,23 +209,22 @@ export const useForm = <T extends object>({
   const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
     await _validate(values, ({}, e) => {
-      const touched = Object.keys(values).reduce(
-        (acc, el) => ({ ...acc, [el]: true }),
-        {},
+      setTouchedValues(
+        Object.keys(values).reduce((acc, el) => ({ ...acc, [el]: true }), {}),
       );
-      setTouchedValues(touched);
       Object.keys({ ...e }).length === 0 && onSubmit && onSubmit(values, e);
     });
   };
 
   return {
     values,
+    onSetValues,
     touchedValues,
     errors,
     fieldsIterate,
     fieldsHelper,
-    handleChange,
     handleSubmit,
+    handleChange,
     handleBlur,
     setFieldValue,
     setFieldBlur,

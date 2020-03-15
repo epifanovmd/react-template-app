@@ -39,13 +39,13 @@ class EventRegister {
   emitEvent(eventName: string, data?: any) {
     const listeners = this.listeners.get(eventName);
     if (listeners != null) {
-      listeners.forEach((i) => i.callback(data));
+      setTimeout(() => listeners.forEach((i) => i.callback(data)));
     }
   }
 
   private getOrCreateListeners(eventName: string) {
     let listeners = this.listeners.get(eventName);
-    if (listeners === null) {
+    if (listeners == null) {
       listeners = [];
       this.listeners.set(eventName, listeners);
     }

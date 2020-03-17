@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
+import { RadioChangeEvent } from "antd/es/radio";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 interface IUseForm<T extends object> {
@@ -8,6 +9,7 @@ interface IUseForm<T extends object> {
   onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
   validate?: (values: T) => Partial<T>;
   validateSchema?: ObjectSchema<Shape<object, T>>;
+  validateOnInit?: boolean;
 }
 
 export const useForm = <T extends object>({
@@ -16,6 +18,7 @@ export const useForm = <T extends object>({
   onChange,
   validate,
   validateSchema,
+  validateOnInit,
 }: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
   const [touchedValues, setTouchedValues] = React.useState<
@@ -29,8 +32,13 @@ export const useForm = <T extends object>({
     onChange && onChange(values, errors);
   }, [values, errors]);
 
+  useEffect(() => {
+    validateOnInit && _validate(values);
+  }, [values]);
+
   const onSetValues = (_values: T) => {
     setValues(_values);
+    _validate(_values);
   };
 
   const fieldsHelper = {
@@ -100,7 +108,7 @@ export const useForm = <T extends object>({
       array: A[];
     }) => void,
   ) => {
-    return (values[name] as any | []).map(
+    return ((values[name] as any) || []).map(
       (value: A, index: number, array: A[]) => {
         const touched: Partial<{ [key in keyof A]: boolean }> = {};
         const error: Partial<{ [key in keyof A]: string }> = {};
@@ -158,7 +166,10 @@ export const useForm = <T extends object>({
       setErrors({
         ...e,
       });
-      _finally && _finally(_values, errors);
+      _finally &&
+        _finally(_values, {
+          ...e,
+        });
     }
 
     return _values;
@@ -170,24 +181,24 @@ export const useForm = <T extends object>({
     setTouchedValues({});
   };
 
-  const handleChange = async (event: React.ChangeEvent<any>) => {
+  const handleChange = (event: React.ChangeEvent<any> | RadioChangeEvent) => {
     const target = event?.target;
     const value = target?.type === "checkbox" ? target?.checked : target?.value;
     const name = target?.name;
-    const _values = await _validate({ ...values, [name]: value });
-    setValues(_values);
+    _validate({ ...values, [name]: value });
+    setValues({ ...values, [name]: value });
   };
 
-  const setFieldValue = async <K extends keyof T>(name: K, value: T[K]) => {
-    const _values = await _validate({ ...values, [name]: value });
-    setValues(_values);
+  const setFieldValue = <K extends keyof T>(name: K, value: T[K]) => {
+    _validate({ ...values, [name]: value });
+    setValues({ ...values, [name]: value });
     setTouchedValues((state) => ({
       ...state,
       [name]: true,
     }));
   };
 
-  const handleBlur = async (event: React.FocusEvent<any>) => {
+  const handleBlur = (event: React.FocusEvent<any>) => {
     const target = event.target;
     const name = target.name;
     name &&
@@ -195,20 +206,20 @@ export const useForm = <T extends object>({
         ...state,
         [name]: true,
       }));
-    await _validate(values);
+    _validate(values);
   };
 
-  const setFieldBlur = async (name: keyof T | string) => {
+  const setFieldBlur = (name: keyof T | string) => {
     setTouchedValues((state) => ({
       ...state,
       [name]: true,
     }));
-    await _validate(values);
+    _validate(values);
   };
 
   const handleSubmit = async (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
-    await _validate(values, ({}, e) => {
+    _validate(values, ({}, e) => {
       setTouchedValues(
         Object.keys(values).reduce((acc, el) => ({ ...acc, [el]: true }), {}),
       );

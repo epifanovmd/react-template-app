@@ -2,7 +2,6 @@ import { EventNames, eventRegister } from "./eventRegister";
 import { IModalProps } from "Components/popup/popup";
 import React from "react";
 import { message, Modal, notification } from "antd";
-import { ModalFunc } from "antd/lib/modal/Modal";
 
 export const popup = {
   message: {

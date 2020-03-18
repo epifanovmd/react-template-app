@@ -1,7 +1,6 @@
 import React, { FC, memo, useCallback } from "react";
-import { Input, Select } from "antd";
-import { InputProps } from "antd/es/input";
-import styled from "styled-components";
+import { Select } from "antd";
+import styled, { css } from "styled-components";
 import { SelectProps } from "antd/es/select";
 
 interface IProps extends Omit<SelectProps, "onChange" | "onBlur"> {
@@ -22,7 +21,16 @@ interface IProps extends Omit<SelectProps, "onChange" | "onBlur"> {
 const Wrap = styled.div<{ maxWidth?: string }>`
   display: flex;
   flex-flow: column;
-  ${({ maxWidth }) => (maxWidth ? "flex-grow : 0" : "flex-grow : 1")};
+  ${({ maxWidth }) =>
+    maxWidth
+      ? css`
+          flex-grow: 0;
+          flex-basis: auto;
+        `
+      : css`
+          flex-grow: 1;
+          flex-basis: 0;
+        `};
   padding: 8px;
   position: relative;
 `;
@@ -58,7 +66,7 @@ const Description = styled.div`
   color: #8c8c8c;
 `;
 
-const InputWrap = styled.div<{ maxWidth?: string }>`
+const ControlWrap = styled.div<{ maxWidth?: string }>`
   ${({ maxWidth }) => (maxWidth ? `max-width : ${maxWidth}` : "")};
   display: flex;
   flex-flow: column;
@@ -113,7 +121,7 @@ export const CustomSelect: FC<IProps> = memo((props) => {
             {title}
           </Label>
         )}
-        <InputWrap maxWidth={maxWidth}>
+        <ControlWrap maxWidth={maxWidth}>
           <Select onBlur={onBlurHandler} onChange={onChangeHandler} {...rest}>
             {options.map((item, index) => (
               <Select.Option key={index} value={item.value}>
@@ -123,7 +131,7 @@ export const CustomSelect: FC<IProps> = memo((props) => {
           </Select>
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
-        </InputWrap>
+        </ControlWrap>
       </TitleWrap>
     </Wrap>
   );

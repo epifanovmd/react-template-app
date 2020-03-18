@@ -18,7 +18,16 @@ interface IProps extends InputProps {
 const Wrap = styled.div<{ maxWidth?: string }>`
   display: flex;
   flex-flow: column;
-  ${({ maxWidth }) => (maxWidth ? "flex-grow : 0" : "flex-grow : 1")};
+  ${({ maxWidth }) =>
+    maxWidth
+      ? css`
+          flex-grow: 0;
+          flex-basis: auto;
+        `
+      : css`
+          flex-grow: 1;
+          flex-basis: 0;
+        `};
   padding: 8px;
   position: relative;
 `;
@@ -53,7 +62,7 @@ const Description = styled.div`
   color: #8c8c8c;
 `;
 
-const InputWrap = styled.div<{ maxWidth?: string }>`
+const ControlWrap = styled.div<{ maxWidth?: string }>`
   ${({ maxWidth }) => (maxWidth ? `max-width : ${maxWidth}` : "")};
   display: flex;
   flex-flow: column;
@@ -92,15 +101,17 @@ export const PasswordInput: FC<IProps> = memo((props) => {
             {title}
           </Label>
         )}
-        <InputWrap maxWidth={maxWidth}>
+        <ControlWrap maxWidth={maxWidth}>
           <Input.Password
-            style={touch && !isValid ? { border: "1px solid red" } : {}}
+            style={
+              touch && isValid === false ? { border: "1px solid red" } : {}
+            }
             name={name}
             {...rest}
           />
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
-        </InputWrap>
+        </ControlWrap>
       </TitleWrap>
     </Wrap>
   );

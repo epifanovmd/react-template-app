@@ -1,26 +1,21 @@
 import React, { FC, memo, useCallback } from "react";
-import { DatePicker } from "antd";
+import { Checkbox } from "antd";
 import styled, { css } from "styled-components";
-import { RangePickerProps } from "antd/es/date-picker/interface";
-import { RangePickerValue } from "antd/lib/date-picker/interface";
-import moment from "moment";
+import { CheckboxGroupProps, CheckboxProps } from "antd/es/checkbox";
 
-const { RangePicker } = DatePicker;
-
-interface IProps
-  extends Omit<RangePickerProps, "onChange" | "onBlur" | "value"> {
+interface IProps extends Omit<CheckboxProps, "onChange" | "onBlur"> {
   error?: string;
   touch?: boolean;
   title?: string;
-  name?: string;
+  name: string;
   positionTitle?: "top" | "left";
   requiredIcon?: boolean;
   minWidthTitle?: string;
   description?: string;
   maxWidth?: string;
-  value?: { from: string; to: string };
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
+  options: { label: string; value: any }[];
+  onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur?: (event: React.FocusEvent<HTMLSelectElement>) => void;
 }
 
 const Wrap = styled.div<{ maxWidth?: string }>`
@@ -82,7 +77,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomRangePicker: FC<IProps> = memo((props) => {
+export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
   const {
     title,
     touch,
@@ -95,35 +90,15 @@ export const CustomRangePicker: FC<IProps> = memo((props) => {
     maxWidth,
     onChange,
     onBlur,
-    value,
+    options,
     ...rest
   } = props;
-
-  const onChangeHandler: (
-    dates: RangePickerValue,
-    dateStrings: [string, string],
-  ) => void = useCallback(
-    ({}, values) => {
+  const onChangeHandler: CheckboxGroupProps["onChange"] = useCallback(
+    (value) => {
       const func: any = onChange;
-      func &&
-        func({
-          target: {
-            value:
-              values[0] && values[1]
-                ? { from: values[0], to: values[1] }
-                : undefined,
-            name,
-          },
-        });
+      func && func({ target: { value, name } });
     },
     [onChange],
-  );
-  const onBlurHandler: (status: boolean) => void = useCallback(
-    (status) => {
-      const func: any = onBlur;
-      !status && func && func({ target: { value: true, name } });
-    },
-    [onBlur],
   );
 
   return (
@@ -140,18 +115,13 @@ export const CustomRangePicker: FC<IProps> = memo((props) => {
           </Label>
         )}
         <ControlWrap maxWidth={maxWidth}>
-          <RangePicker
-            onChange={onChangeHandler}
-            onOpenChange={onBlurHandler}
-            value={
-              value
-                ? (value.from &&
-                    value.to && [moment(value.from), moment(value.to)]) ||
-                  undefined
-                : undefined
-            }
-            {...rest}
-          />
+          <Checkbox.Group onChange={onChangeHandler}>
+            {options.map((item, index) => (
+              <Checkbox {...rest} key={index} value={item.value}>
+                {item.value}
+              </Checkbox>
+            ))}
+          </Checkbox.Group>
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </ControlWrap>

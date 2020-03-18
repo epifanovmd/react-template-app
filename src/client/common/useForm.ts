@@ -3,6 +3,7 @@ import { ObjectSchema, Shape } from "yup";
 import { RadioChangeEvent } from "antd/es/radio";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
+
 interface IUseForm<T extends object> {
   initialValues: T;
   onChange?: (values: T, errors: Partial<Record<keyof T, string>>) => void;

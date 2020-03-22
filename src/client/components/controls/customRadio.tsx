@@ -92,6 +92,7 @@ export const CustomRadioGroup: FC<IProps> = memo((props) => {
     onChange,
     onBlur,
     options,
+    value,
     ...rest
   } = props;
 
@@ -115,7 +116,7 @@ export const CustomRadioGroup: FC<IProps> = memo((props) => {
           </Label>
         )}
         <ControlWrap maxWidth={maxWidth}>
-          <Radio.Group onChange={handleChange}>
+          <Radio.Group value={value} onChange={handleChange}>
             {options.map((item, index) => (
               <Radio {...rest} name={name} key={index} value={item.value}>
                 {item.value}

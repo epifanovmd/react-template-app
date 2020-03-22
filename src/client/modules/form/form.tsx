@@ -10,17 +10,15 @@ import { CustomRadioGroup } from "Components/controls/customRadio";
 import { array, number, object, string } from "yup";
 
 const From: FC = () => {
-  const validateSchema = object().shape({
+  const validateSchema: any = object().shape({
     input: string().required("Поле явялется обязательным"),
     select: array(string()).required("Поле явялется обязательным"),
     checkBox: array(number()).required("Поле явялется обязательным"),
-    radio: array(number()).required("Поле явялется обязательным"),
-    range: object()
-      .shape({
-        from: string(),
-        to: string(),
-      })
-      .required("Поле явялется обязательным"),
+    radio: number().required("Поле явялется обязательным"),
+    range: object().shape({
+      from: string().required("Поле явялется обязательным"),
+      to: string().required("Поле явялется обязательным"),
+    }),
     textArea: string().required("Поле явялется обязательным"),
     selectes: array(
       object().shape({
@@ -43,18 +41,19 @@ const From: FC = () => {
       input: "",
       select: ["2", "1"],
       checkBox: [1],
-      radio: [],
+      radio: 2,
       range: { from: "", to: "" },
       textArea: "",
       selectes: [
         {
-          select: 1,
+          select: undefined,
         },
       ],
     },
     onSubmit: (_values) => {
       console.log("Values", _values);
     },
+    validateOnInit: true,
     validateSchema,
   });
 
@@ -142,7 +141,9 @@ const From: FC = () => {
         );
       })}
       {/* tslint:disable-next-line:jsx-no-lambda */}
-      <Button onClick={() => fieldsHelper.append("selectes", [{ select: 1 }])}>
+      <Button
+        onClick={() => fieldsHelper.append("selectes", [{ select: undefined }])}
+      >
         Добавить
       </Button>
       <Button htmlType={"submit"}>Отправить</Button>

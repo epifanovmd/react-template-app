@@ -233,7 +233,9 @@ export const useForm = <T extends object>({
     event?.preventDefault();
     _validate(values, ({}, e) => {
       setTouchedValues(
-        Object.keys(values).reduce((acc, el) => ({ ...acc, [el]: true }), {}),
+        Object.keys(values).reduce((acc, el) => {
+          return { ...acc, [el]: true };
+        }, {}),
       );
       Object.keys({ ...e }).length === 0 && onSubmit && onSubmit(values, e);
     });

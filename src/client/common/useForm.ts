@@ -233,7 +233,25 @@ export const useForm = <T extends object>({
     event?.preventDefault();
     _validate(values, ({}, e) => {
       setTouchedValues(
-        Object.keys(values).reduce((acc, el) => {
+        (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
+          const field = values[el] as any;
+          if (
+            Array.isArray(field) &&
+            field[0] &&
+            typeof field[0] === "object" &&
+            !Array.isArray(field[0])
+          ) {
+            const obj: any = {};
+            const arr: any[] = field;
+            arr.forEach((val, ind) => {
+              Object.keys(val).forEach((key) => {
+                obj[`${el}[${ind}].${key}`] = true;
+              });
+            });
+
+            return { ...acc, ...obj };
+          }
+
           return { ...acc, [el]: true };
         }, {}),
       );

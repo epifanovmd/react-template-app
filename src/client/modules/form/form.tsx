@@ -57,6 +57,8 @@ const From: FC = () => {
     validateSchema,
   });
 
+  console.log("errors", errors);
+
   return (
     <form onSubmit={handleSubmit}>
       <CustomInput
@@ -123,7 +125,7 @@ const From: FC = () => {
       />
       {fieldsIterate("selectes", (selectes) => {
         return (
-          <>
+          <div key={selectes.index}>
             <CustomSelect
               name={selectes.fieldsName.select}
               value={selectes.value.select}
@@ -137,15 +139,9 @@ const From: FC = () => {
                 { value: 3, label: "3" },
               ]}
             />
-          </>
+          </div>
         );
       })}
-      {/* tslint:disable-next-line:jsx-no-lambda */}
-      <Button
-        onClick={() => fieldsHelper.append("selectes", [{ select: undefined }])}
-      >
-        Добавить
-      </Button>
       <Button htmlType={"submit"}>Отправить</Button>
     </form>
   );

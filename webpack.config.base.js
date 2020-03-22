@@ -81,15 +81,19 @@ const baseLoaders = {
     use: ["babel-loader", "ts-loader"],
   },
   url: {
-    test: /\.(pdf|jpg|png|gif|svg|ico)$/,
+    test: /\.(pdf|jpg|png|gif|ico)$/,
     loader: "url-loader",
     options: {
       limit: 25000,
       name: "[path][name].[hash:8].[ext]",
     },
   },
+  svg: {
+    test: /\.svg$/,
+    use: ["@svgr/webpack"],
+  },
   file: {
-    test: /\.(pdf|jpg|png|gif|svg|ico)$/,
+    test: /\.(pdf|jpg|png|gif|ico)$/,
     loader: "file-loader",
     options: {
       name: "[path][name].[hash:8].[ext]",

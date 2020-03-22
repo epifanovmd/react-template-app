@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { ObjectSchema, Shape } from "yup";
 import { RadioChangeEvent } from "antd/es/radio";
 
@@ -41,6 +41,17 @@ export const useForm = <T extends object>({
     setValues(_values);
     _validate(_values);
   };
+
+  const getFields = useCallback(() => {
+    const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
+    Object.keys(initialValues).forEach((key) => {
+      obj[key as keyof T] = key;
+    });
+
+    return obj;
+  }, [initialValues]);
+
+  const fieldNames = getFields();
 
   const fieldsHelper = {
     remove: (name: keyof T, index: number) => {
@@ -230,16 +241,17 @@ export const useForm = <T extends object>({
 
   return {
     values,
-    onSetValues,
     touchedValues,
     errors,
-    fieldsIterate,
-    fieldsHelper,
-    handleSubmit,
+    fieldNames,
+    onSetValues,
     handleChange,
     handleBlur,
     setFieldValue,
     setFieldBlur,
+    handleSubmit,
+    fieldsIterate,
+    fieldsHelper,
     handleClearForm,
   };
 };

@@ -29,7 +29,8 @@ const App = () => {
           <Route
             {...route}
             key={route.path}
-            component={AuthorizationMiddleware(route.component)}
+            // component={AuthorizationMiddleware(route.component)}
+            component={route.component}
           />
         ))}
         <Route exact={true} path={"/authorization"} component={Authorization} />

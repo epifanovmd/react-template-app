@@ -1,14 +1,10 @@
 import React, { FC, memo, useCallback } from "react";
-import { Checkbox } from "antd";
+import { Radio } from "antd";
 import styled, { css } from "styled-components";
-import {
-  CheckboxChangeEvent,
-  CheckboxGroupProps,
-  CheckboxProps,
-} from "antd/es/checkbox";
-import { RadioChangeEvent } from "antd/es/radio";
+import { CheckboxGroupProps, CheckboxProps } from "antd/es/checkbox";
+import { RadioChangeEvent, RadioGroupProps, RadioProps } from "antd/es/radio";
 
-interface IProps extends Omit<CheckboxProps, "onChange"> {
+interface IProps extends Omit<RadioProps, "onChange"> {
   error?: string;
   touch?: boolean;
   title?: string;
@@ -82,7 +78,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
+export const CustomRadioGroup: FC<IProps> = memo((props) => {
   const {
     title,
     touch,
@@ -96,12 +92,12 @@ export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
     onChange,
     onBlur,
     options,
-    value,
     ...rest
   } = props;
 
-  const handleChange: CheckboxGroupProps["onChange"] = (_value) => {
-    onChange && (onChange as any)({ target: { value: _value, name } });
+  const handleChange: RadioGroupProps["onChange"] = (event) => {
+    onChange &&
+      (onChange as any)({ ...event, target: { ...event.target, name } });
     onBlur && (onBlur as any)({ target: { value: true, name } });
   };
 
@@ -119,13 +115,13 @@ export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
           </Label>
         )}
         <ControlWrap maxWidth={maxWidth}>
-          <Checkbox.Group value={value} onChange={handleChange}>
+          <Radio.Group onChange={handleChange}>
             {options.map((item, index) => (
-              <Checkbox {...rest} key={index} value={item.value}>
+              <Radio {...rest} name={name} key={index} value={item.value}>
                 {item.value}
-              </Checkbox>
+              </Radio>
             ))}
-          </Checkbox.Group>
+          </Radio.Group>
           {error && touch && <Error>{error}</Error>}
           {description && <Description>{description}</Description>}
         </ControlWrap>

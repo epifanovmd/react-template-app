@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AuthActions } from "Modules/authentication/AuthActions";
 import { checkAuthorization } from "Common/checkAuthorization";
 import { IAppState } from "Store/IAppState";
+import { routes } from "@/routes";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();
@@ -21,22 +22,16 @@ export const Header: FC = memo(() => {
     dispatch(AuthActions.logOut());
   };
   const token = useSelector((state: IAppState) => state.auth.token);
-  const { count = 0 } = useSelector(
-    (state: IAppState) => state.messagesPage.messages,
-  );
 
   return (
     <div className={styles.header}>
       <menu>
         <ul className={styles.items}>
-          <li>
-            <NavLink to={"/"}>{t("users")}</NavLink>
-          </li>
-          <li>
-            <NavLink to={"/messages"}>
-              {t("messages") + (count > 0 ? ` +${count}` : "")}
-            </NavLink>
-          </li>
+          {routes.map(({ path, pathName }) => (
+            <li key={path}>
+              <NavLink to={path}>{t(pathName)}</NavLink>
+            </li>
+          ))}
           {!checkAuthorization(token) ? (
             <li>
               <NavLink to={"/authorization"}>{t("sign_in")}</NavLink>

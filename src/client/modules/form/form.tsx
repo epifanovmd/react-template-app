@@ -11,18 +11,26 @@ import { array, number, object, string } from "yup";
 
 const From: FC = () => {
   const validateSchema: any = object().shape({
-    input: string().required("Поле явялется обязательным"),
-    select: array(string()).required("Поле явялется обязательным"),
-    checkBox: array(number()).required("Поле явялется обязательным"),
-    radio: number().required("Поле явялется обязательным"),
+    input: string().required("Поле 'input' явялется обязательным"),
+    select: array(string()).required("Поле 'select' явялется обязательным"),
+    checkBox: array(number()).required("Поле 'checkBox' явялется обязательным"),
+    radio: number().required("Поле 'radio' явялется обязательным"),
     range: object().shape({
-      from: string().required("Поле явялется обязательным"),
-      to: string().required("Поле явялется обязательным"),
+      from: string().required("Поле 'from' явялется обязательным"),
+      to: string().required("Поле 'to' явялется обязательным"),
     }),
-    textArea: string().required("Поле явялется обязательным"),
+    textArea: string().required("Поле 'textArea' явялется обязательным"),
+    ranges: array(
+      object().shape({
+        range: object().shape({
+          from: string().required("Поле 'from' явялется обязательным"),
+          to: string().required("Поле 'to' явялется обязательным"),
+        }),
+      }),
+    ),
     selectes: array(
       object().shape({
-        select: number().required("Поле явялется обязательным"),
+        select: array(number()).required("Поле 'select' явялется обязательным"),
       }),
     ),
   });
@@ -44,6 +52,11 @@ const From: FC = () => {
       radio: 2,
       range: { from: "", to: "" },
       textArea: "",
+      ranges: [
+        {
+          range: { from: "", to: "" },
+        },
+      ],
       selectes: [
         {
           select: undefined,
@@ -56,8 +69,6 @@ const From: FC = () => {
     validateOnInit: true,
     validateSchema,
   });
-
-  console.log("errors", errors);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -123,10 +134,24 @@ const From: FC = () => {
         onChange={handleChange}
         onBlur={handleBlur}
       />
+      {fieldsIterate("ranges", (ranges) => {
+        return (
+          <div key={ranges.index}>
+            <CustomRangePicker
+              name={ranges.fieldsName.range}
+              value={ranges.value.range}
+              touch={ranges.touched.range}
+              error={ranges.error.range}
+              onChange={ranges.fieldsHelper.handleChange}
+              onBlur={handleBlur}
+            />
+          </div>
+        );
+      })}
       {fieldsIterate("selectes", (selectes) => {
         return (
           <div key={selectes.index}>
-            <CustomSelect
+            <CustomCheckboxGroup
               name={selectes.fieldsName.select}
               value={selectes.value.select}
               touch={selectes.touched.select}
@@ -136,7 +161,6 @@ const From: FC = () => {
               options={[
                 { value: 1, label: "1" },
                 { value: 2, label: "2" },
-                { value: 3, label: "3" },
               ]}
             />
           </div>

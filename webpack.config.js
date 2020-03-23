@@ -22,7 +22,7 @@ const client = {
   mode: IS_PRODUCTION ? "production" : "development",
   module: {
     rules: [
-      baseLoaders.ts,
+      baseLoaders.tsNew,
       baseLoaders.scss,
       baseLoaders.less,
       baseLoaders.css,

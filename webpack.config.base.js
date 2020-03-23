@@ -4,6 +4,7 @@ const autoprefixer = require("autoprefixer");
 const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -79,6 +80,25 @@ const baseLoaders = {
     test: /\.tsx?$/,
     exclude: /node_modules/,
     use: ["babel-loader", "ts-loader"],
+  },
+  tsNew: {
+    test: /\.tsx?$/,
+    use: [
+      { loader: "babel-loader" },
+      { loader: "cache-loader" },
+      {
+        loader: "thread-loader",
+        options: {
+          workers: require("os").cpus().length - 1,
+        },
+      },
+      {
+        loader: "ts-loader",
+        options: {
+          happyPackMode: true, // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+        },
+      },
+    ],
   },
   url: {
     test: /\.(pdf|jpg|png|gif|ico)$/,
@@ -211,6 +231,7 @@ const baseLoaders = {
 };
 
 const basePlugins = [
+  new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
   ...(IS_PRODUCTION
     ? [
       new MiniCssExtractPlugin({

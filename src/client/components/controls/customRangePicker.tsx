@@ -108,10 +108,7 @@ export const CustomRangePicker: FC<IProps> = memo((props) => {
       func &&
         func({
           target: {
-            value:
-              values[0] && values[1]
-                ? { from: values[0], to: values[1] }
-                : undefined,
+            value: { from: values[0] || "", to: values[1] || "" },
             name,
           },
         });

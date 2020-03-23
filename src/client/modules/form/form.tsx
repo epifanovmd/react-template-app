@@ -10,7 +10,7 @@ import { CustomRadioGroup } from "Components/controls/customRadio";
 import { array, number, object, string } from "yup";
 
 const From: FC = () => {
-  const validateSchema: any = object().shape({
+  const validateSchema = object().shape({
     input: string().required("Поле 'input' явялется обязательным"),
     select: array(string()).required("Поле 'select' явялется обязательным"),
     checkBox: array(number()).required("Поле 'checkBox' явялется обязательным"),
@@ -43,7 +43,6 @@ const From: FC = () => {
     errors,
     touchedValues,
     fieldsIterate,
-    fieldsHelper,
   } = useForm({
     initialValues: {
       input: "",
@@ -59,7 +58,7 @@ const From: FC = () => {
       ],
       selectes: [
         {
-          select: undefined,
+          select: [],
         },
       ],
     },

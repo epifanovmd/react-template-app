@@ -148,9 +148,7 @@ export const useForm = <T extends object>({
         setValues((state) => {
           const newValues = {
             ...state,
-            [name]: (
-              (values[name] as any) || []
-            ).map((item: any, ind: number) =>
+            [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
               index && ind === +index ? { ...item, [key]: value } : item,
             ),
           };
@@ -170,19 +168,18 @@ export const useForm = <T extends object>({
         setValues((state) => {
           const newValues = {
             ...state,
-            [name]: ((values[name] as any) || []).map(
-              (item: any, ind: number) =>
-                ind === index
-                  ? {
-                      ...item,
-                      [key]:
-                        typeof value === "function"
-                          ? (value as (
-                              state: T,
-                            ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
-                          : value,
-                    }
-                  : item,
+            [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
+              ind === index
+                ? {
+                    ...item,
+                    [key]:
+                      typeof value === "function"
+                        ? (value as (
+                            state: T,
+                          ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
+                        : value,
+                  }
+                : item,
             ),
           };
           _validate(newValues);
@@ -294,7 +291,7 @@ export const useForm = <T extends object>({
         }));
       _validate(values);
     },
-    [setTouchedValues, _validate],
+    [setTouchedValues, _validate, values],
   );
 
   const setFieldBlur = useCallback(
@@ -305,7 +302,7 @@ export const useForm = <T extends object>({
       }));
       _validate(values);
     },
-    [setTouchedValues, _validate],
+    [setTouchedValues, _validate, values],
   );
 
   const handleSubmit = useCallback(

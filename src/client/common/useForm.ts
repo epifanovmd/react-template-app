@@ -77,34 +77,54 @@ export const useForm = <T extends object>({
         [name]: [...(state[name] as any), ...(value as any)],
       }));
     },
-    handleChange: async ({ target }: React.ChangeEvent<any>) => {
+    handleChange: ({ target }: React.ChangeEvent<any>) => {
       const name: keyof T = (target?.name || "").split("[")[0];
       const index = ((target?.name.match("\\[[0-9]{1,2}\\]") || [])[0] || -1)
         .split("]")[0]
         .split("[")[1];
       const key = (target?.name || "").split(".")[1];
       const value = target?.value;
-      const _values = await _validate({
-        ...values,
-        [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
-          index && ind === +index ? { ...item, [key]: value } : item,
-        ),
+      setValues((state) => {
+        const newValues = {
+          ...state,
+          [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
+            index && ind === +index ? { ...item, [key]: value } : item,
+          ),
+        };
+        _validate(newValues);
+
+        return newValues;
       });
-      setValues(_values);
     },
     setFieldValue: async <A extends T[keyof T]>(
       name: keyof T,
       key: keyof TCheckArray<A>,
-      value: TCheckArray<A>[keyof TCheckArray<A>],
+      value:
+        | ((state: T) => TCheckArray<A>[keyof TCheckArray<A>])
+        | TCheckArray<A>[keyof TCheckArray<A>],
       index: number,
     ) => {
-      const _values = await _validate({
-        ...values,
-        [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
-          ind === index ? { ...item, [key]: value } : item,
-        ),
+      setValues((state) => {
+        const newValues = {
+          ...state,
+          [name]: ((values[name] as any) || []).map((item: any, ind: number) =>
+            ind === index
+              ? {
+                  ...item,
+                  [key]:
+                    typeof value === "function"
+                      ? (value as (
+                          state: T,
+                        ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
+                      : value,
+                }
+              : item,
+          ),
+        };
+        _validate(newValues);
+
+        return newValues;
       });
-      setValues(_values);
     },
   };
 
@@ -197,13 +217,30 @@ export const useForm = <T extends object>({
     const target = event?.target;
     const value = target?.type === "checkbox" ? target?.checked : target?.value;
     const name = target?.name;
-    _validate({ ...values, [name]: value });
-    setValues({ ...values, [name]: value });
+    setValues((state) => {
+      const newValues = { ...state, [name]: value };
+      _validate(newValues);
+
+      return newValues;
+    });
   };
 
-  const setFieldValue = <K extends keyof T>(name: K, value: T[K]) => {
-    _validate({ ...values, [name]: value });
-    setValues({ ...values, [name]: value });
+  const setFieldValue = <K extends keyof T>(
+    name: K,
+    value: ((state: T) => T[K]) | T[K],
+  ) => {
+    setValues((state) => {
+      const newValues = {
+        ...state,
+        [name]:
+          typeof value === "function"
+            ? (value as (state: T) => T[K])(state)
+            : value,
+      };
+      _validate(newValues);
+
+      return newValues;
+    });
     setTouchedValues((state) => ({
       ...state,
       [name]: true,

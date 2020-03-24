@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { ObjectSchema, Shape } from "yup";
 import { RadioChangeEvent } from "antd/es/radio";
-import { debounce } from "Common/debounce";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 
@@ -246,14 +245,13 @@ export const useForm = <T extends object>({
       const value =
         target?.type === "checkbox" ? target?.checked : target?.value;
       const name = target?.name;
-      debounce(() => {
-        setValues((state) => {
-          const newValues = { ...state, [name]: value };
-          _validate(newValues);
 
-          return newValues;
-        });
-      }, 0);
+      setValues((state) => {
+        const newValues = { ...state, [name]: value };
+        _validate(newValues);
+
+        return newValues;
+      });
     },
     [setValues, _validate],
   );

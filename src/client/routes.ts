@@ -38,7 +38,6 @@ export const getRoutsFromRole = (
 export const routepaths = {
   ROOT: "/",
   USERS: "/users",
-  MESSAGES: "/messages",
   FORM: "/form",
 };
 

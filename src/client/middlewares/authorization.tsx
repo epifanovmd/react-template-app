@@ -1,13 +1,11 @@
 import React, { FC } from "react";
 import { withRouter } from "react-router-dom";
 import { checkAuthorization } from "Common/checkAuthorization";
-import { useSelector } from "react-redux";
-import { IAppState } from "Store/IAppState";
 import { RouteComponentProps } from "react-router";
 
 export const AuthorizationMiddleware = (Component: any) => {
   const AuthMiddleware: FC<RouteComponentProps> = (props) => {
-    const token = useSelector((state: IAppState) => state.auth.token);
+    const token = "";
     const hasAuthenticationToken = () => {
       return checkAuthorization(token);
     };

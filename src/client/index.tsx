@@ -16,7 +16,6 @@ const history = createBrowserHistory();
 initLocalization({ initLang: cookie.get("i18next") }).finally();
 export const store = createSimpleStore({
   ...window.REDUX_DATA,
-  auth: { token: cookie.get("token") },
 });
 
 const renderMethod =

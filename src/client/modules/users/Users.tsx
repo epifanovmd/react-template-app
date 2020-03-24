@@ -21,6 +21,7 @@ const Users: FC<IProps> = memo(() => {
 
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);
+  console.log(users.data);
 
   return (
     <>

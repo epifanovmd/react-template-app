@@ -5,7 +5,6 @@ import { UsersAsyncActions } from "Modules/users/usersAsyncActions";
 import loadable from "@loadable/component";
 
 const Users = loadable(() => import("./modules/users/Users"));
-const Messages = loadable(() => import("./modules/messages/messages"));
 const Form = loadable(() => import("./modules/form/form"));
 
 export enum Roles {
@@ -50,12 +49,6 @@ export const routes: IRoute[] = [
     component: Users,
     exact: true,
     getInitialData: UsersAsyncActions.getUsers(),
-  },
-  {
-    path: routepaths.MESSAGES,
-    pathName: "messages",
-    component: Messages,
-    exact: true,
   },
   {
     path: routepaths.FORM,

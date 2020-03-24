@@ -5,7 +5,7 @@ import { newState } from "Store/common/newState";
 import { LoadState } from "Common/loadState";
 import { Success } from "typescript-fsa";
 import { IEmpty } from "Common/IEmpty";
-import { IUserDto } from "Api/dto/Users.g";
+import { IUser } from "Api/dto/Users.g";
 import { IResponse } from "@/api";
 
 function getUsersStartedHandler(state: IUsersState) {
@@ -19,13 +19,13 @@ function getUsersStartedHandler(state: IUsersState) {
 
 function getUsersDoneHandler(
   state: IUsersState,
-  { result }: Success<IEmpty, IResponse<IUserDto>>,
+  { result }: Success<IEmpty, IResponse<IUser[]>>,
 ) {
   return newState(
     state,
     newState(state, {
       users: {
-        data: result.data.data,
+        data: result.data,
         loadState: LoadState.idle,
       },
     }),

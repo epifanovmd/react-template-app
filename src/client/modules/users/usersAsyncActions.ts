@@ -13,12 +13,12 @@ export const UsersAsyncActions = {
       params: {},
       actions: UsersActions.getUsers,
       onSuccess: ({}, result) => {
-        callback && callback(result.data.data);
+        callback && callback(result.data);
       },
       onFail: ({}, {}, { i18next }) => {
         popup.notification.error({
           message: i18next.t("error"),
-          description: i18next.t("auth_error"),
+          description: i18next.t("error"),
         });
       },
     });

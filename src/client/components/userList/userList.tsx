@@ -19,8 +19,6 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         <TableHeader>
           <TableRow>
             <TableRowCell>{t("username")}</TableRowCell>
-            <TableRowCell>{t("firstName")}</TableRowCell>
-            <TableRowCell>{t("lastName")}</TableRowCell>
             <TableRowCell>{t("email")}</TableRowCell>
           </TableRow>
         </TableHeader>
@@ -29,10 +27,6 @@ export const UserList: FC<IProps> = memo(({ users }) => {
           users.map((item) => (
             <TableRow key={item.id}>
               <TableRowCell label={t("username")}>{item.username}</TableRowCell>
-              <TableRowCell label={t("firstName")}>
-                {item.firstName}
-              </TableRowCell>
-              <TableRowCell label={t("lastName")}>{item.lastName}</TableRowCell>
               <TableRowCell label={t("email")}>{item.email}</TableRowCell>
             </TableRow>
           ))}

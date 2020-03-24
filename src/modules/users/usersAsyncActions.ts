@@ -1,9 +1,9 @@
 import { UsersActions } from "./usersActions";
 import { popup } from "Common/popup";
-import { IUser } from "Api/dto/Users.g";
+import { IUser } from "src/api/dto/Users.g";
 import { SimpleThunk } from "Common/simpleThunk";
 import { RequestType } from "Common/requestType";
-import { callApi } from "Store/common/apiActionsAsync";
+import { callApi } from "../../store/common/apiActionsAsync";
 
 export const UsersAsyncActions = {
   getUsers: (callback?: (users: IUser[]) => void): SimpleThunk => {

@@ -1,10 +1,10 @@
 import React, { FC, memo, useEffect } from "react";
-import { UserList } from "Components/userList/userList";
 import Helmet from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { UsersAsyncActions } from "./usersAsyncActions";
-import { IAppState } from "Store/IAppState";
+import { IAppState } from "../../store/IAppState";
 import { useTranslation } from "react-i18next";
+import { UserList } from "@/components/userList/userList";
 
 interface IProps {}
 

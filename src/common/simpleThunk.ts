@@ -1,7 +1,7 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
-import { IAppState } from "Store/IAppState";
-import { IExtraArguments } from "Store/store";
+import { IAppState } from "../store/IAppState";
+import { IExtraArguments } from "../store/store";
 
 export type SimpleThunk = ThunkAction<
   Promise<void>,

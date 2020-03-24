@@ -1,10 +1,10 @@
-import { Popup } from "Components/popup/popup";
+import { Popup } from "./components/popup/popup";
 import { Route, Switch } from "react-router-dom";
 import React from "react";
 import { routes } from "./routes";
-import { Header } from "Components/layouts/header/header";
+import { Header } from "./components/layouts/header/header";
 import { useTranslation } from "react-i18next";
-import "../../node_modules/antd/dist/antd.css";
+import "antd/dist/antd.css";
 
 const App = () => {
   const { i18n } = useTranslation();

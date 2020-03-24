@@ -1,4 +1,4 @@
-import { RequestType } from "Common/requestType";
+import { RequestType } from "../common/requestType";
 import { IResponse } from "./index";
 
 interface IParams<P> {

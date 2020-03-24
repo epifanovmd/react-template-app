@@ -12,7 +12,6 @@ React Redux Server Side Rendering Application
   - Typescript Fsa Reducers
   - Reselect
   - i18next
-  - Express (SSR)
   - Luxon
   - Loadable Component (for code splitting)
   - CSS Modules
@@ -26,7 +25,7 @@ $ yarn
 
 ### Run
 ```sh
-$ yarn prod:ssr
+$ yarn prod
 ```
 ```sh
 Application listening on: http://localhost:8080

@@ -1,5 +1,5 @@
 import { EventNames, eventRegister } from "./eventRegister";
-import { IModalProps } from "Components/popup/popup";
+import { IModalProps } from "../components/popup/popup";
 import React from "react";
 import { message, Modal, notification } from "antd";
 

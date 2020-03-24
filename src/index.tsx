@@ -5,7 +5,7 @@ import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { loadableReady } from "@loadable/component";
 import App from "./App";
-import { createSimpleStore } from "Store/store";
+import { createSimpleStore } from "./store/store";
 import "./assets/global.module.scss";
 import { initLocalization } from "./localization/localization";
 import { Cookies } from "react-cookie";

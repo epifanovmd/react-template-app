@@ -81,16 +81,16 @@ export const useForm = <T extends object>({
 
       return _values;
     },
-    [setErrors],
+    [setErrors, validateSchema, validate],
   );
 
   useEffect(() => {
     onChange && onChange(values, errors);
-  }, [values, errors]);
+  }, [values, errors, onChange]);
 
   useEffect(() => {
     validateOnInit && _validate(values);
-  }, [values, _validate]);
+  }, [values, _validate, validateOnInit]);
 
   const onSetValues = useCallback(
     (_values: T) => {
@@ -109,7 +109,7 @@ export const useForm = <T extends object>({
     return obj;
   }, [initialValues]);
 
-  const fieldNames = useMemo(() => getFields(), [initialValues]);
+  const fieldNames = useMemo(() => getFields(), [getFields]);
 
   const fieldsHelper = useMemo(
     () => ({

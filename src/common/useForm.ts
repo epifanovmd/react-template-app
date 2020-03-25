@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { ObjectSchema, Shape } from "yup";
-import { RadioChangeEvent } from "antd/es/radio";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 
@@ -240,7 +239,7 @@ export const useForm = <T extends object>({
   }, [setValues, initialValues, setErrors, setTouchedValues]);
 
   const handleChange = useCallback(
-    (event: React.ChangeEvent<any> | RadioChangeEvent) => {
+    (event: React.ChangeEvent<any>) => {
       const target = event?.target;
       const value =
         target?.type === "checkbox" ? target?.checked : target?.value;

@@ -1,22 +1,22 @@
+import "./assets/global.module.scss";
+
+import { loadableReady } from "@loadable/component";
+import { createBrowserHistory } from "history";
 import React, { Suspense } from "react";
+import { Cookies } from "react-cookie";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
-import { loadableReady } from "@loadable/component";
+
 import App from "./App";
-import { createSimpleStore } from "./store/store";
-import "./assets/global.module.scss";
 import { initLocalization } from "./localization/localization";
-import { Cookies } from "react-cookie";
+import { createSimpleStore } from "./store/store";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();
 
 initLocalization({ initLang: cookie.get("i18next") }).finally();
-export const store = createSimpleStore({
-  ...window.REDUX_DATA,
-});
+export const store = createSimpleStore({ ...window.REDUX_DATA });
 
 const renderMethod =
   typeof window === "undefined" ? ReactDOM.hydrate : ReactDOM.render;
@@ -41,6 +41,7 @@ loadableReady(() => {
 if ((module as any).hot) {
   (module as any).hot.accept("./App", () => {
     const NewApp = require("./App").default;
+
     renderApp(NewApp);
   });
 }

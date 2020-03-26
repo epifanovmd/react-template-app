@@ -9,12 +9,12 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 const alias = {
-  "@": path.resolve(__dirname, `src/`),
-  Store: path.resolve(__dirname, `src/store`),
-  Api: path.resolve(__dirname, `src/api`),
-  Modules: path.resolve(__dirname, `src/modules`),
-  Common: path.resolve(__dirname, `src/common`),
-  Components: path.resolve(__dirname, `src/components`),
+  "@": path.resolve(__dirname, "src/"),
+  Store: path.resolve(__dirname, "src/store"),
+  Api: path.resolve(__dirname, "src/api"),
+  Modules: path.resolve(__dirname, "src/modules"),
+  Common: path.resolve(__dirname, "src/common"),
+  Components: path.resolve(__dirname, "src/components"),
 };
 
 const baseConfigClient = {
@@ -43,10 +43,11 @@ const baseLoaders = {
   ts: {
     test: /\.tsx?$/,
     exclude: /node_modules/,
-    use: ["babel-loader", "ts-loader"],
+    use: ["babel-loader", "ts-loader", "eslint-loader"],
   },
   tsNew: {
     test: /\.tsx?$/,
+    exclude: /node_modules/,
     use: [
       { loader: "babel-loader" },
       { loader: "cache-loader" },
@@ -59,7 +60,16 @@ const baseLoaders = {
       {
         loader: "ts-loader",
         options: {
-          happyPackMode: true, // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+          // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
+          happyPackMode: true,
+        },
+      },
+      {
+        loader: "eslint-loader",
+        options: {
+          cache: true,
+          emitError: true,
+          emitWarning: true,
         },
       },
     ],
@@ -158,7 +168,8 @@ const baseLoaders = {
         },
       },
       {
-        loader: "less-loader", // compiles Less to CSS,
+        // compiles Less to CSS
+        loader: "less-loader",
         options: {
           javascriptEnabled: true,
         },

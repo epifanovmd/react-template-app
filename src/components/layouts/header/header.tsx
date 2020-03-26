@@ -1,9 +1,10 @@
 import React, { ChangeEvent, FC, memo } from "react";
-import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import styles from "./styles.module.scss";
 import { useDispatch } from "react-redux";
+import { NavLink } from "react-router-dom";
+
 import { routes } from "../../../routes";
+import styles from "./styles.module.scss";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();

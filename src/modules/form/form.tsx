@@ -1,12 +1,12 @@
-import React, { FC, useCallback } from "react";
-import { useForm } from "Common/useForm";
-import { CustomInput } from "Components/controls/customInput";
-import { CustomSelect } from "Components/controls/customSelect";
-import { CustomCheckboxGroup } from "Components/controls/customCheckbox";
-import { CustomRangePicker } from "Components/controls/customRangePicker";
-import { CustomTextArea } from "Components/controls/customTextArea";
 import { Button } from "antd";
+import { useForm } from "Common/useForm";
+import { CustomCheckboxGroup } from "Components/controls/customCheckbox";
+import { CustomInput } from "Components/controls/customInput";
 import { CustomRadioGroup } from "Components/controls/customRadio";
+import { CustomRangePicker } from "Components/controls/customRangePicker";
+import { CustomSelect } from "Components/controls/customSelect";
+import { CustomTextArea } from "Components/controls/customTextArea";
+import React, { FC, useCallback } from "react";
 import { array, number, object, string } from "yup";
 
 const From: FC = () => {
@@ -52,20 +52,22 @@ const From: FC = () => {
       select: ["2", "1"],
       checkBox: [1],
       radio: 2,
-      range: { from: "", to: "" },
+      range: {
+        from: "",
+        to: "",
+      },
       textArea: "",
       ranges: [
         {
-          range: { from: "", to: "" },
+          range: {
+            from: "",
+            to: "",
+          },
         },
       ],
-      checkboxes: [
-        {
-          checkbox: [],
-        },
-      ],
+      checkboxes: [{ checkbox: [] }],
     },
-    onSubmit: (_values) => {
+    onSubmit: _values => {
       console.log("Values", _values);
     },
     validateOnInit: true,
@@ -76,23 +78,30 @@ const From: FC = () => {
     (index: number) => () => {
       fieldsHelper.remove("ranges", index);
     },
-    [fieldsHelper.remove],
+    [fieldsHelper],
   );
 
   const onRemoveCheckboxes = useCallback(
     (index: number) => () => {
       fieldsHelper.remove("checkboxes", index);
     },
-    [fieldsHelper.remove],
+    [fieldsHelper],
   );
 
   const onAppendRanges = useCallback(() => {
-    fieldsHelper.append("ranges", [{ range: { from: "", to: "" } }]);
-  }, [fieldsHelper.remove]);
+    fieldsHelper.append("ranges", [
+      {
+        range: {
+          from: "",
+          to: "",
+        },
+      },
+    ]);
+  }, [fieldsHelper]);
 
   const onAppendCheckboxes = useCallback(() => {
     fieldsHelper.append("checkboxes", [{ checkbox: [] }]);
-  }, [fieldsHelper.remove]);
+  }, [fieldsHelper]);
 
   return (
     <form onSubmit={handleSubmit}>
@@ -112,9 +121,18 @@ const From: FC = () => {
         onChange={handleChange}
         onBlur={handleBlur}
         options={[
-          { value: 1, label: "1" },
-          { value: 2, label: "2" },
-          { value: 3, label: "3" },
+          {
+            value: 1,
+            label: "1",
+          },
+          {
+            value: 2,
+            label: "2",
+          },
+          {
+            value: 3,
+            label: "3",
+          },
         ]}
       />
       <CustomCheckboxGroup
@@ -125,8 +143,14 @@ const From: FC = () => {
         onChange={handleChange}
         onBlur={handleBlur}
         options={[
-          { value: 1, label: "1" },
-          { value: 2, label: "2" },
+          {
+            value: 1,
+            label: "1",
+          },
+          {
+            value: 2,
+            label: "2",
+          },
         ]}
       />
 
@@ -138,8 +162,14 @@ const From: FC = () => {
         onChange={handleChange}
         onBlur={handleBlur}
         options={[
-          { value: 1, label: "1" },
-          { value: 2, label: "2" },
+          {
+            value: 1,
+            label: "1",
+          },
+          {
+            value: 2,
+            label: "2",
+          },
         ]}
       />
       <CustomRangePicker
@@ -158,43 +188,45 @@ const From: FC = () => {
         onChange={handleChange}
         onBlur={handleBlur}
       />
-      {fieldsIterate("ranges", (ranges) => {
-        return (
-          <div key={ranges.index}>
-            <CustomRangePicker
-              name={ranges.fieldsName.range}
-              value={ranges.value.range}
-              touch={ranges.touched.range}
-              error={ranges.error.range}
-              onChange={ranges.fieldsHelper.handleChange}
-              onBlur={handleBlur}
-            />
-            <Button onClick={onRemoveRanges(ranges.index)}>Удалить</Button>
-          </div>
-        );
-      })}
+      {fieldsIterate("ranges", ranges => (
+        <div key={ranges.index}>
+          <CustomRangePicker
+            name={ranges.fieldsName.range}
+            value={ranges.value.range}
+            touch={ranges.touched.range}
+            error={ranges.error.range}
+            onChange={ranges.fieldsHelper.handleChange}
+            onBlur={handleBlur}
+          />
+          <Button onClick={onRemoveRanges(ranges.index)}>Удалить</Button>
+        </div>
+      ))}
       <Button onClick={onAppendRanges}>Добавть период</Button>
-      {fieldsIterate("checkboxes", (checkboxes) => {
-        return (
-          <div key={checkboxes.index}>
-            <CustomCheckboxGroup
-              name={checkboxes.fieldsName.checkbox}
-              value={checkboxes.value.checkbox}
-              touch={checkboxes.touched.checkbox}
-              error={checkboxes.error.checkbox}
-              onChange={checkboxes.fieldsHelper.handleChange}
-              onBlur={handleBlur}
-              options={[
-                { value: 1, label: "1" },
-                { value: 2, label: "2" },
-              ]}
-            />
-            <Button onClick={onRemoveCheckboxes(checkboxes.index)}>
-              Удалить
-            </Button>
-          </div>
-        );
-      })}
+      {fieldsIterate("checkboxes", checkboxes => (
+        <div key={checkboxes.index}>
+          <CustomCheckboxGroup
+            name={checkboxes.fieldsName.checkbox}
+            value={checkboxes.value.checkbox}
+            touch={checkboxes.touched.checkbox}
+            error={checkboxes.error.checkbox}
+            onChange={checkboxes.fieldsHelper.handleChange}
+            onBlur={handleBlur}
+            options={[
+              {
+                value: 1,
+                label: "1",
+              },
+              {
+                value: 2,
+                label: "2",
+              },
+            ]}
+          />
+          <Button onClick={onRemoveCheckboxes(checkboxes.index)}>
+            Удалить
+          </Button>
+        </div>
+      ))}
       <Button onClick={onAppendCheckboxes}>Добавть чекбоксы</Button>
       <Button htmlType={"submit"}>Отправить</Button>
     </form>

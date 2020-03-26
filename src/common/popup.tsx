@@ -1,7 +1,8 @@
-import { EventNames, eventRegister } from "./eventRegister";
-import { IModalProps } from "../components/popup/popup";
-import React from "react";
 import { message, Modal, notification } from "antd";
+import { IModalProps } from "Components/popup/popup";
+import React from "react";
+
+import { EventNames, eventRegister } from "./eventRegister";
 
 export const popup = {
   message: {
@@ -26,13 +27,12 @@ export const popup = {
     config: notification.config,
     destroy: notification.destroy,
   },
-  confitm: Modal.confirm,
+  confirm: Modal.confirm,
   info: Modal.info,
   success: Modal.success,
   error: Modal.error,
   warn: Modal.warn,
   warning: Modal.warning,
-  confirm: Modal.confirm,
   destroyAll: Modal.destroyAll,
 
   modal({

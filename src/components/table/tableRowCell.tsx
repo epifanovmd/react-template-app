@@ -1,10 +1,10 @@
+import cn from "classnames";
 import React, { FC } from "react";
+
+import styles from "./styles.module.scss";
 import { ITableProps } from "./table";
 
-import cn from "classnames";
-import styles from "./styles.module.scss";
-
-export const TableRowCell: FC<ITableProps & { label?: string }> = (props) => {
+export const TableRowCell: FC<ITableProps & { label?: string }> = props => {
   const { children, className, label, ...rest } = props;
 
   return (

@@ -1,12 +1,12 @@
-import React, { FC, memo, useCallback } from "react";
 import { Checkbox } from "antd";
-import styled, { css } from "styled-components";
 import {
   CheckboxChangeEvent,
   CheckboxGroupProps,
   CheckboxProps,
 } from "antd/es/checkbox";
 import { RadioChangeEvent } from "antd/es/radio";
+import React, { FC, memo, useCallback } from "react";
+import styled, { css } from "styled-components";
 
 interface IProps extends Omit<CheckboxProps, "onChange"> {
   error?: string;
@@ -82,7 +82,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
+export const CustomCheckboxGroup: FC<IProps> = memo(props => {
   const {
     title,
     touch,
@@ -100,9 +100,21 @@ export const CustomCheckboxGroup: FC<IProps> = memo((props) => {
     ...rest
   } = props;
 
-  const handleChange: CheckboxGroupProps["onChange"] = (_value) => {
-    onChange && (onChange as any)({ target: { value: _value, name } });
-    onBlur && (onBlur as any)({ target: { value: true, name } });
+  const handleChange: CheckboxGroupProps["onChange"] = _value => {
+    onChange &&
+      (onChange as any)({
+        target: {
+          value: _value,
+          name,
+        },
+      });
+    onBlur &&
+      (onBlur as any)({
+        target: {
+          value: true,
+          name,
+        },
+      });
   };
 
   return (

@@ -1,6 +1,6 @@
-import React, { FC, memo } from "react";
 import { Input } from "antd";
 import { InputProps } from "antd/es/input";
+import React, { FC, memo } from "react";
 import styled, { css } from "styled-components";
 
 interface IProps extends InputProps {
@@ -74,7 +74,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomInput: FC<IProps> = memo((props) => {
+export const CustomInput: FC<IProps> = memo(props => {
   const {
     title,
     touch,

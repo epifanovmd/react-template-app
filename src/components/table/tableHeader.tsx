@@ -1,10 +1,10 @@
+import cn from "classnames";
 import React, { FC } from "react";
+
+import styles from "./styles.module.scss";
 import { ITableProps } from "./table";
 
-import cn from "classnames";
-import styles from "./styles.module.scss";
-
-export const TableHeader: FC<ITableProps> = (props) => {
+export const TableHeader: FC<ITableProps> = props => {
   const { children, className, ...rest } = props;
 
   return (

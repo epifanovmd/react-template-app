@@ -1,13 +1,14 @@
-import { UsersActions } from "./usersActions";
 import { popup } from "Common/popup";
-import { IUser } from "src/api/dto/Users.g";
-import { SimpleThunk } from "Common/simpleThunk";
 import { RequestType } from "Common/requestType";
-import { callApi } from "../../store/common/apiActionsAsync";
+import { SimpleThunk } from "Common/simpleThunk";
+import { IUser } from "src/api/dto/Users.g";
+import { callApi } from "Store/common/apiActionsAsync";
+
+import { UsersActions } from "./usersActions";
 
 export const UsersAsyncActions = {
-  getUsers: (callback?: (users: IUser[]) => void): SimpleThunk => {
-    return callApi({
+  getUsers: (callback?: (users: IUser[]) => void): SimpleThunk =>
+    callApi({
       url: "users",
       method: RequestType.GET,
       params: {},
@@ -21,6 +22,5 @@ export const UsersAsyncActions = {
           description: i18next.t("error"),
         });
       },
-    });
-  },
+    }),
 };

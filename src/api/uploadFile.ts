@@ -22,18 +22,18 @@ export const uploadFile = async <P, R>({
   const urlResult = `/api/${url}`;
 
   const formData = new FormData();
+
   formData.append(filePropertyName, file, fileName);
 
   try {
     const res = await fetch(urlResult, {
       method,
       body: formData,
-      headers: {
-        ...headers,
-      },
+      headers: { ...headers },
     });
 
     const status = res.status;
+
     if (status === 401) {
       return {
         data: {} as R,
@@ -44,7 +44,10 @@ export const uploadFile = async <P, R>({
 
     const json = (await res.json()) || {};
 
-    return { data: json as R, status };
+    return {
+      data: json as R,
+      status,
+    };
   } catch (error) {
     return {
       data: {} as R,

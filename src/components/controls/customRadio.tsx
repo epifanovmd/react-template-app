@@ -1,8 +1,8 @@
-import React, { FC, memo, useCallback } from "react";
 import { Radio } from "antd";
-import styled, { css } from "styled-components";
 import { CheckboxGroupProps, CheckboxProps } from "antd/es/checkbox";
 import { RadioChangeEvent, RadioGroupProps, RadioProps } from "antd/es/radio";
+import React, { FC, memo, useCallback } from "react";
+import styled, { css } from "styled-components";
 
 interface IProps extends Omit<RadioProps, "onChange"> {
   error?: string;
@@ -78,7 +78,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomRadioGroup: FC<IProps> = memo((props) => {
+export const CustomRadioGroup: FC<IProps> = memo(props => {
   const {
     title,
     touch,
@@ -96,10 +96,22 @@ export const CustomRadioGroup: FC<IProps> = memo((props) => {
     ...rest
   } = props;
 
-  const handleChange: RadioGroupProps["onChange"] = (event) => {
+  const handleChange: RadioGroupProps["onChange"] = event => {
     onChange &&
-      (onChange as any)({ ...event, target: { ...event.target, name } });
-    onBlur && (onBlur as any)({ target: { value: true, name } });
+      (onChange as any)({
+        ...event,
+        target: {
+          ...event.target,
+          name,
+        },
+      });
+    onBlur &&
+      (onBlur as any)({
+        target: {
+          value: true,
+          name,
+        },
+      });
   };
 
   return (

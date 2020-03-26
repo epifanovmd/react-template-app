@@ -1,6 +1,6 @@
+import TextArea, { TextAreaProps } from "antd/es/input/TextArea";
 import React, { FC, memo } from "react";
 import styled, { css } from "styled-components";
-import TextArea, { TextAreaProps } from "antd/es/input/TextArea";
 
 interface IProps extends TextAreaProps {
   error?: string;
@@ -73,7 +73,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomTextArea: FC<IProps> = memo((props) => {
+export const CustomTextArea: FC<IProps> = memo(props => {
   const {
     title,
     touch,

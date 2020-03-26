@@ -1,5 +1,6 @@
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { Action } from "redux";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+
 import { IAppState } from "../store/IAppState";
 import { IExtraArguments } from "../store/store";
 

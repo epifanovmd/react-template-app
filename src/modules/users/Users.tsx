@@ -1,10 +1,12 @@
 import React, { FC, memo, useEffect } from "react";
 import Helmet from "react-helmet";
-import { useDispatch, useSelector } from "react-redux";
-import { UsersAsyncActions } from "./usersAsyncActions";
-import { IAppState } from "../../store/IAppState";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { IAppState } from "Store/IAppState";
+
 import { UserList } from "@/components/userList/userList";
+
+import { UsersAsyncActions } from "./usersAsyncActions";
 
 interface IProps {}
 
@@ -13,14 +15,14 @@ const Users: FC<IProps> = memo(() => {
 
   useEffect(() => {
     dispatch(
-      UsersAsyncActions.getUsers((result) => {
+      UsersAsyncActions.getUsers(result => {
         console.log("-------", result);
       }),
     );
-  }, []);
-
+  }, [dispatch]);
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);
+
   console.log(users.data);
 
   return (

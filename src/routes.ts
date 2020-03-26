@@ -1,8 +1,8 @@
-import * as React from "react";
-import { RouteComponentProps } from "react-router";
+import loadable from "@loadable/component";
 import { SimpleThunk } from "Common/simpleThunk";
 import { UsersAsyncActions } from "Modules/users/usersAsyncActions";
-import loadable from "@loadable/component";
+import * as React from "react";
+import { RouteComponentProps } from "react-router";
 
 const Users = loadable(() => import("./modules/users/Users"));
 const Form = loadable(() => import("./modules/form/form"));
@@ -27,13 +27,12 @@ export interface IRoute {
 export const getRoutsFromRole = (
   _routes: IRoute[],
   _roles: (keyof typeof Roles)[],
-) => {
-  return _routes.filter(
+) =>
+  _routes.filter(
     ({ roles }) =>
       roles &&
-      roles.some((item) => roles.some((itm) => Roles[itm] === Roles[item])),
+      roles.some(item => roles.some(itm => Roles[itm] === Roles[item])),
   );
-};
 
 export const routepaths = {
   ROOT: "/",

@@ -1,7 +1,7 @@
-import React, { FC, memo, useCallback } from "react";
 import { Select } from "antd";
-import styled, { css } from "styled-components";
 import { SelectProps } from "antd/es/select";
+import React, { FC, memo, useCallback } from "react";
+import styled, { css } from "styled-components";
 
 interface IProps extends Omit<SelectProps, "onChange" | "onBlur"> {
   error?: string;
@@ -77,7 +77,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomSelect: FC<IProps> = memo((props) => {
+export const CustomSelect: FC<IProps> = memo(props => {
   const {
     title,
     touch,
@@ -94,18 +94,32 @@ export const CustomSelect: FC<IProps> = memo((props) => {
     ...rest
   } = props;
   const onChangeHandler: SelectProps["onChange"] = useCallback(
-    (value) => {
+    value => {
       const func: any = onChange;
-      func && func({ target: { value, name } });
+
+      func &&
+        func({
+          target: {
+            value,
+            name,
+          },
+        });
     },
-    [onChange],
+    [onChange, name],
   );
   const onBlurHandler: SelectProps["onBlur"] = useCallback(
-    (value) => {
+    value => {
       const func: any = onBlur;
-      func && func({ target: { value, name } });
+
+      func &&
+        func({
+          target: {
+            value,
+            name,
+          },
+        });
     },
-    [onBlur],
+    [onBlur, name],
   );
 
   return (

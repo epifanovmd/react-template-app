@@ -1,3 +1,6 @@
+import { Modal } from "antd";
+import { ModalProps } from "antd/es/modal";
+import { EventNames, eventRegister } from "Common/eventRegister";
 import React, {
   FC,
   memo,
@@ -6,10 +9,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { EventNames, eventRegister } from "Common/eventRegister";
-import { Modal } from "antd";
-import { ModalProps } from "antd/lib/modal/Modal";
-import { bool, boolean } from "yup";
 
 export interface IModalProps extends ModalProps {
   title: string;
@@ -22,18 +21,21 @@ export const Popup: FC = memo(() => {
   let listenerId: string;
   const [state, setState] = useState<{
     modals: ({ id: string; isOpen: boolean } & IModalProps)[];
-  }>({
-    modals: [],
-  });
+  }>({ modals: [] });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     listenerId = eventRegister.addEventListener(
       EventNames.modal,
       (data: IModalProps) => {
-        setState((_state) => ({
+        setState(_state => ({
           modals: [
             ..._state.modals,
-            { id: Math.random().toString(), isOpen: true, ...data },
+            {
+              id: Math.random().toString(),
+              isOpen: true,
+              ...data,
+            },
           ],
         }));
       },
@@ -42,7 +44,7 @@ export const Popup: FC = memo(() => {
     return () => {
       eventRegister.removeEventListener(listenerId);
     };
-  }, [state, setState]);
+  }, [eventRegister, state, setState]);
 
   const { modals } = state;
 
@@ -50,12 +52,17 @@ export const Popup: FC = memo(() => {
     (id: string) => {
       setState({
         ...state,
-        modals: modals.map((item) =>
-          item.id === id ? { ...item, isOpen: false } : item,
+        modals: modals.map(item =>
+          item.id === id
+            ? {
+                ...item,
+                isOpen: false,
+              }
+            : item,
         ),
       });
     },
-    [state.modals],
+    [setState, modals, state],
   );
 
   const onClose = useCallback(
@@ -63,7 +70,7 @@ export const Popup: FC = memo(() => {
       onFailure && onFailure();
       closeModalById(id);
     },
-    [state.modals],
+    [closeModalById],
   );
 
   const onOk = useCallback(
@@ -71,21 +78,23 @@ export const Popup: FC = memo(() => {
       onSuccess && onSuccess();
       closeModalById(id);
     },
-    [state.modals],
+    [closeModalById],
   );
 
   useEffect(() => {
     const timoutId = setTimeout(() => {
-      setState({ ...state, modals: modals.filter((item) => item.isOpen) });
+      setState({
+        ...state,
+        modals: modals.filter(item => item.isOpen),
+      });
     }, 300);
 
     return () => clearTimeout(timoutId);
-  }, [
-    useMemo(() => state.modals.some((item) => !item.isOpen), [state.modals]),
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useMemo(() => state.modals.some(item => !item.isOpen), [state.modals])]);
 
   return (
-    <>
+    <div>
       {modals.map(
         ({ id, title, render, isOpen, onFailure, onSuccess, ...rest }) => (
           <Modal
@@ -100,6 +109,6 @@ export const Popup: FC = memo(() => {
           </Modal>
         ),
       )}
-    </>
+    </div>
   );
 });

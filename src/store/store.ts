@@ -1,11 +1,12 @@
-import { applyMiddleware, createStore, Store } from "redux";
-import thunkMiddleware from "redux-thunk";
-import { createMainReduce } from "./reducers";
-import { IAppState } from "./IAppState";
-import { composeWithDevTools } from "redux-devtools-extension";
 import i18next from "i18next";
+import { applyMiddleware, createStore, Store } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunkMiddleware from "redux-thunk";
+
 import { initSocket } from "../socket/initSocket";
 import { SocketAsyncActions } from "../socket/socketAsyncActions";
+import { IAppState } from "./IAppState";
+import { createMainReduce } from "./reducers";
 
 export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {
@@ -24,7 +25,10 @@ const middleware =
         ),
       )
     : applyMiddleware(
-        thunkMiddleware.withExtraArgument<IExtraArguments>({ i18next, socket }),
+        thunkMiddleware.withExtraArgument<IExtraArguments>({
+          i18next,
+          socket,
+        }),
       );
 
 const reducers = createMainReduce();
@@ -35,6 +39,7 @@ export const createSimpleStore = (initialState?: IAppState) => {
     initialState,
     middleware,
   );
+
   store.dispatch(SocketAsyncActions.connect());
 
   return store;

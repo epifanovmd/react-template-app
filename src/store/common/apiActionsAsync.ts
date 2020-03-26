@@ -1,8 +1,9 @@
-import { AsyncActionCreators } from "typescript-fsa";
-import { IAppState } from "../IAppState";
 import { RequestType } from "Common/requestType";
 import { SimpleThunk } from "Common/simpleThunk";
+import { AsyncActionCreators } from "typescript-fsa";
+
 import { baseFetch, IResponse } from "../../api";
+import { IAppState } from "../IAppState";
 import { IExtraArguments } from "../store";
 
 export interface IFetchParams<P, R> {
@@ -31,29 +32,54 @@ export const callApi = <P, R>({
   actions,
   onSuccess,
   onFail,
-}: IFetchParams<P, R>): SimpleThunk => {
-  return async (dispatch, getState, extraArguments) => {
-    dispatch(actions.started(params));
+}: IFetchParams<P, R>): SimpleThunk => async (
+  dispatch,
+  getState,
+  extraArguments,
+) => {
+  dispatch(actions.started(params));
 
-    const { data, status, message } = await baseFetch<P, R>(
-      url,
-      params,
-      method,
-      headers,
+  const { data, status, message } = await baseFetch<P, R>(
+    url,
+    params,
+    method,
+    headers,
+  );
+
+  if (status >= 400 || data === null) {
+    const error = {
+      name: status.toString(),
+      message: message || status.toString(),
+    };
+
+    dispatch(
+      actions.failed({
+        params,
+        error,
+      }),
     );
-
-    if (status >= 400 || data === null) {
-      const error = {
-        name: status.toString(),
-        message: message || status.toString(),
-      };
-
-      dispatch(actions.failed({ params, error }));
-      onFail && onFail(error, getState, extraArguments);
-    } else {
-      dispatch(actions.done({ params, result: { data, message, status } }));
-      onSuccess &&
-        onSuccess(getState, { data, message, status }, extraArguments);
-    }
-  };
+    onFail && onFail(error, getState, extraArguments);
+  } else {
+    dispatch(
+      actions.done({
+        params,
+        result: {
+          data,
+          message,
+          status,
+        },
+      }),
+    );
+    onSuccess &&
+      true &&
+      onSuccess(
+        getState,
+        {
+          data,
+          message,
+          status,
+        },
+        extraArguments,
+      );
+  }
 };

@@ -3,9 +3,7 @@ interface IListenerHandler {
   id: string;
 }
 
-export const EventNames = {
-  modal: "actions",
-};
+export const EventNames = { modal: "actions" };
 
 class EventRegister {
   addEventListener(eventName: string, callback: (data: any) => void) {
@@ -23,11 +21,13 @@ class EventRegister {
 
   removeEventListener(listenerId: string) {
     const eventName = this.listenersToEvent.get(listenerId);
+
     if (eventName != null) {
       const listeners = this.getOrCreateListeners(eventName);
+
       this.listeners.set(
         eventName,
-        listeners.filter((i) => i.id != listenerId),
+        listeners.filter(i => i.id != listenerId),
       );
     }
   }
@@ -38,13 +38,15 @@ class EventRegister {
 
   emitEvent(eventName: string, data?: any) {
     const listeners = this.listeners.get(eventName);
+
     if (listeners != null) {
-      setTimeout(() => listeners.forEach((i) => i.callback(data)));
+      setTimeout(() => listeners.forEach(i => i.callback(data)));
     }
   }
 
   private getOrCreateListeners(eventName: string) {
     let listeners = this.listeners.get(eventName);
+
     if (listeners == null) {
       listeners = [];
       this.listeners.set(eventName, listeners);

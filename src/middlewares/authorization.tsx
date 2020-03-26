@@ -1,14 +1,12 @@
-import React, { FC } from "react";
-import { withRouter } from "react-router-dom";
 import { checkAuthorization } from "Common/checkAuthorization";
+import React, { FC } from "react";
 import { RouteComponentProps } from "react-router";
+import { withRouter } from "react-router-dom";
 
 export const AuthorizationMiddleware = (Component: any) => {
-  const AuthMiddleware: FC<RouteComponentProps> = (props) => {
+  const AuthMiddleware: FC<RouteComponentProps> = props => {
     const token = "";
-    const hasAuthenticationToken = () => {
-      return checkAuthorization(token);
-    };
+    const hasAuthenticationToken = () => checkAuthorization(token);
 
     const checkAuthentication = () => {
       if (!hasAuthenticationToken()) {
@@ -18,6 +16,7 @@ export const AuthorizationMiddleware = (Component: any) => {
         history.push(`${"authorization"}?redirect=${redirect}`);
       }
     };
+
     checkAuthentication();
 
     return <Component />;

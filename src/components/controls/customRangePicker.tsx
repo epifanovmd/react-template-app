@@ -1,9 +1,9 @@
-import React, { FC, memo, useCallback } from "react";
 import { DatePicker } from "antd";
-import styled, { css } from "styled-components";
 import { RangePickerProps } from "antd/es/date-picker/interface";
 import { RangePickerValue } from "antd/lib/date-picker/interface";
 import moment from "moment";
+import React, { FC, memo, useCallback } from "react";
+import styled, { css } from "styled-components";
 
 const { RangePicker } = DatePicker;
 
@@ -82,7 +82,7 @@ const TitleWrap = styled.div<{ positionTitle?: "top" | "left" }>`
   ${({ positionTitle }) => (positionTitle === "left" ? "display: flex;" : "")}
 `;
 
-export const CustomRangePicker: FC<IProps> = memo((props) => {
+export const CustomRangePicker: FC<IProps> = memo(props => {
   const {
     title,
     touch,
@@ -105,22 +105,34 @@ export const CustomRangePicker: FC<IProps> = memo((props) => {
   ) => void = useCallback(
     ({}, values) => {
       const func: any = onChange;
+
       func &&
         func({
           target: {
-            value: { from: values[0] || "", to: values[1] || "" },
+            value: {
+              from: values[0] || "",
+              to: values[1] || "",
+            },
             name,
           },
         });
     },
-    [onChange],
+    [onChange, name],
   );
   const onBlurHandler: (status: boolean) => void = useCallback(
-    (status) => {
+    status => {
       const func: any = onBlur;
-      !status && func && func({ target: { value: true, name } });
+
+      !status &&
+        func &&
+        func({
+          target: {
+            value: true,
+            name,
+          },
+        });
     },
-    [onBlur],
+    [onBlur, name],
   );
 
   return (

@@ -11,7 +11,6 @@ interface IUseForm<T extends object> {
   validateSchema?: ObjectSchema<Shape<object, T>>;
   validateOnInit?: boolean;
 }
-
 export const useForm = <T extends object>({
   initialValues,
   onSubmit,
@@ -38,45 +37,46 @@ export const useForm = <T extends object>({
     ) => {
       if (validateSchema) {
         validateSchema
-          .validate(_values, { strict: true, abortEarly: false })
+          .validate(_values, {
+            strict: true,
+            abortEarly: false,
+          })
           .then(() => {
             setErrors({});
             _finally && _finally(_values, {});
           })
-          .catch((err) => {
+          .catch(err => {
             const e: Partial<Record<keyof T | string, string>> = {};
-            (err.inner as { path: keyof T; errors: string[] }[]).map((item) => {
-              const split = (item.path as string).split(".");
-              if (split[1]) {
-                if (split[0][split[0].length - 1] !== "]") {
-                  e[split[0] as keyof T] = `${
-                    e[split[0]] ? e[split[0]] + ", " : ""
-                  }${(item.errors || []).join(",")}`;
+
+            (err.inner as { path: keyof T; errors: string[] }[]).forEach(
+              item => {
+                const split = (item.path as string).split(".");
+
+                if (!split[1]) {
+                  if (split[0][split[0].length - 1] !== "]") {
+                    e[split[0] as keyof T] = `${
+                      e[split[0]] ? `${e[split[0]]}, ` : ""
+                    }${(item.errors || []).join(",")}`;
+                  } else {
+                    e[`${split[0]}.${split[1]}` as keyof T] = `${
+                      e[`${split[0]}.${split[1]}`]
+                        ? `${e[`${split[0]}.${split[1]}`]}, `
+                        : ""
+                    }${(item.errors || []).join(",")}`;
+                  }
                 } else {
-                  e[(split[0] + "." + split[1]) as keyof T] = `${
-                    e[split[0] + "." + split[1]]
-                      ? e[split[0] + "." + split[1]] + ", "
-                      : ""
-                  }${(item.errors || []).join(",")}`;
+                  e[item.path] = (item.errors || []).join(",");
                 }
-              } else {
-                e[item.path] = (item.errors || []).join(",");
-              }
-            });
-            setErrors({
-              ...e,
-            });
+              },
+            );
+            setErrors({ ...e });
             _finally && _finally(_values, { ...e });
           });
       } else {
         const e = validate ? validate(_values) : {};
-        setErrors({
-          ...e,
-        });
-        _finally &&
-          _finally(_values, {
-            ...e,
-          });
+
+        setErrors({ ...e });
+        _finally && _finally(_values, { ...e });
       }
 
       return _values;
@@ -102,7 +102,8 @@ export const useForm = <T extends object>({
 
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
-    Object.keys(initialValues).forEach((key) => {
+
+    Object.keys(initialValues).forEach(key => {
       obj[key as keyof T] = key;
     });
 
@@ -114,7 +115,7 @@ export const useForm = <T extends object>({
   const fieldsHelper = useMemo(
     () => ({
       remove: (name: keyof T, index: number) => {
-        setValues((state) => {
+        setValues(state => {
           if (state[name]) {
             const newState = {
               ...state,
@@ -122,6 +123,7 @@ export const useForm = <T extends object>({
                 ({}, ind: number) => ind !== index,
               ),
             };
+
             _validate(newState);
 
             return newState;
@@ -131,7 +133,7 @@ export const useForm = <T extends object>({
         });
       },
       append: <K extends keyof T>(name: K, value: T[K]) => {
-        setValues((state) => ({
+        setValues(state => ({
           ...state,
           [name]: [...(state[name] as any), ...(value as any)],
         }));
@@ -143,13 +145,20 @@ export const useForm = <T extends object>({
           .split("[")[1];
         const key = (target?.name || "").split(".")[1];
         const value = target?.value;
-        setValues((state) => {
+
+        setValues(state => {
           const newValues = {
             ...state,
             [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
-              index && ind === +index ? { ...item, [key]: value } : item,
+              index && ind === +index
+                ? {
+                    ...item,
+                    [key]: value,
+                  }
+                : item,
             ),
           };
+
           _validate(newValues);
 
           return newValues;
@@ -163,7 +172,7 @@ export const useForm = <T extends object>({
           | TCheckArray<A>[keyof TCheckArray<A>],
         index: number,
       ) => {
-        setValues((state) => {
+        setValues(state => {
           const newValues = {
             ...state,
             [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
@@ -180,6 +189,7 @@ export const useForm = <T extends object>({
                 : item,
             ),
           };
+
           _validate(newValues);
 
           return newValues;
@@ -201,8 +211,8 @@ export const useForm = <T extends object>({
         index: number;
         array: A[];
       }) => void,
-    ) => {
-      return ((values[name] as any) || []).map(
+    ) =>
+      ((values[name] as any) || []).map(
         (value: A, index: number, array: A[]) => {
           const touched: Partial<{ [key in keyof A]: boolean }> = {};
           const error: Partial<{ [key in keyof A]: string }> = {};
@@ -210,7 +220,7 @@ export const useForm = <T extends object>({
             [key in keyof A]: string;
           };
 
-          Object.keys(value).forEach((item) => {
+          Object.keys(value).forEach(item => {
             fieldsName[item as keyof A] = `${name}[${index}].${item}`;
             touched[item as keyof A] =
               touchedValues[`${name}[${index}].${item}`];
@@ -227,8 +237,7 @@ export const useForm = <T extends object>({
             array,
           });
         },
-      );
-    },
+      ),
     [fieldsHelper, values, touchedValues, errors],
   );
 
@@ -245,8 +254,12 @@ export const useForm = <T extends object>({
         target?.type === "checkbox" ? target?.checked : target?.value;
       const name = target?.name;
 
-      setValues((state) => {
-        const newValues = { ...state, [name]: value };
+      setValues(state => {
+        const newValues = {
+          ...state,
+          [name]: value,
+        };
+
         _validate(newValues);
 
         return newValues;
@@ -257,7 +270,7 @@ export const useForm = <T extends object>({
 
   const setFieldValue = useCallback(
     <K extends keyof T>(name: K, value: ((state: T) => T[K]) | T[K]) => {
-      setValues((state) => {
+      setValues(state => {
         const newValues = {
           ...state,
           [name]:
@@ -265,11 +278,12 @@ export const useForm = <T extends object>({
               ? (value as (state: T) => T[K])(state)
               : value,
         };
+
         _validate(newValues);
 
         return newValues;
       });
-      setTouchedValues((state) => ({
+      setTouchedValues(state => ({
         ...state,
         [name]: true,
       }));
@@ -279,10 +293,11 @@ export const useForm = <T extends object>({
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<any>) => {
-      const target = event.target;
-      const name = target.name;
+      const { target } = event;
+      const { name } = target;
+
       name &&
-        setTouchedValues((state) => ({
+        setTouchedValues(state => ({
           ...state,
           [name]: true,
         }));
@@ -290,10 +305,11 @@ export const useForm = <T extends object>({
     },
     [setTouchedValues, _validate, values],
   );
+  const arr = [1, 2, 3, 4];
 
   const setFieldBlur = useCallback(
     (name: keyof T | string) => {
-      setTouchedValues((state) => ({
+      setTouchedValues(state => ({
         ...state,
         [name]: true,
       }));
@@ -309,6 +325,7 @@ export const useForm = <T extends object>({
         setTouchedValues(
           (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
             const field = values[el] as any;
+
             if (
               Array.isArray(field) &&
               field[0] &&
@@ -317,16 +334,23 @@ export const useForm = <T extends object>({
             ) {
               const obj: any = {};
               const arr: any[] = field;
+
               arr.forEach((val, ind) => {
-                Object.keys(val).forEach((key) => {
+                Object.keys(val).forEach(key => {
                   obj[`${el}[${ind}].${key}`] = true;
                 });
               });
 
-              return { ...acc, ...obj };
+              return {
+                ...acc,
+                ...obj,
+              };
             }
 
-            return { ...acc, [el]: true };
+            return {
+              ...acc,
+              [el]: true,
+            };
           }, {}),
         );
         Object.keys({ ...e }).length === 0 && onSubmit && onSubmit(values, e);

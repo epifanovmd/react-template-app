@@ -46,6 +46,7 @@ const From: FC = () => {
     touchedValues,
     fieldsIterate,
     fieldsHelper,
+    setFieldValue,
   } = useForm({
     initialValues: {
       input: "",

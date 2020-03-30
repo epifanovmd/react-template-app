@@ -193,7 +193,6 @@
     "guard-for-in": "error",
     "max-classes-per-file": 2,
     "no-empty-function": "error",
-    //    "no-empty-pattern": "warn",
     "no-eval": "error",
     "no-extend-native": "error",
     "no-extra-bind": "error",

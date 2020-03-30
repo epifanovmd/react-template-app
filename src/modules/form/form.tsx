@@ -74,6 +74,8 @@ const From: FC = () => {
     validateSchema,
   });
 
+  console.log("errors", errors);
+
   const onRemoveRanges = useCallback(
     (index: number) => () => {
       fieldsHelper.remove("ranges", index);

@@ -90,7 +90,8 @@ export const useForm = <T extends object>({
 
   useEffect(() => {
     validateOnInit && _validate(values);
-  }, [values, _validate, validateOnInit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onSetValues = useCallback(
     (_values: T) => {
@@ -99,6 +100,8 @@ export const useForm = <T extends object>({
     },
     [setValues, _validate],
   );
+
+  console.log("render");
 
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
@@ -305,7 +308,6 @@ export const useForm = <T extends object>({
     },
     [setTouchedValues, _validate, values],
   );
-  const arr = [1, 2, 3, 4];
 
   const setFieldBlur = useCallback(
     (name: keyof T | string) => {

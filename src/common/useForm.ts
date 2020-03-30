@@ -101,8 +101,6 @@ export const useForm = <T extends object>({
     [setValues, _validate],
   );
 
-  console.log("render");
-
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
 

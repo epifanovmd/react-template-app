@@ -68,9 +68,8 @@ const baseLoaders = {
         loader: "eslint-loader",
         options: {
           cache: true,
-          emitError: true,
-          // emitWarning: true,
-          failOnWarning: false,
+          emitWarning: true,
+          // failOnWarning: false,
         },
       },
     ],

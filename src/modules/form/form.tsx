@@ -231,6 +231,14 @@ const From: FC = () => {
         </div>
       ))}
       <Button onClick={onAppendCheckboxes}>Добавть чекбоксы</Button>
+      {/* eslint-disable-next-line react/jsx-no-bind */}
+      <Button
+        onClick={() => {
+          setFieldValue("checkboxes", () => []);
+        }}
+      >
+        Добавть чекбоксы
+      </Button>
       <Button htmlType={"submit"}>Отправить</Button>
     </form>
   );

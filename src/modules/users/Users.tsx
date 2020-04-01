@@ -1,4 +1,12 @@
-import React, { FC, memo, useEffect } from "react";
+import { useOutsideClick } from "Common/useOutsideClick";
+import React, {
+  createRef,
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +30,6 @@ const Users: FC<IProps> = memo(() => {
   }, [dispatch]);
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);
-
-  console.log(users.data);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import loadable from "@loadable/component";
 import { SimpleThunk } from "Common/simpleThunk";
+import { TestComponents } from "Modules/test/testComponents";
 import { UsersAsyncActions } from "Modules/users/usersAsyncActions";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
@@ -38,6 +39,7 @@ export const routepaths = {
   ROOT: "/",
   USERS: "/users",
   FORM: "/form",
+  TESTCOMPONENTS: "/testComponents",
 };
 
 export const routes: IRoute[] = [
@@ -52,6 +54,12 @@ export const routes: IRoute[] = [
     path: routepaths.FORM,
     pathName: "form",
     component: Form,
+    exact: true,
+  },
+  {
+    path: routepaths.TESTCOMPONENTS,
+    pathName: "test",
+    component: TestComponents,
     exact: true,
   },
 ];

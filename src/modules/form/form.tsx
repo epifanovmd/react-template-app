@@ -123,6 +123,7 @@ const From: FC = () => {
         error={errors.select}
         onChange={handleChange}
         onBlur={handleBlur}
+        mode={"multiple"}
         options={[
           {
             value: 1,

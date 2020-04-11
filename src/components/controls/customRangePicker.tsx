@@ -1,6 +1,5 @@
-import { DatePicker, Select } from "antd";
-import { RangePickerProps } from "antd/es/date-picker/interface";
-import { RangePickerValue } from "antd/lib/date-picker/interface";
+import { DatePicker } from "antd";
+import { RangePickerProps } from "antd/es/date-picker";
 import {
   AntWrapper,
   IAntWrapperProps,
@@ -20,7 +19,7 @@ interface IProps
 export const CustomRangePicker: FC<IProps> = memo(
   ({ onChange, onBlur, name, value, ...rest }) => {
     const onChangeHandler: (
-      dates: RangePickerValue,
+      dates: any,
       dateStrings: [string, string],
     ) => void = useCallback(
       ({}, values) => {
@@ -57,7 +56,7 @@ export const CustomRangePicker: FC<IProps> = memo(
 
     return (
       <AntWrapper
-        {...rest}
+        {...(rest as any)}
         Component={RangePicker}
         onChange={onChangeHandler}
         onOpenChange={onBlurHandler}

@@ -1,11 +1,11 @@
 import "antd/dist/antd.css";
 
+import { Header } from "Components/layouts/header/header";
+import { Popup } from "Components/popup/popup";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";
 
-import { Header } from "./components/layouts/header/header";
-import { Popup } from "./components/popup/popup";
 import { routes } from "./routes";
 
 const App = () => {

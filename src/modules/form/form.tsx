@@ -46,7 +46,6 @@ const From: FC = () => {
     touchedValues,
     fieldsIterate,
     fieldsHelper,
-    setFieldValue,
   } = useForm({
     initialValues: {
       input: "",
@@ -74,8 +73,6 @@ const From: FC = () => {
     validateOnInit: true,
     validateSchema,
   });
-
-  console.log("errors", errors);
 
   const onRemoveRanges = useCallback(
     (index: number) => () => {
@@ -110,7 +107,7 @@ const From: FC = () => {
     <form onSubmit={handleSubmit}>
       <CustomInput
         name={fieldNames.input}
-        value={values.input}
+        defaultValue={values.input}
         touch={touchedValues.input}
         error={errors.input}
         onChange={handleChange}
@@ -118,7 +115,7 @@ const From: FC = () => {
       />
       <CustomSelect
         name={fieldNames.select}
-        value={values.select}
+        defaultValue={values.select}
         touch={touchedValues.select}
         error={errors.select}
         onChange={handleChange}
@@ -186,7 +183,7 @@ const From: FC = () => {
       />
       <CustomTextArea
         name={fieldNames.textArea}
-        value={values.textArea}
+        defaultValue={values.textArea}
         touch={touchedValues.textArea}
         error={errors.textArea}
         onChange={handleChange}
@@ -218,7 +215,7 @@ const From: FC = () => {
             options={[
               {
                 value: 1,
-                label: "1",
+                label: "  1",
               },
               {
                 value: 2,

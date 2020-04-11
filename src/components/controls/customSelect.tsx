@@ -7,7 +7,7 @@ import {
 import React, { FC, memo, useCallback } from "react";
 
 interface IProps
-  extends Omit<SelectProps, "onChange" | "onBlur">,
+  extends Omit<SelectProps<any>, "onChange" | "onBlur">,
     IAntWrapperProps {
   options: { label: string; value: string | number }[];
   onChange?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -16,7 +16,7 @@ interface IProps
 
 export const CustomSelect: FC<IProps> = memo(
   ({ onChange, onBlur, options, name, value, ...rest }) => {
-    const onChangeHandler: SelectProps["onChange"] = useCallback(
+    const onChangeHandler: SelectProps<any>["onChange"] = useCallback(
       value => {
         const func: any = onChange;
 
@@ -30,7 +30,7 @@ export const CustomSelect: FC<IProps> = memo(
       },
       [onChange, name],
     );
-    const onBlurHandler: SelectProps["onBlur"] = useCallback(
+    const onBlurHandler: SelectProps<any>["onBlur"] = useCallback(
       value => {
         const func: any = onBlur;
 

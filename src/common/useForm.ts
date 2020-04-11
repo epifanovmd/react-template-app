@@ -52,7 +52,7 @@ export const useForm = <T extends object>({
               item => {
                 const split = (item.path as string).split(".");
 
-                if (!split[1]) {
+                if (split[1]) {
                   if (split[0][split[0].length - 1] !== "]") {
                     e[split[0] as keyof T] = `${
                       e[split[0]] ? `${e[split[0]]}, ` : ""
@@ -183,9 +183,10 @@ export const useForm = <T extends object>({
                     ...item,
                     [key]:
                       typeof value === "function"
-                        ? (value as (
-                            state: T,
-                          ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
+                        ? (
+                            value as
+                            (state: T) => TCheckArray<A>[keyof TCheckArray<A>]
+                          )(state)
                         : value,
                   }
                 : item,
@@ -218,9 +219,11 @@ export const useForm = <T extends object>({
         (value: A, index: number, array: A[]) => {
           const touched: Partial<{ [key in keyof A]: boolean }> = {};
           const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldsName: { [key in keyof A]: string } = {} as {
-            [key in keyof A]: string;
-          };
+          const fieldsName: { [key in keyof A]: string } =
+            {} as
+            {
+              [key in keyof A]: string;
+            };
 
           Object.keys(value).forEach(item => {
             fieldsName[item as keyof A] = `${name}[${index}].${item}`;
@@ -285,12 +288,13 @@ export const useForm = <T extends object>({
 
         return newValues;
       });
-      setTouchedValues(state => ({
-        ...state,
-        [name]: true,
-      }));
+      !touchedValues[name] &&
+        setTouchedValues(state => ({
+          ...state,
+          [name]: true,
+        }));
     },
-    [setValues, setTouchedValues, _validate],
+    [setValues, setTouchedValues, _validate, touchedValues],
   );
 
   const handleBlur = useCallback(
@@ -298,25 +302,28 @@ export const useForm = <T extends object>({
       const { target } = event;
       const { name } = target;
 
-      name &&
+      if (name && !touchedValues[name]) {
         setTouchedValues(state => ({
           ...state,
           [name]: true,
         }));
-      _validate(values);
+        _validate(values);
+      }
     },
-    [setTouchedValues, _validate, values],
+    [setTouchedValues, _validate, values, touchedValues],
   );
 
   const setFieldBlur = useCallback(
     (name: keyof T | string) => {
-      setTouchedValues(state => ({
-        ...state,
-        [name]: true,
-      }));
-      _validate(values);
+      if (name && !touchedValues[name]) {
+        setTouchedValues(state => ({
+          ...state,
+          [name]: true,
+        }));
+        _validate(values);
+      }
     },
-    [setTouchedValues, _validate, values],
+    [setTouchedValues, _validate, values, touchedValues],
   );
 
   const handleSubmit = useCallback(

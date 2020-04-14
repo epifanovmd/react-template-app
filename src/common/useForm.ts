@@ -48,27 +48,27 @@ export const useForm = <T extends object>({
           .catch(err => {
             const e: Partial<Record<keyof T | string, string>> = {};
 
-            (err.inner as { path: keyof T; errors: string[] }[]).forEach(
-              item => {
-                const split = (item.path as string).split(".");
+            (
+              (err.inner || []) as { path: keyof T; errors: string[] }[]
+            ).forEach(item => {
+              const split = (item.path as string).split(".");
 
-                if (split[1]) {
-                  if (split[0][split[0].length - 1] !== "]") {
-                    e[split[0] as keyof T] = `${
-                      e[split[0]] ? `${e[split[0]]}, ` : ""
-                    }${(item.errors || []).join(",")}`;
-                  } else {
-                    e[`${split[0]}.${split[1]}` as keyof T] = `${
-                      e[`${split[0]}.${split[1]}`]
-                        ? `${e[`${split[0]}.${split[1]}`]}, `
-                        : ""
-                    }${(item.errors || []).join(",")}`;
-                  }
+              if (split[1]) {
+                if (split[0][split[0].length - 1] !== "]") {
+                  e[split[0] as keyof T] = `${
+                    e[split[0]] ? `${e[split[0]]}, ` : ""
+                  }${(item.errors || []).join(",")}`;
                 } else {
-                  e[item.path] = (item.errors || []).join(",");
+                  e[`${split[0]}.${split[1]}` as keyof T] = `${
+                    e[`${split[0]}.${split[1]}`]
+                      ? `${e[`${split[0]}.${split[1]}`]}, `
+                      : ""
+                  }${(item.errors || []).join(",")}`;
                 }
-              },
-            );
+              } else {
+                e[item.path] = (item.errors || []).join(",");
+              }
+            });
             setErrors({ ...e });
             _finally && _finally(_values, { ...e });
           });

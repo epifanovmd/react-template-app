@@ -70,9 +70,12 @@ const From: FC = () => {
     onSubmit: _values => {
       console.log("Values", _values);
     },
+    watch: ["checkBox", "checkboxes"],
     validateOnInit: true,
     validateSchema,
   });
+
+  console.log("render");
 
   const onRemoveRanges = useCallback(
     (index: number) => () => {

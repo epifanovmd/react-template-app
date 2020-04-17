@@ -10,7 +10,9 @@ interface IUseForm<T extends object> {
   validate?: (values: T) => Partial<T>;
   validateSchema?: ObjectSchema<Shape<object, T>>;
   validateOnInit?: boolean;
+  watch?: (keyof T)[];
 }
+
 export const useForm = <T extends object>({
   initialValues,
   onSubmit,
@@ -18,6 +20,7 @@ export const useForm = <T extends object>({
   validate,
   validateSchema,
   validateOnInit,
+  watch,
 }: IUseForm<T>) => {
   const [values, setValues] = React.useState<T>(initialValues);
   const [touchedValues, setTouchedValues] = React.useState<
@@ -42,40 +45,65 @@ export const useForm = <T extends object>({
             abortEarly: false,
           })
           .then(() => {
-            setErrors({});
+            setErrors(e => {
+              if (Object.keys(e).length > 0) {
+                return {};
+              }
+              Object.keys(e).forEach(key => {
+                delete e[key];
+              });
+
+              return e;
+            });
             _finally && _finally(_values, {});
           })
           .catch(err => {
-            const e: Partial<Record<keyof T | string, string>> = {};
+            setErrors(e => {
+              const inner =
+                (err.inner || []) as { path: keyof T; errors: string[] }[];
+              const prevErrors = { ...e };
 
-            (
-              (err.inner || []) as { path: keyof T; errors: string[] }[]
-            ).forEach(item => {
-              const split = (item.path as string).split(".");
+              Object.keys(e).forEach(key => {
+                delete e[key];
+              });
 
-              if (split[1]) {
-                if (split[0][split[0].length - 1] !== "]") {
-                  e[split[0] as keyof T] = `${
-                    e[split[0]] ? `${e[split[0]]}, ` : ""
-                  }${(item.errors || []).join(",")}`;
+              inner.forEach(item => {
+                const split = (item.path as string).split(".");
+
+                if (split[1]) {
+                  if (split[0][split[0].length - 1] !== "]") {
+                    e[split[0] as keyof T] = `${
+                      e[split[0]] ? `${e[split[0]]}, ` : ""
+                    }${(item.errors || []).join(",")}`;
+                  } else {
+                    const newError = `${
+                      e[`${split[0]}.${split[1]}`]
+                        ? `${e[`${split[0]}.${split[1]}`]}, `
+                        : ""
+                    }${(item.errors || []).join(",")}`;
+
+                    e[`${split[0]}.${split[1]}` as keyof T] = newError;
+                  }
                 } else {
-                  e[`${split[0]}.${split[1]}` as keyof T] = `${
-                    e[`${split[0]}.${split[1]}`]
-                      ? `${e[`${split[0]}.${split[1]}`]}, `
-                      : ""
-                  }${(item.errors || []).join(",")}`;
+                  const newError = (item.errors || []).join(",");
+
+                  e[item.path] = newError;
                 }
-              } else {
-                e[item.path] = (item.errors || []).join(",");
+              });
+              _finally && _finally(_values, { ...e });
+
+              if (Object.keys(prevErrors).length !== Object.keys(e).length) {
+                // eslint-disable-next-line no-param-reassign
+                e = { ...e };
               }
+
+              return e;
             });
-            setErrors({ ...e });
-            _finally && _finally(_values, { ...e });
           });
       } else {
         const e = validate ? validate(_values) : {};
 
-        setErrors({ ...e });
+        setErrors(e);
         _finally && _finally(_values, { ...e });
       }
 
@@ -148,18 +176,25 @@ export const useForm = <T extends object>({
         const key = (target?.name || "").split(".")[1];
         const value = target?.value;
 
+        console.log("name", name);
+
         setValues(state => {
-          const newValues = {
-            ...state,
-            [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
+          state[name] = ((state[name] as any) || []).map(
+            (item: any, ind: number) =>
               index && ind === +index
                 ? {
                     ...item,
                     [key]: value,
                   }
                 : item,
-            ),
-          };
+          );
+          let newValues = state;
+
+          if (watch && watch.some(item => item === name)) {
+            newValues = {
+              ...state,
+            };
+          }
 
           _validate(newValues);
 
@@ -260,10 +295,15 @@ export const useForm = <T extends object>({
       const name = target?.name;
 
       setValues(state => {
-        const newValues = {
-          ...state,
-          [name]: value,
-        };
+        // @ts-ignore
+        state[name] = value;
+        let newValues = state;
+
+        if (watch && watch.some(item => item === name)) {
+          newValues = {
+            ...state,
+          };
+        }
 
         _validate(newValues);
 
@@ -276,13 +316,18 @@ export const useForm = <T extends object>({
   const setFieldValue = useCallback(
     <K extends keyof T>(name: K, value: ((state: T) => T[K]) | T[K]) => {
       setValues(state => {
-        const newValues = {
-          ...state,
-          [name]:
-            typeof value === "function"
-              ? (value as (state: T) => T[K])(state)
-              : value,
-        };
+        // @ts-ignore
+        state[name] =
+          typeof value === "function"
+            ? (value as (state: T) => T[K])(state)
+            : value;
+        let newValues = state;
+
+        if (watch && watch.some(item => item === name)) {
+          newValues = {
+            ...state,
+          };
+        }
 
         _validate(newValues);
 

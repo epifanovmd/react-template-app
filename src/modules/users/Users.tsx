@@ -1,4 +1,5 @@
 import { useOutsideClick } from "Common/useOutsideClick";
+import { fetchUsers } from "Modules/users/reduxToolKit";
 import React, {
   createRef,
   FC,
@@ -22,11 +23,12 @@ const Users: FC<IProps> = memo(() => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      UsersAsyncActions.getUsers(result => {
-        console.log("-------", result);
-      }),
-    );
+    // dispatch(
+    //   UsersAsyncActions.getUsers(result => {
+    //     console.log("-------", result);
+    //   }),
+    // );
+    dispatch(fetchUsers());
   }, [dispatch]);
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);

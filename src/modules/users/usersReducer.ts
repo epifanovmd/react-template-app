@@ -1,11 +1,12 @@
 import { IEmpty } from "Common/IEmpty";
 import { LoadState } from "Common/loadState";
 import { IUser } from "src/api/dto/Users.g";
+import { newState } from "Store/common/newState";
 import { Success } from "typescript-fsa";
 import { reducerWithInitialState } from "typescript-fsa-reducers";
 
-import { IResponse } from "../../api";
-import { newState } from "../../store/common/newState";
+import { IResponse } from "@/api";
+
 import { IUsersState, usersInitialState } from "./IUsersState";
 import { UsersActions } from "./usersActions";
 

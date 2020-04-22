@@ -1,4 +1,4 @@
-import { usersReducer } from "Modules/users/usersReducer";
+import { usersSlice } from "Modules/users/reduxToolKit";
 import { combineReducers, Reducer } from "redux";
 
 import { IAppState } from "../IAppState";
@@ -8,7 +8,7 @@ export type Reducers<T> = {
 };
 
 export function createMainReduce(): Reducer<IAppState> {
-  const _reducers: Reducers<IAppState> = { usersPage: usersReducer };
+  const _reducers: Reducers<IAppState> = { usersPage: usersSlice.reducer };
 
   return combineReducers(_reducers);
 }

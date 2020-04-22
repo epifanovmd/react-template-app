@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import BackendExpress from "i18next-node-fs-backend";
 import Backend from "i18next-xhr-backend";
 import { initReactI18next } from "react-i18next";
 
@@ -21,24 +22,45 @@ const translations = {
 };
 
 export const initLocalization = ({
-  initLang = "en",
-}: IInitLocalizationParams) =>
-  i18next
-    .use(Backend)
-    .use(LngDetector)
-    .use(initReactI18next)
-    .init({
+                                   initLang = "en",
+                                   isServer,
+                                 }: IInitLocalizationParams) => {
+  if (isServer) {
+    return i18next.use(BackendExpress).init({
       fallbackLng: initLang,
       lng: initLang,
-      debug: false,
-      load: "languageOnly",
       interpolation: {
         escapeValue: false,
         prefix: "",
       },
+      debug: false,
+      load: "languageOnly",
       backend: {
         loadPath(language: IAvailableLanguages) {
           return translations[language];
         },
+        jsonIndent: 2,
       },
     });
+  } else {
+    return i18next
+      .use(Backend)
+      .use(LngDetector)
+      .use(initReactI18next)
+      .init({
+        fallbackLng: initLang,
+        lng: initLang,
+        debug: false,
+        load: "languageOnly",
+        interpolation: {
+          escapeValue: false,
+          prefix: "",
+        },
+        backend: {
+          loadPath(language: IAvailableLanguages) {
+            return translations[language];
+          },
+        },
+      });
+  }
+};

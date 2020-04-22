@@ -1,12 +1,14 @@
 const webpack = require("webpack");
 const path = require("path");
 const autoprefixer = require("autoprefixer");
+const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
+const IS_SSR = process.env.SSR;
 
 const alias = {
   "react-dom": "@hot-loader/react-dom",
@@ -40,6 +42,28 @@ const baseConfigClient = {
   },
   externals: "node_modules",
 };
+
+const baseConfigServer = {
+  name: "server",
+  target: "node",
+  entry: {
+    server: path.resolve(__dirname, "src/server/index.ts"),
+  },
+  output: {
+    filename: "server/[name].js",
+    path: path.resolve(__dirname, "build"),
+  },
+  node: {
+    fs: "empty",
+    net: "empty",
+  },
+  resolve: {
+    extensions: [".ts", ".tsx", ".js", ".scss"],
+    alias,
+  },
+  externals: [nodeExternals()],
+};
+
 const baseLoaders = {
   ts: {
     test: /\.tsx?$/,
@@ -205,6 +229,10 @@ const baseLoaders = {
       },
     ],
   },
+  scss_null_loader: {
+    test: /\.(sa|sc|c)ss$/,
+    loader: "null-loader",
+  },
 };
 
 const basePlugins = [
@@ -218,20 +246,28 @@ const basePlugins = [
         }),
       ]
     : []),
-  new HtmlWebpackPlugin({
-    template: "public/index.html",
-  }),
+  ...(!IS_SSR
+    ? [
+        new HtmlWebpackPlugin({
+          template: "public/index.html",
+        }),
+      ]
+    : []),
   new webpack.DefinePlugin({
+    "process.env.SSR": JSON.stringify(process.env.SSR),
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
+    IS_SSR: JSON.stringify(IS_SSR),
     "process.env.PORT": JSON.stringify(process.env.PORT),
   }),
 ];
 
 module.exports = {
   baseConfigClient,
+  baseConfigServer,
   baseLoaders,
   basePlugins,
   IS_DEVELOPMENT,
   IS_PRODUCTION,
+  IS_SSR,
 };

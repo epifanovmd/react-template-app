@@ -1,4 +1,3 @@
-import { IEmpty } from "Common/IEmpty";
 import { RequestType } from "Common/requestType";
 import fetch from "isomorphic-unfetch";
 import querystring from "query-string";
@@ -10,9 +9,9 @@ export interface IResponse<R> {
   message?: string;
 }
 
-export const baseFetch = async <R, P>(
+export const baseFetch = async <P, R>(
   url: string,
-  params: P | IEmpty = {},
+  params: P,
   method: RequestType = RequestType.GET,
   headers: { [key: string]: string } = {},
 ): Promise<IResponse<R>> => {
@@ -29,7 +28,6 @@ export const baseFetch = async <R, P>(
     const res = await fetch(`http://localhost:8080${urlResult}`, {
       method,
       ...body,
-      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -40,7 +38,10 @@ export const baseFetch = async <R, P>(
     const json = (await res?.json()) || {};
     const status = res.status;
 
-    return { data: json as any, status };
+    return {
+      data: json as any,
+      status,
+    };
   } catch (error) {
     return {
       data: {} as R,

@@ -9,10 +9,12 @@ const proxy = require("./proxy");
 
 const {
   baseConfigClient,
+  baseConfigServer,
   baseLoaders,
   basePlugins,
   IS_DEVELOPMENT,
   IS_PRODUCTION,
+  IS_SSR,
 } = webpackBaseConfig;
 
 const client = {
@@ -60,4 +62,22 @@ const client = {
   },
 };
 
-module.exports = client;
+const server = {
+  ...baseConfigServer,
+  mode: IS_PRODUCTION ? "production" : "development",
+  module: {
+    rules: [
+      baseLoaders.ts,
+      ...baseLoaders.font,
+      baseLoaders.scss_null_loader,
+    ],
+  },
+  plugins: [
+    ...basePlugins,
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1,
+    }),
+  ],
+};
+
+module.exports = IS_SSR ? [client, server] : client;

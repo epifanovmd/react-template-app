@@ -8,6 +8,7 @@ export const template = (
   reduxState: IAppState,
   helmetData: HelmetData,
   extractor: ChunkExtractor,
+  styles: string,
 ) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +18,7 @@ export const template = (
   <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="/favicon.ico">
   <title>React SSR</title>
+  ${styles}
   ${helmetData.title.toString()}
   ${helmetData.meta.toString()}
   ${extractor.getLinkTags()}

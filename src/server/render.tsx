@@ -12,6 +12,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom";
 import { createSimpleStore } from "Store/store";
+import { ServerStyleSheet } from "styled-components";
 
 import { initLocalization } from "@/localization/localization";
 import { routes } from "@/routes";
@@ -35,6 +36,8 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     statsFile: webStats,
     entrypoints: ["client"],
   });
+
+  const sheet = new ServerStyleSheet();
 
   // Fetch initial data and set to store
   const dataRequirements = routes
@@ -61,11 +64,12 @@ export const serverRenderer = () => (req: Request, res: Response) => {
         </ReduxProvider>
       </I18nextProvider>,
     );
-    const reactDom = renderToString(jsx);
+    const reactDom = renderToString(sheet.collectStyles(jsx));
+    const styles = sheet.getStyleTags();
     const reduxState = store.getState();
     const helmetData = Helmet.renderStatic();
 
     res.writeHead(200, { "Content-Type": "text/html" });
-    res.end(template(reactDom, reduxState, helmetData, webExtractor));
+    res.end(template(reactDom, reduxState, helmetData, webExtractor, styles));
   });
 };

@@ -28,7 +28,14 @@ const Users: FC<IProps> = memo(() => {
     //     console.log("-------", result);
     //   }),
     // );
-    dispatch(fetchUsers());
+
+    dispatch(
+      fetchUsers({
+        onSuccess: ({ result }) => {
+          console.log("-------", result.data);
+        },
+      }),
+    );
   }, [dispatch]);
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);

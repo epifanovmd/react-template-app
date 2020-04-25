@@ -1,13 +1,5 @@
-import { useOutsideClick } from "Common/useOutsideClick";
 import { fetchUsers } from "Modules/users/reduxToolKit";
-import React, {
-  createRef,
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { FC, memo, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,20 +7,12 @@ import { IAppState } from "Store/IAppState";
 
 import { UserList } from "@/components/userList/userList";
 
-import { UsersAsyncActions } from "./usersAsyncActions";
-
 interface IProps {}
 
 const Users: FC<IProps> = memo(() => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // dispatch(
-    //   UsersAsyncActions.getUsers(result => {
-    //     console.log("-------", result);
-    //   }),
-    // );
-
     dispatch(
       fetchUsers({
         onSuccess: ({ result }) => {

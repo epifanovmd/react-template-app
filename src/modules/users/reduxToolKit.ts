@@ -4,7 +4,8 @@ import { LoadState } from "Common/loadState";
 import { popup } from "Common/popup";
 import { RequestType } from "Common/requestType";
 import { usersInitialState } from "Modules/users/IUsersState";
-import { callApiToolkit } from "Store/common/apiActionsAsyncToolkit";
+import { callApiToolkit } from "Store/common/apiActionsAsync";
+import { string } from "yup";
 
 export const fetchUsers = callApiToolkit<IUser[]>({
   url: "users",
@@ -23,7 +24,7 @@ export const usersSlice = createSlice({
   initialState: usersInitialState,
   reducers: {
     clearUsers: state => {
-      state.users.data = [];
+      state.users.data.keys = [];
     },
   },
   extraReducers: builder => {
@@ -31,7 +32,7 @@ export const usersSlice = createSlice({
       state.users.loadState = LoadState.refreshing;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.users.data = action.payload.data;
+      state.users.data = createNormalize(action.payload.data, "id");
     });
     builder.addCase(fetchUsers.rejected, state => {
       state.users.loadState = LoadState.error;
@@ -41,3 +42,27 @@ export const usersSlice = createSlice({
 });
 
 export const { clearUsers } = usersSlice.actions;
+
+export interface INormalizeData<T> {
+  values: { [key in string | number]?: T };
+  keys: T[keyof T][];
+}
+export const createNormalize = <T>(
+  array?: T[],
+  key?: keyof T,
+): INormalizeData<T> => {
+  const keys: T[keyof T][] = [];
+  const values: { [key in string | number]?: T } = {};
+
+  key &&
+    array &&
+    array.forEach(item => {
+      keys.push(item[key]);
+      values[item[key] as any] = item;
+    });
+
+  return {
+    values,
+    keys,
+  };
+};

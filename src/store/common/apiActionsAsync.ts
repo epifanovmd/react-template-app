@@ -1,85 +1,92 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RequestType } from "Common/requestType";
-import { SimpleThunk } from "Common/simpleThunk";
-import { AsyncActionCreators } from "typescript-fsa";
+import { Action } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
-import { baseFetch, IResponse } from "../../api";
+import { index, IResponse } from "@/api";
+
 import { IAppState } from "../IAppState";
 import { IExtraArguments } from "../store";
 
-export interface IFetchParams<P, R> {
-  params: P;
-  url: string;
+type TSuccessCallback<R> = (params: {
+  getState: () => IAppState;
+  result: IResponse<R>;
+  extraArguments: IExtraArguments;
+}) => void;
+
+export interface IFetchParams<R, QP, P> {
+  url:
+    | ((
+        args: QP extends void
+          ? P extends void
+            ? void
+            : P
+          : P extends void
+          ? { params: QP }
+          : { params: QP } & P,
+      ) => string)
+    | string;
   method: RequestType;
   headers?: { [key: string]: string };
-  actions: AsyncActionCreators<P, IResponse<R>, Error>;
-  onSuccess?: (
-    getState: () => IAppState,
-    result: IResponse<R>,
-    extraArguments: IExtraArguments,
-  ) => void;
-  onFail?: (
-    error: Error,
-    getState: () => IAppState,
-    extraArguments: IExtraArguments,
-  ) => void;
+  actionType: string;
+  onSuccess?: TSuccessCallback<R>;
+  onFail?: (params: {
+    error?: Error;
+    getState: () => IAppState;
+    extraArguments: IExtraArguments;
+  }) => void;
 }
 
-export const callApi = <P, R>({
-  params,
+type TCalcType<QP, P> = QP extends void
+  ? void & (P extends void ? void : { args: P })
+  : { params: QP } & (P extends void ? void : { args: P });
+
+export const callApiToolkit = <R, QP = void, P = void>({
   url,
   method,
   headers,
-  actions,
-  onSuccess,
+  actionType,
+  onSuccess: _onSuccess,
   onFail,
-}: IFetchParams<P, R>): SimpleThunk => async (
-  dispatch,
-  getState,
-  extraArguments,
-) => {
-  dispatch(actions.started(params));
-
-  const { data, status, message } = await baseFetch<P, R>(
-    url,
-    params,
-    method,
-    headers,
-  );
-
-  if (status >= 400 || data === null) {
-    const error = {
-      name: status.toString(),
-      message: message || status.toString(),
-    };
-
-    dispatch(
-      actions.failed({
-        params,
-        error,
-      }),
+}: IFetchParams<R, QP, P>) =>
+  createAsyncThunk<
+    IResponse<R>,
+    TCalcType<QP, P> extends void
+      ? { onSuccess: TSuccessCallback<R> } | void
+      : { onSuccess?: TSuccessCallback<R> } & TCalcType<QP, P>,
+    {
+      dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
+      state: IAppState;
+      extra: IExtraArguments;
+    }
+  >(actionType, async (args, { extra, getState }) => {
+    // @ts-ignore
+    const { onSuccess, params, ...rest } = args || {};
+    const { data, status, message, error } = await index<R, QP>(
+      typeof url === "function" ? url({ params, ...rest } as any) : url,
+      params || {},
+      method,
+      headers,
     );
-    onFail && onFail(error, getState, extraArguments);
-  } else {
-    dispatch(
-      actions.done({
-        params,
-        result: {
-          data,
-          message,
-          status,
-        },
-      }),
-    );
-    onSuccess &&
-      true &&
-      onSuccess(
+
+    if (status >= 400 || data === null || error) {
+      onFail &&
+        onFail({
+          error: error || new Error(message || status.toString()),
+          getState,
+          extraArguments: extra,
+        });
+      throw new Error(message || status.toString());
+    } else {
+      const payload = {
         getState,
-        {
-          data,
-          message,
-          status,
-        },
-        extraArguments,
-      );
-  }
-};
+        result: { data, message, status },
+        extraArguments: extra,
+      };
+
+      onSuccess && onSuccess(payload);
+      _onSuccess && _onSuccess(payload);
+
+      return { data, message, status };
+    }
+  });

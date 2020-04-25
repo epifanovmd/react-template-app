@@ -1,6 +1,5 @@
 import loadable from "@loadable/component";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { SimpleThunk } from "Common/simpleThunk";
 import { TestComponents } from "Modules/test/testComponents";
 import { fetchUsers } from "Modules/users/reduxToolKit";
 import * as React from "react";
@@ -21,7 +20,7 @@ export interface IRoute {
     | React.ComponentType<RouteComponentProps<any>>
     | React.ComponentType<any>;
   exact: boolean;
-  getInitialData?: SimpleThunk | AsyncThunkAction<any, any, any>;
+  getInitialData?: AsyncThunkAction<any, any, any>;
   roles?: (keyof typeof Roles)[];
   Icon?: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
 }

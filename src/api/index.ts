@@ -1,6 +1,6 @@
+import { IEmpty } from "Common/IEmpty";
+import { RequestType } from "Common/requestType";
 import querystring from "query-string";
-
-import { RequestType } from "../common/requestType";
 
 export interface IResponse<R> {
   data: R;
@@ -9,9 +9,9 @@ export interface IResponse<R> {
   message?: string;
 }
 
-export const baseFetch = async <P, R>(
+export const index = async <R, P>(
   url: string,
-  params: P,
+  params: P | IEmpty = {},
   method: RequestType = RequestType.GET,
   headers: { [key: string]: string } = {},
 ): Promise<IResponse<R>> => {
@@ -38,10 +38,7 @@ export const baseFetch = async <P, R>(
     const json = (await res?.json()) || {};
     const status = res.status;
 
-    return {
-      data: json as any,
-      status,
-    };
+    return { data: json as any, status };
   } catch (error) {
     return {
       data: {} as R,

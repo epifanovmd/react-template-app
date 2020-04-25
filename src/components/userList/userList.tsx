@@ -1,3 +1,4 @@
+import { INormalizeData } from "Modules/users/reduxToolKit";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { IUser } from "src/api/dto/Users.g";
@@ -8,7 +9,7 @@ import { TableRow } from "../table/tableRow";
 import { TableRowCell } from "../table/tableRowCell";
 
 interface IProps {
-  users: IUser[];
+  users: INormalizeData<IUser>;
 }
 
 export const UserList: FC<IProps> = memo(({ users }) => {
@@ -24,12 +25,20 @@ export const UserList: FC<IProps> = memo(({ users }) => {
       </TableHeader>
 
       {users &&
-        users.map(item => (
-          <TableRow key={item.id}>
-            <TableRowCell label={t("username")}>{item.username}</TableRowCell>
-            <TableRowCell label={t("email")}>{item.email}</TableRowCell>
-          </TableRow>
-        ))}
+        (users.keys || []).map(key => {
+          const item = users.values[key];
+
+          return (
+            item && (
+              <TableRow key={item.id}>
+                <TableRowCell label={t("username")}>
+                  {item.username}
+                </TableRowCell>
+                <TableRowCell label={t("email")}>{item.email}</TableRowCell>
+              </TableRow>
+            )
+          );
+        })}
     </Table>
   );
 });

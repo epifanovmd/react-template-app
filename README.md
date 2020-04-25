@@ -8,13 +8,13 @@ React Redux Server Side Rendering Application
   - React Router
   - React-Redux
   - Redux Thunk
-  - Typescript Fsa
-  - Typescript Fsa Reducers
+  - Redux Toolkit
   - Reselect
   - i18next
   - Luxon
   - Loadable Component (for code splitting)
   - CSS Modules
+  - Styled Components
 
 ### Installation
 ```sh

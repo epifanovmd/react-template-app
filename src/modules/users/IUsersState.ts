@@ -1,5 +1,5 @@
 import { LoadState } from "Common/loadState";
-import { INormalizeData } from "Modules/users/reduxToolKit";
+import { INormalizeData } from "Common/normalaizer";
 import { IUser } from "src/api/dto/Users.g";
 import { IReduxData } from "Store/IAppState";
 

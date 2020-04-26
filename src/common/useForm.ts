@@ -234,7 +234,7 @@ export const useForm = <T extends object>({
         });
       },
     }),
-    [setValues, _validate],
+    [setValues, _validate, watch],
   );
 
   const fieldsIterate = useCallback(
@@ -309,7 +309,7 @@ export const useForm = <T extends object>({
         return newValues;
       });
     },
-    [setValues, _validate],
+    [setValues, _validate, watch],
   );
 
   const setFieldValue = useCallback(
@@ -337,7 +337,7 @@ export const useForm = <T extends object>({
           [name]: true,
         }));
     },
-    [setValues, setTouchedValues, _validate, touchedValues],
+    [setValues, setTouchedValues, _validate, touchedValues, watch],
   );
 
   const handleBlur = useCallback(

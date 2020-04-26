@@ -1,9 +1,13 @@
 import loadable from "@loadable/component";
-import { AsyncThunkAction } from "@reduxjs/toolkit";
+import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
+import { IResponse } from "Api/baseFetch";
 import { TestComponents } from "Modules/test/testComponents";
 import { fetchUsers } from "Modules/users/reduxToolKit";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
+import { Action } from "redux";
+import { IAppState } from "Store/IAppState";
+import { IExtraArguments } from "Store/store";
 
 const Users = loadable(() => import("./modules/users/Users"));
 const Form = loadable(() => import("./modules/form/form"));
@@ -20,7 +24,15 @@ export interface IRoute {
     | React.ComponentType<RouteComponentProps<any>>
     | React.ComponentType<any>;
   exact: boolean;
-  getInitialData?: AsyncThunkAction<any, any, any>;
+  getInitialData?: AsyncThunkAction<
+    IResponse<any>,
+    any,
+    {
+      dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
+      state: IAppState;
+      extra: IExtraArguments;
+    }
+  >;
   roles?: (keyof typeof Roles)[];
   Icon?: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
 }

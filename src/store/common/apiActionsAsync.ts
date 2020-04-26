@@ -1,9 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { baseFetch, IResponse } from "Api/baseFetch";
 import { RequestType } from "Common/requestType";
 import { Action } from "redux";
 import { ThunkDispatch } from "redux-thunk";
-
-import { index, IResponse } from "@/api";
 
 import { IAppState } from "../IAppState";
 import { IExtraArguments } from "../store";
@@ -60,9 +59,8 @@ export const callApiToolkit = <R, QP = void, P = void>({
       extra: IExtraArguments;
     }
   >(actionType, async (args, { extra, getState }) => {
-    // @ts-ignore
-    const { onSuccess, params, ...rest } = args || {};
-    const { data, status, message, error } = await index<R, QP>(
+    const { onSuccess, params, ...rest } = args || ({} as any);
+    const { data, status, message, error } = await baseFetch<R, QP>(
       typeof url === "function" ? url({ params, ...rest } as any) : url,
       params || {},
       method,

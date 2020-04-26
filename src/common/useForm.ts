@@ -76,26 +76,22 @@ export const useForm = <T extends object>({
                       e[split[0]] ? `${e[split[0]]}, ` : ""
                     }${(item.errors || []).join(",")}`;
                   } else {
-                    const newError = `${
+                    e[`${split[0]}.${split[1]}` as keyof T] = `${
                       e[`${split[0]}.${split[1]}`]
                         ? `${e[`${split[0]}.${split[1]}`]}, `
                         : ""
                     }${(item.errors || []).join(",")}`;
-
-                    e[`${split[0]}.${split[1]}` as keyof T] = newError;
                   }
                 } else {
-                  const newError = (item.errors || []).join(",");
-
-                  e[item.path] = newError;
+                  e[item.path] = (item.errors || []).join(",");
                 }
               });
-              _finally && _finally(_values, { ...e });
 
               if (Object.keys(prevErrors).length !== Object.keys(e).length) {
                 // eslint-disable-next-line no-param-reassign
                 e = { ...e };
               }
+              _finally && _finally(_values, e);
 
               return e;
             });
@@ -176,8 +172,6 @@ export const useForm = <T extends object>({
         const key = (target?.name || "").split(".")[1];
         const value = target?.value;
 
-        console.log("name", name);
-
         setValues(state => {
           state[name] = ((state[name] as any) || []).map(
             (item: any, ind: number) =>
@@ -210,7 +204,7 @@ export const useForm = <T extends object>({
         index: number,
       ) => {
         setValues(state => {
-          const newValues = {
+          let newValues = {
             ...state,
             [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
               ind === index
@@ -227,6 +221,12 @@ export const useForm = <T extends object>({
                 : item,
             ),
           };
+
+          if (watch && watch.some(item => item === name)) {
+            newValues = {
+              ...state,
+            };
+          }
 
           _validate(newValues);
 
@@ -295,8 +295,7 @@ export const useForm = <T extends object>({
       const name = target?.name;
 
       setValues(state => {
-        // @ts-ignore
-        state[name] = value;
+        state[name as keyof T] = value;
         let newValues = state;
 
         if (watch && watch.some(item => item === name)) {
@@ -316,7 +315,6 @@ export const useForm = <T extends object>({
   const setFieldValue = useCallback(
     <K extends keyof T>(name: K, value: ((state: T) => T[K]) | T[K]) => {
       setValues(state => {
-        // @ts-ignore
         state[name] =
           typeof value === "function"
             ? (value as (state: T) => T[K])(state)

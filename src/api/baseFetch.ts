@@ -9,7 +9,7 @@ export interface IResponse<R> {
   message?: string;
 }
 
-export const index = async <R, P>(
+export const baseFetch = async <R, P>(
   url: string,
   params: P | IEmpty = {},
   method: RequestType = RequestType.GET,

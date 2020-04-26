@@ -1,4 +1,4 @@
-import { INormalizeData } from "Modules/users/reduxToolKit";
+import { INormalizeData } from "Common/normalaizer";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { IUser } from "src/api/dto/Users.g";

@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import Backend from "i18next-xhr-backend";
 import { initReactI18next } from "react-i18next";
 
 export interface IInitLocalizationParams {
@@ -13,6 +14,7 @@ export const initLocalization = ({
   initLang = "en",
 }: IInitLocalizationParams) =>
   i18next
+    .use(Backend)
     .use(LngDetector)
     .use(initReactI18next)
     .init({
@@ -24,5 +26,7 @@ export const initLocalization = ({
         escapeValue: false,
         prefix: "",
       },
-      backend: { loadPath: "/locales/{{lng}}/{{ns}}.json" },
+      backend: {
+        loadPath: "/locales/{{lng}}/{{ns}}.json",
+      },
     });

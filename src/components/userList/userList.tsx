@@ -1,3 +1,4 @@
+import { INormalizeData } from "Common/normalaizer";
 import { Button } from "antd";
 import { useModal } from "Common/hooks/useModal";
 import { INormalizeData } from "Common/normalaizer";

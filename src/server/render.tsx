@@ -1,6 +1,7 @@
 import { ChunkExtractor } from "@loadable/server";
+import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
+import { IResponse } from "Api/baseFetch";
 import { checkAuthorization } from "Common/checkAuthorization";
-import { SimpleDispatch, SimpleThunk } from "Common/simpleThunk";
 import { Request, Response } from "express-serve-static-core";
 import i18next from "i18next";
 import path from "path";
@@ -11,7 +12,9 @@ import { I18nextProvider } from "react-i18next";
 import { Provider as ReduxProvider } from "react-redux";
 import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom";
-import { createSimpleStore } from "Store/store";
+import { Action } from "redux";
+import { IAppState } from "Store/IAppState";
+import { createSimpleStore, IExtraArguments } from "Store/store";
 import { ServerStyleSheet } from "styled-components";
 
 import { initLocalization } from "@/localization/localization";
@@ -28,7 +31,17 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     "en";
   const context = {};
   const store = createSimpleStore();
-  const getData = (thunk: SimpleThunk) => (dispatch: SimpleDispatch) =>
+  const getData = (
+    thunk: AsyncThunkAction<
+      IResponse<any>,
+      any,
+      {
+        dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
+        state: IAppState;
+        extra: IExtraArguments;
+      }
+    >,
+  ) => (dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>) =>
     dispatch(thunk as any);
 
   const webStats = path.resolve("./build/loadable-stats.json");

@@ -11,12 +11,12 @@ export const fetchUsers = callApiToolkit<IUser[]>({
   url: "users",
   method: RequestType.GET,
   actionType: "USERS/GET_USERS",
-  onFail: ({ error, extraArguments: { i18next } }) => {
-    popup.notification.error({
-      message: i18next.t("error"),
-      description: error?.message,
-    });
-  },
+  // onFail: ({ error, extraArguments: { i18next } }) => {
+  //   popup.notification.error({
+  //     message: i18next.t("error"),
+  //     description: error?.message,
+  //   });
+  // },
 });
 
 const { fromResponse, reducers } = createNormalize<IUser, IUsersState>();

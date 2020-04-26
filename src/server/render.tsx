@@ -42,7 +42,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
       }
     >,
   ) => (dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>) =>
-    dispatch(thunk as any);
+    dispatch(thunk);
 
   const webStats = path.resolve("./build/loadable-stats.json");
   const webExtractor = new ChunkExtractor({

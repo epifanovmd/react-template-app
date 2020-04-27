@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "Api/dto/Users.g";
 import { LoadState } from "Common/loadState";
 import { createNormalize } from "Common/normalaizer";
 import { popup } from "Common/popup";
 import { RequestType } from "Common/requestType";
-import { usersInitialState } from "Modules/users/IUsersState";
+import { IUsersState, usersInitialState } from "Modules/users/IUsersState";
 import { callApiToolkit } from "Store/common/apiActionsAsync";
 
 export const fetchUsers = callApiToolkit<IUser[]>({
@@ -19,20 +19,20 @@ export const fetchUsers = callApiToolkit<IUser[]>({
   },
 });
 
+const { fromResponse, reducers } = createNormalize<IUser, IUsersState>();
+
 export const usersSlice = createSlice({
   name: "users",
   initialState: usersInitialState,
   reducers: {
-    clearUsers: state => {
-      state.users.data.keys = [];
-    },
+    ...reducers("users"),
   },
   extraReducers: builder => {
     builder.addCase(fetchUsers.pending, state => {
       state.users.loadState = LoadState.refreshing;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.users.data = createNormalize(action.payload.data, "id");
+      state.users.data = fromResponse(action.payload.data, "id");
     });
     builder.addCase(fetchUsers.rejected, state => {
       state.users.loadState = LoadState.error;
@@ -41,4 +41,4 @@ export const usersSlice = createSlice({
   },
 });
 
-export const { clearUsers } = usersSlice.actions;
+export const UsersActions = usersSlice.actions;

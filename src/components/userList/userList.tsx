@@ -1,7 +1,10 @@
 import { INormalizeData } from "Common/normalaizer";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { IUser } from "src/api/dto/Users.g";
+
+import { UsersActions } from "@/modules/users/reduxToolKit";
 
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";
@@ -9,11 +12,12 @@ import { TableRow } from "../table/tableRow";
 import { TableRowCell } from "../table/tableRowCell";
 
 interface IProps {
-  users: INormalizeData<IUser>;
+  users: INormalizeData<IUser, "id">;
 }
 
 export const UserList: FC<IProps> = memo(({ users }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   return (
     <Table>
@@ -30,7 +34,12 @@ export const UserList: FC<IProps> = memo(({ users }) => {
 
           return (
             item && (
-              <TableRow key={item.id}>
+              <TableRow
+                key={item.id}
+                onClick={() => {
+                  dispatch(UsersActions.remove(item.id));
+                }}
+              >
                 <TableRowCell label={t("username")}>
                   {item.username}
                 </TableRowCell>

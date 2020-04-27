@@ -4,7 +4,7 @@ import { IUser } from "src/api/dto/Users.g";
 import { IReduxData } from "Store/IAppState";
 
 export interface IUsersState {
-  users: IReduxData<INormalizeData<IUser>>;
+  users: IReduxData<INormalizeData<IUser, "id">>;
 }
 
 export const usersInitialState: IUsersState = {

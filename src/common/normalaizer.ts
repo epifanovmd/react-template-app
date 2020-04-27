@@ -5,7 +5,7 @@ export interface INormalizeData<T, K extends keyof T> {
   keys: T[K][];
 }
 
-export const createNormalize = <T, S>() => {
+export const createNormalize = <T extends { id: any }, S>() => {
   const fromResponse = <K extends keyof T = keyof T>(
     array?: T[],
     key?: K,
@@ -26,8 +26,8 @@ export const createNormalize = <T, S>() => {
     };
   };
 
-  const reducers = <P>(key: keyof Draft<S>) => ({
-    remove: (state: Draft<S>, { payload }: PayloadAction<P>) => {
+  const reducers = <K extends keyof Draft<S>>(key: K) => ({
+    remove: (state: Draft<S>, { payload }: PayloadAction<T["id"]>) => {
       (state[key] as any).data.keys = (state[key] as any).data.keys.filter(
         (item: any) => item !== payload,
       );

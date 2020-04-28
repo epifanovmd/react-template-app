@@ -384,9 +384,8 @@ export const useForm = <T extends object>({
               !Array.isArray(field[0])
             ) {
               const obj: any = {};
-              const arr: any[] = field;
 
-              arr.forEach((val, ind) => {
+              field.forEach((val, ind) => {
                 Object.keys(val).forEach(key => {
                   obj[`${el}[${ind}].${key}`] = true;
                 });

@@ -5,30 +5,47 @@ export interface INormalizeData<T, K extends keyof T> {
   keys: T[K][];
 }
 
-export const createNormalize = <T extends object, S, KK extends keyof T>(
-  inputKey: KK,
-) => {
-  const fromResponse = (array?: T[]): INormalizeData<T, KK> => {
-    const keys: T[KK][] = [];
+export const createNormalize = <T extends object, S>() => {
+  const fromResponse = <K extends keyof T>(
+    array: T[],
+    key: K,
+  ): INormalizeData<T, K> => {
+    const keys: Set<T[K]> = new Set();
     const values: { [key in string | number]?: T } = {};
 
     array &&
       array.forEach(item => {
-        keys.push(item[inputKey]);
-        values[item[inputKey] as any] = item;
+        keys.add(item[key]);
+        values[item[key] as any] = item;
       });
 
     return {
       values,
-      keys,
+      keys: Array.from(keys.keys()),
     };
   };
 
   const reducers = <K extends keyof Draft<S>>(key: K) => ({
-    remove: (state: Draft<S>, { payload }: PayloadAction<T[KK]>) => {
+    remove: (state: Draft<S>, { payload }: PayloadAction<string | number>) => {
       (state[key] as any).data.keys = (state[key] as any).data.keys.filter(
         (item: any) => item !== payload,
       );
+      delete (state[key] as any).data.values[key];
+    },
+    set: <
+      F extends { key: string | number; value: (values: T) => T },
+      V extends { key: string | number; value: T }
+    >(
+      state: Draft<S>,
+      { payload }: PayloadAction<F | V>,
+    ) => {
+      (state[key] as any).data.keys = Array.from(
+        new Set([...(state[key] as any).data.keys, payload.key]),
+      );
+      (state[key] as any).data.values[payload.key] =
+        typeof payload.value === "function"
+          ? (payload.value as any)((state[key] as any).data.values)
+          : payload.value;
     },
   });
 

@@ -19,9 +19,7 @@ export const fetchUsers = callApiToolkit<IUser[]>({
   },
 });
 
-const { fromResponse, reducers } = createNormalize<IUser, IUsersState, "id">(
-  "id",
-);
+const { fromResponse, reducers } = createNormalize<IUser, IUsersState>();
 
 export const usersSlice = createSlice({
   name: "users",
@@ -34,7 +32,7 @@ export const usersSlice = createSlice({
       state.users.loadState = LoadState.refreshing;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
-      state.users.data = fromResponse(action.payload.data);
+      state.users.data = fromResponse(action.payload.data, "id");
     });
     builder.addCase(fetchUsers.rejected, state => {
       state.users.loadState = LoadState.error;

@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { INormalizeData } from "Common/normalaizer";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
@@ -48,6 +49,25 @@ export const UserList: FC<IProps> = memo(({ users }) => {
             )
           );
         })}
+      <Button
+        onClick={() => {
+          dispatch(
+            UsersActions.set({
+              key: 12344,
+              value: () => ({
+                name: "1234",
+                email: "43254325",
+                id: 12344,
+                phone: "123456789654",
+                username: "username",
+                website: "dfsfsdgfdgfdgfd",
+              }),
+            }),
+          );
+        }}
+      >
+        Добавить
+      </Button>
     </Table>
   );
 });

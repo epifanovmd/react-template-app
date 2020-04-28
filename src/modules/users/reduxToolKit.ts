@@ -32,6 +32,7 @@ export const usersSlice = createSlice({
       state.users.loadState = LoadState.refreshing;
     });
     builder.addCase(fetchUsers.fulfilled, (state, action) => {
+      console.log("res", fromResponse(action.payload.data, "id"));
       state.users.data = fromResponse(action.payload.data, "id");
     });
     builder.addCase(fetchUsers.rejected, state => {

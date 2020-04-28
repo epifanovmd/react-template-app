@@ -11,11 +11,16 @@ export const createNormalize = <T extends object, S>() => {
     key: K,
   ): INormalizeData<T, K> => {
     const keys: Set<T[K]> = new Set();
-    const values: { [key in string | number]?: T } = {};
+    const values: { [key in number]?: T } = {};
 
     array &&
       array.forEach(item => {
         keys.add(item[key]);
+        if (values[item[key] as any]) {
+          console.error(
+            `createNormalize: The key by which you group is not unique: "fromResponse(array, "${key}" <---)"`,
+          );
+        }
         values[item[key] as any] = item;
       });
 

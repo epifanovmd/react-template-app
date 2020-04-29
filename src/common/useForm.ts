@@ -195,8 +195,8 @@ export const useForm = <T extends object>({
           return newValues;
         });
       },
-      setFieldValue: <A extends T[keyof T]>(
-        name: keyof T,
+      setFieldValue: <K extends keyof T, A extends T[K]>(
+        name: K,
         key: keyof TCheckArray<A>,
         value:
           | ((state: T) => TCheckArray<A>[keyof TCheckArray<A>])

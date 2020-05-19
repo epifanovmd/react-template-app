@@ -1,12 +1,13 @@
 import { checkAuthorization } from "Common/checkAuthorization";
 import React, { FC } from "react";
-import { RouteComponentProps } from "react-router";
+import { RouteComponentProps, useHistory } from "react-router";
 import { withRouter } from "react-router-dom";
 
 export const AuthorizationMiddleware = (Component: any) => {
   const AuthMiddleware: FC<RouteComponentProps> = props => {
     const token = "";
     const hasAuthenticationToken = () => checkAuthorization(token);
+    const {} = useHistory();
 
     const checkAuthentication = () => {
       if (!hasAuthenticationToken()) {

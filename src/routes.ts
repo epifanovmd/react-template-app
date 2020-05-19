@@ -44,7 +44,12 @@ export const getRoutsFromRole = (
   _routes.filter(
     ({ roles }) =>
       roles &&
-      roles.some(item => roles.some(itm => Roles[itm] === Roles[item])),
+      _roles &&
+      roles.some(item =>
+        _roles.some(
+          itm => Roles[itm] && Roles[item] && Roles[itm] === Roles[item],
+        ),
+      ),
   );
 
 export const routepaths = {

@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { History } from "history";
 import i18next from "i18next";
 import { Store } from "redux";
 import thunkMiddleware from "redux-thunk";
@@ -12,12 +13,15 @@ export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {
   i18next: typeof i18next;
   socket: SocketIOClient.Socket;
-  history: any;
+  history: History;
 }
 
 const rootReducer = createMainReduce();
 
-export const createSimpleStore = (history: any, preloadedState?: IAppState) => {
+export const createSimpleStore = (
+  history: History,
+  preloadedState?: IAppState,
+) => {
   const store: Store<IAppState, any> = configureStore({
     reducer: rootReducer,
     preloadedState,

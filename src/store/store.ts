@@ -12,11 +12,12 @@ export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {
   i18next: typeof i18next;
   socket: SocketIOClient.Socket;
+  history: any;
 }
 
 const rootReducer = createMainReduce();
 
-export const createSimpleStore = (preloadedState?: IAppState) => {
+export const createSimpleStore = (history: any, preloadedState?: IAppState) => {
   const store: Store<IAppState, any> = configureStore({
     reducer: rootReducer,
     preloadedState,
@@ -24,6 +25,7 @@ export const createSimpleStore = (preloadedState?: IAppState) => {
       thunkMiddleware.withExtraArgument<IExtraArguments>({
         i18next,
         socket,
+        history,
       }),
     ],
     devTools: process.env.NODE_ENV === "development",

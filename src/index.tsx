@@ -7,16 +7,16 @@ import { Cookies } from "react-cookie";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
+import { createSimpleStore } from "Store/store";
 
 import App from "./App";
 import { initLocalization } from "./localization/localization";
-import { createSimpleStore } from "./store/store";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();
 
 initLocalization({ initLang: cookie.get("i18next") }).finally();
-export const store = createSimpleStore({ ...window.REDUX_DATA });
+export const store = createSimpleStore(history, { ...window.REDUX_DATA });
 
 const renderMethod =
   typeof window === "undefined" ? ReactDOM.hydrate : ReactDOM.render;

@@ -72,12 +72,14 @@ export const callApiToolkit = <R, QP = void, P = void>({
     if (status >= 400 || data === null || error) {
       onFail &&
         onFail({
-          error: error || new Error(message || status.toString()),
+          error: new Error(
+            (data as any)?.message || message || status.toString(),
+          ),
           getState,
           dispatch,
           extraArguments: extra,
         });
-      throw new Error(message || status.toString());
+      throw new Error((data as any)?.message || message || status.toString());
     } else {
       const payload = {
         getState,

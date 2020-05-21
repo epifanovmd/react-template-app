@@ -9,6 +9,7 @@ import { IExtraArguments } from "../store";
 
 type TSuccessCallback<R> = (params: {
   getState: () => IAppState;
+  dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
   result: IResponse<R>;
   extraArguments: IExtraArguments;
 }) => void;
@@ -32,6 +33,7 @@ export interface IFetchParams<R, QP, P> {
   onFail?: (params: {
     error?: Error;
     getState: () => IAppState;
+    dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
     extraArguments: IExtraArguments;
   }) => void;
 }
@@ -58,7 +60,7 @@ export const callApiToolkit = <R, QP = void, P = void>({
       state: IAppState;
       extra: IExtraArguments;
     }
-  >(actionType, async (args, { extra, getState }) => {
+  >(actionType, async (args, { extra, getState, dispatch }) => {
     const { onSuccess, params, ...rest } = args || ({} as any);
     const { data, status, message, error } = await baseFetch<R, QP>(
       typeof url === "function" ? url({ params, ...rest } as any) : url,
@@ -72,12 +74,14 @@ export const callApiToolkit = <R, QP = void, P = void>({
         onFail({
           error: error || new Error(message || status.toString()),
           getState,
+          dispatch,
           extraArguments: extra,
         });
       throw new Error(message || status.toString());
     } else {
       const payload = {
         getState,
+        dispatch,
         result: { data, message, status },
         extraArguments: extra,
       };

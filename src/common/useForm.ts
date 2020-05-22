@@ -204,10 +204,9 @@ export const useForm = <T extends object>({
         index: number,
       ) => {
         setValues(state => {
-          let newValues = {
-            ...state,
-            [name]: ((state[name] as any) || []).map((item: any, ind: number) =>
-              ind === index
+          state[name] = ((state[name] as any) || []).map(
+            (item: any, ind: number) =>
+              index && ind === +index
                 ? {
                     ...item,
                     [key]:
@@ -219,8 +218,8 @@ export const useForm = <T extends object>({
                         : value,
                   }
                 : item,
-            ),
-          };
+          );
+          let newValues = state;
 
           if (watch && watch.some(item => item === name)) {
             newValues = {

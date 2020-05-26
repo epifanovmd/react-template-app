@@ -35,7 +35,7 @@ export const createNormalize = <T extends object, S>() => {
       (state[key] as any).data.keys = (state[key] as any).data.keys.filter(
         (item: any) => item !== payload,
       );
-      delete (state[key] as any).data.values[key];
+      delete (state[key] as any).data.values[payload];
     },
     set: <
       F extends { key: string | number; value: (values: T) => T },

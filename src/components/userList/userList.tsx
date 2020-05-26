@@ -20,6 +20,8 @@ export const UserList: FC<IProps> = memo(({ users }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
+  console.log(users.values);
+
   return (
     <Table>
       <TableHeader>

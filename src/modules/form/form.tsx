@@ -195,7 +195,7 @@ const From: FC = () => {
       {fieldsIterate("ranges", ranges => (
         <div key={ranges.index}>
           <CustomRangePicker
-            name={ranges.fieldsName.range}
+            name={ranges.fieldNames.range}
             value={ranges.value.range}
             touch={ranges.touched.range}
             error={ranges.error.range}
@@ -209,7 +209,7 @@ const From: FC = () => {
       {fieldsIterate("checkboxes", checkboxes => (
         <div key={checkboxes.index}>
           <CustomCheckboxGroup
-            name={checkboxes.fieldsName.checkbox}
+            name={checkboxes.fieldNames.checkbox}
             value={checkboxes.value.checkbox}
             touch={checkboxes.touched.checkbox}
             error={checkboxes.error.checkbox}

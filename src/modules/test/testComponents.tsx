@@ -89,7 +89,7 @@ export const TestComponents: FC = memo(() => {
         <SearchInput
           title={"inputs"}
           onChange={inputs.fieldsHelper.handleChange}
-          name={inputs.fieldsName.input}
+          name={inputs.fieldNames.input}
           onBlur={handleBlur}
           touch={inputs.touched.input}
           error={inputs.error.input}

@@ -5,10 +5,16 @@ type TCheckArray<T> = T extends any[] ? T[number] : T;
 
 interface IUseForm<T extends object> {
   initialValues: T;
-  onChange?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
-  onSubmit?: (values: T, errors: Partial<Record<keyof T, string>>) => void;
-  validate?: (values: T) => Partial<T>;
-  validateSchema?: ObjectSchema<Shape<object, T>>;
+  onChange?: (
+    values: T,
+    errors: Partial<Record<keyof T | string, string>>,
+  ) => void;
+  onSubmit?: (
+    values: T,
+    errors: Partial<Record<keyof T | string, string>>,
+  ) => void;
+  validate?: (values: T) => Partial<Record<keyof T | string, string>>;
+  validateSchema?: ObjectSchema<Shape<object, Partial<T>>>;
   validateOnInit?: boolean;
   watch?: (keyof T)[];
 }
@@ -35,7 +41,7 @@ export const useForm = <T extends object>({
       _values: T,
       _finally?: (
         _values: Partial<T>,
-        errors: Partial<Record<keyof T, string>>,
+        errors: Partial<Record<keyof T | string, string>>,
       ) => void,
     ) => {
       if (validateSchema) {
@@ -97,9 +103,11 @@ export const useForm = <T extends object>({
             });
           });
       } else {
-        const e = validate ? validate(_values) : {};
+        const e: Partial<Record<keyof T | string, string>> | null = validate
+          ? validate(_values)
+          : null;
 
-        setErrors(e);
+        setErrors(err => (e ? e : err));
         _finally && _finally(_values, { ...e });
       }
 
@@ -243,7 +251,7 @@ export const useForm = <T extends object>({
         value: A;
         touched: Partial<{ [key in keyof A]: boolean }>;
         error: Partial<{ [key in keyof A]: string }>;
-        fieldsName: { [key in keyof A]: string };
+        fieldNames: { [key in keyof A]: string };
         fieldsHelper: typeof fieldsHelper;
         index: number;
         array: A[];
@@ -253,14 +261,14 @@ export const useForm = <T extends object>({
         (value: A, index: number, array: A[]) => {
           const touched: Partial<{ [key in keyof A]: boolean }> = {};
           const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldsName: { [key in keyof A]: string } =
+          const fieldNames: { [key in keyof A]: string } =
             {} as
             {
               [key in keyof A]: string;
             };
 
           Object.keys(value).forEach(item => {
-            fieldsName[item as keyof A] = `${name}[${index}].${item}`;
+            fieldNames[item as keyof A] = `${name}[${index}].${item}`;
             touched[item as keyof A] =
               touchedValues[`${name}[${index}].${item}`];
             error[item as keyof A] = errors[`${name}[${index}].${item}`];
@@ -272,7 +280,7 @@ export const useForm = <T extends object>({
             index,
             touched,
             error,
-            fieldsName,
+            fieldNames,
             array,
           });
         },

@@ -192,7 +192,7 @@ export const useForm = <T extends object>({
           );
           let newValues = state;
 
-          if (watch && watch.some(item => item === name)) {
+          if ((watch && watch.some(item => item === name)) || !watch) {
             newValues = {
               ...state,
             };
@@ -229,7 +229,10 @@ export const useForm = <T extends object>({
           );
           let newValues = state;
 
-          if (watch && watch.some(item => item === name || item === key)) {
+          if (
+            (watch && watch.some(item => item === name || item === key)) ||
+            !watch
+          ) {
             newValues = {
               ...state,
             };
@@ -305,7 +308,7 @@ export const useForm = <T extends object>({
         state[name as keyof T] = value;
         let newValues = state;
 
-        if (watch && watch.some(item => item === name)) {
+        if ((watch && watch.some(item => item === name)) || !watch) {
           newValues = {
             ...state,
           };
@@ -328,7 +331,7 @@ export const useForm = <T extends object>({
             : value;
         let newValues = state;
 
-        if (watch && watch.some(item => item === name)) {
+        if ((watch && watch.some(item => item === name)) || !watch) {
           newValues = {
             ...state,
           };

@@ -204,7 +204,7 @@ const baseLoaders = {
 };
 
 const basePlugins = [
-  new ForkTsCheckerWebpackPlugin({ checkSyntacticErrors: true }),
+  new ForkTsCheckerWebpackPlugin({ async: true }),
   ...(IS_PRODUCTION
     ? [
         new MiniCssExtractPlugin({

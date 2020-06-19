@@ -25,10 +25,7 @@ $ yarn
 
 ### Run
 ```sh
-$ yarn prod
-```
-```sh
-Application listening on: http://localhost:8080
+$ yarn dev
 ```
 
 License

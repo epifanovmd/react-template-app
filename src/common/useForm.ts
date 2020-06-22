@@ -3,7 +3,7 @@ import { ObjectSchema, Shape } from "yup";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 
-interface IUseForm<T extends object> {
+interface IUseForm<T> {
   initialValues: T;
   onChange?: (
     values: T,
@@ -14,20 +14,21 @@ interface IUseForm<T extends object> {
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
   validate?: (values: T) => Partial<Record<keyof T | string, string>>;
-  validateSchema?: ObjectSchema<Shape<object, Partial<T>>>;
+  validateSchema?: ObjectSchema<Shape<object, Partial<Record<keyof T, any>>>>;
   validateOnInit?: boolean;
-  watch?: (keyof T)[];
 }
 
-export const useForm = <T extends object>({
-  initialValues,
-  onSubmit,
-  onChange,
-  validate,
-  validateSchema,
-  validateOnInit,
-  watch,
-}: IUseForm<T>) => {
+export const useForm = <T extends object>(
+  {
+    initialValues,
+    onSubmit,
+    onChange,
+    validate,
+    validateSchema,
+    validateOnInit,
+  }: IUseForm<T>,
+  watch?: (keyof T)[],
+) => {
   const [values, setValues] = React.useState<T>(initialValues);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T | string, boolean>>
@@ -66,7 +67,11 @@ export const useForm = <T extends object>({
           .catch(err => {
             setErrors(e => {
               const inner =
-                (err.inner || []) as { path: keyof T; errors: string[] }[];
+                (err.inner || []) as
+                {
+                  path: keyof T;
+                  errors: string[];
+                }[];
               const prevErrors = { ...e };
 
               Object.keys(e).forEach(key => {
@@ -248,33 +253,40 @@ export const useForm = <T extends object>({
   );
 
   const fieldsIterate = useCallback(
-    <A extends TCheckArray<T[B]>, B extends keyof T>(
-      name: B,
+    (
+      name: keyof T,
       fields: (val: {
-        value: A;
-        touched: Partial<{ [key in keyof A]: boolean }>;
-        error: Partial<{ [key in keyof A]: string }>;
-        fieldNames: { [key in keyof A]: string };
+        value: TCheckArray<T>;
+        touched: Partial<{ [key in keyof TCheckArray<T>]: boolean }>;
+        error: Partial<{ [key in keyof TCheckArray<T>]: string }>;
+        fieldNames: { [key in keyof TCheckArray<T>]: string };
         fieldsHelper: typeof fieldsHelper;
         index: number;
-        array: A[];
+        array: TCheckArray<T>[];
       }) => void,
     ) =>
       ((values[name] as any) || []).map(
-        (value: A, index: number, array: A[]) => {
-          const touched: Partial<{ [key in keyof A]: boolean }> = {};
-          const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldNames: { [key in keyof A]: string } =
+        (value: TCheckArray<T>, index: number, array: TCheckArray<T>[]) => {
+          const touched: Partial<
+            { [key in keyof TCheckArray<T>]: boolean }
+          > = {};
+          const error: Partial<{ [key in keyof TCheckArray<T>]: string }> = {};
+          const fieldNames: {
+            [key in keyof TCheckArray<T>]: string;
+          } =
             {} as
             {
-              [key in keyof A]: string;
+              [key in keyof TCheckArray<T>]: string;
             };
 
           Object.keys(value).forEach(item => {
-            fieldNames[item as keyof A] = `${name}[${index}].${item}`;
-            touched[item as keyof A] =
+            fieldNames[
+              item as keyof TCheckArray<T>
+            ] = `${name}[${index}].${item}`;
+            touched[item as keyof TCheckArray<T>] =
               touchedValues[`${name}[${index}].${item}`];
-            error[item as keyof A] = errors[`${name}[${index}].${item}`];
+            error[item as keyof TCheckArray<T>] =
+              errors[`${name}[${index}].${item}`];
           });
 
           return fields({
@@ -323,11 +335,11 @@ export const useForm = <T extends object>({
   );
 
   const setFieldValue = useCallback(
-    <K extends keyof T>(name: K, value: ((state: T) => T[K]) | T[K]) => {
+    (name: keyof T, value: ((state: T) => T[keyof T]) | T[keyof T]) => {
       setValues(state => {
         state[name] =
           typeof value === "function"
-            ? (value as (state: T) => T[K])(state)
+            ? (value as (state: T) => T[keyof T])(state)
             : value;
         let newValues = state;
 

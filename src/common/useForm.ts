@@ -313,7 +313,9 @@ export const useForm = <T extends object>(
     (event: React.ChangeEvent<any>) => {
       const target = event?.target;
       const value =
-        target?.type === "checkbox" ? target?.checked : target?.value;
+        target?.type === "checkbox" || target?.type === "radio"
+          ? target?.checked
+          : target?.value;
       const name = target?.name;
 
       setValues(state => {

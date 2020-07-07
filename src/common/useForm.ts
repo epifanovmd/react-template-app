@@ -252,57 +252,6 @@ export const useForm = <T extends object>(
     [setValues, _validate, watch],
   );
 
-  // const fieldsIterate = useCallback(
-  //   (
-  //     name: keyof T,
-  //     fields: (val: {
-  //       value: TCheckArray<T>;
-  //       touched: Partial<{ [key in keyof TCheckArray<T[keyof T]>]: boolean }>;
-  //       error: Partial<{ [key in keyof TCheckArray<T[keyof T]>]: string }>;
-  //       fieldNames: { [key in keyof TCheckArray<T[keyof T]>]: string };
-  //       fieldsHelper: typeof fieldsHelper;
-  //       index: number;
-  //       array: TCheckArray<T>[];
-  //     }) => void,
-  //   ) =>
-  //     ((values[name] as any) || []).map(
-  //       (value: TCheckArray<T>, index: number, array: TCheckArray<T>[]) => {
-  //         const touched: Partial<
-  //           { [key in keyof TCheckArray<T>]: boolean }
-  //         > = {};
-  //         const error: Partial<{ [key in keyof TCheckArray<T>]: string }> = {};
-  //         const fieldNames: {
-  //           [key in keyof TCheckArray<T>]: string;
-  //         } =
-  //           {} as
-  //           {
-  //             [key in keyof TCheckArray<T>]: string;
-  //           };
-  //
-  //         Object.keys(value).forEach(item => {
-  //           fieldNames[
-  //             item as keyof TCheckArray<T>
-  //           ] = `${name}[${index}].${item}`;
-  //           touched[item as keyof TCheckArray<T>] =
-  //             touchedValues[`${name}[${index}].${item}`];
-  //           error[item as keyof TCheckArray<T>] =
-  //             errors[`${name}[${index}].${item}`];
-  //         });
-  //
-  //         return fields({
-  //           fieldsHelper,
-  //           value,
-  //           index,
-  //           touched,
-  //           error,
-  //           fieldNames,
-  //           array,
-  //         });
-  //       },
-  //     ),
-  //   [fieldsHelper, values, touchedValues, errors],
-  // );
-
   const fieldsIterate = useCallback(
     <A extends TCheckArray<T[B]>, B extends keyof T>(
       name: B,

@@ -27,36 +27,38 @@ export const TestComponents: FC = memo(() => {
     handleSubmit,
     setFieldValue,
     fieldsIterate,
-  } = useForm({
-    initialValues: {
-      inp: "",
-      inp1: "",
-      inputs: [
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-        { input: "" },
-      ],
+  } = useForm(
+    {
+      initialValues: {
+        inp: "",
+        inp1: "",
+        inputs: [
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+          { input: "" },
+        ],
+      },
+      validateSchema,
+      validateOnInit: true,
+      onSubmit: vals => console.log("values", vals),
     },
-    watch: ["inp", "inputs"],
-    validateSchema,
-    validateOnInit: true,
-    onSubmit: vals => console.log("values", vals),
-  });
+    ["inp", "inputs"],
+  );
 
   console.log("render");
 

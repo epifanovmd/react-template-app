@@ -46,34 +46,36 @@ const From: FC = () => {
     touchedValues,
     fieldsIterate,
     fieldsHelper,
-  } = useForm({
-    initialValues: {
-      input: "",
-      select: ["2", "1"],
-      checkBox: [1],
-      radio: 2,
-      range: {
-        from: "",
-        to: "",
-      },
-      textArea: "",
-      ranges: [
-        {
-          range: {
-            from: "",
-            to: "",
-          },
+  } = useForm(
+    {
+      initialValues: {
+        input: "",
+        select: ["2", "1"],
+        checkBox: [1],
+        radio: 2,
+        range: {
+          from: "",
+          to: "",
         },
-      ],
-      checkboxes: [{ checkbox: [] }],
+        textArea: "",
+        ranges: [
+          {
+            range: {
+              from: "",
+              to: "",
+            },
+          },
+        ],
+        checkboxes: [{ checkbox: [] }],
+      },
+      onSubmit: _values => {
+        console.log("Values", _values);
+      },
+      validateOnInit: true,
+      validateSchema,
     },
-    onSubmit: _values => {
-      console.log("Values", _values);
-    },
-    watch: ["checkBox", "checkboxes"],
-    validateOnInit: true,
-    validateSchema,
-  });
+    ["checkBox", "checkboxes"],
+  );
 
   console.log("render");
 

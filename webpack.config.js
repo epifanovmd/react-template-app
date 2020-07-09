@@ -24,6 +24,7 @@ const client = {
       baseLoaders.scss,
       baseLoaders.less,
       baseLoaders.css,
+      baseLoaders.locales,
       ...baseLoaders.font,
       baseLoaders.file,
     ],

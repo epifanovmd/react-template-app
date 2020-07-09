@@ -3,12 +3,22 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-xhr-backend";
 import { initReactI18next } from "react-i18next";
 
+import englishTranslation from "./locales/en/translation.json";
+import russianTranslation from "./locales/ru/translation.json";
+
 export interface IInitLocalizationParams {
   initLang?: string;
   isServer?: boolean;
 }
 
+type IAvailableLanguages = "ru" | "en";
+
 const LngDetector = new LanguageDetector(null, { caches: ["cookie"] });
+
+const translations = {
+  ru: russianTranslation,
+  en: englishTranslation,
+};
 
 export const initLocalization = ({
   initLang = "en",
@@ -27,6 +37,8 @@ export const initLocalization = ({
         prefix: "",
       },
       backend: {
-        loadPath: "/locales/{{lng}}/{{ns}}.json",
+        loadPath(language: IAvailableLanguages) {
+          return translations[language];
+        },
       },
     });

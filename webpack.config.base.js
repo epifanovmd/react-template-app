@@ -87,10 +87,28 @@ const baseLoaders = {
     use: ["@svgr/webpack"],
   },
   file: {
-    test: /\.(pdf|jpg|png|gif|ico)$/,
+    test: /\.(pdf|jpg|png|gif|ico|json)$/,
+    loader: "file-loader",
+    exclude: [
+      path.resolve(__dirname, "src/localization"),
+      path.resolve(__dirname, "node_modules"),
+    ],
+    options: {
+      name() {
+        return "files/[name].[hash:8].[ext]";
+      },
+    },
+  },
+  locales: {
+    test: /\.json$/,
+    include: [path.resolve(__dirname, "src/localization")],
+    exclude: /node_modules/,
+    type: "javascript/auto",
     loader: "file-loader",
     options: {
-      name: "[path][name].[hash:8].[ext]",
+      name() {
+        return "locales/[name].[hash:8].[ext]";
+      },
     },
   },
   font: [
@@ -191,11 +209,7 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
+          plugins: [autoprefixer()],
           sourceMap: true,
         },
       },

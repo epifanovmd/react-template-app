@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { useForm } from "Common/useForm";
+import { useForm } from "Common/hooks/useForm";
 import { CustomCheckboxGroup } from "Components/controls/customCheckbox";
 import { CustomInput } from "Components/controls/customInput";
 import { CustomRadioGroup } from "Components/controls/customRadio";

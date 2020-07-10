@@ -29,6 +29,7 @@ export interface IFetchParams<R, QP, P> {
   method: RequestType;
   headers?: { [key: string]: string };
   actionType: string;
+  transformData?: (result: R, getState: () => IAppState) => R;
   onSuccess?: TSuccessCallback<R>;
   onFail?: (params: {
     error?: Error;
@@ -47,6 +48,7 @@ export const callApiToolkit = <R, QP = void, P = void>({
   method,
   headers,
   actionType,
+  transformData,
   onSuccess: _onSuccess,
   onFail,
 }: IFetchParams<R, QP, P>) =>
@@ -81,16 +83,19 @@ export const callApiToolkit = <R, QP = void, P = void>({
         });
       throw new Error((data as any)?.message || message || status.toString());
     } else {
+      const transformedResult = transformData
+        ? transformData(data, getState)
+        : data;
       const payload = {
         getState,
         dispatch,
-        result: { data, message, status },
+        result: { data: transformedResult, message, status },
         extraArguments: extra,
       };
 
       onSuccess && onSuccess(payload);
       _onSuccess && _onSuccess(payload);
 
-      return { data, message, status };
+      return { data: transformedResult, message, status };
     }
   });

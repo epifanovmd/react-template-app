@@ -69,7 +69,6 @@ const baseLoaders = {
         options: {
           cache: true,
           emitWarning: true,
-          // failOnWarning: false,
         },
       },
     ],

@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { debounce } from "Common/debounce";
-import { useForm } from "Common/useForm";
+import { useForm } from "Common/hooks/useForm";
 import { CustomRangePicker } from "Components/controls/customRangePicker";
 import { SearchInput } from "Components/controls/searchInput";
 import React, { FC, memo } from "react";

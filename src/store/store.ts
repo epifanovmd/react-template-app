@@ -13,13 +13,13 @@ export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {
   i18next: typeof i18next;
   socket: SocketIOClient.Socket;
-  history: History;
+  history?: History;
 }
 
 const rootReducer = createMainReduce();
 
 export const createSimpleStore = (
-  history: History,
+  history?: History,
   preloadedState?: IAppState,
 ) => {
   const store: Store<IAppState, any> = configureStore({

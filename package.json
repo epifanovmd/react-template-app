@@ -80,6 +80,7 @@
     "@types/http-proxy-middleware": "^0.19.3",
     "@types/jsonwebtoken": "^8.3.8",
     "@types/loadable__component": "^5.10.0",
+    "@types/loadable__server": "^5.12.2",
     "@types/luxon": "^1.22.0",
     "@types/mini-css-extract-plugin": "^0.9.1",
     "@types/node": "^13.11.0",

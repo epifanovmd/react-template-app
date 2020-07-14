@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+// @ts-ignore
 import BackendExpress from "i18next-node-fs-backend";
 import Backend from "i18next-xhr-backend";
 import { initReactI18next } from "react-i18next";
@@ -22,9 +23,9 @@ const translations = {
 };
 
 export const initLocalization = ({
-                                   initLang = "en",
-                                   isServer,
-                                 }: IInitLocalizationParams) => {
+  initLang = "en",
+  isServer,
+}: IInitLocalizationParams) => {
   if (isServer) {
     return i18next.use(BackendExpress).init({
       fallbackLng: initLang,
@@ -36,10 +37,7 @@ export const initLocalization = ({
       debug: false,
       load: "languageOnly",
       backend: {
-        loadPath(language: IAvailableLanguages) {
-          return translations[language];
-        },
-        jsonIndent: 2,
+        loadPath: "/locales/{{lng}}/{{ns}}.json",
       },
     });
   } else {

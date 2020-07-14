@@ -1,12 +1,10 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 // @ts-ignore
-import BackendExpress from "i18next-node-fs-backend";
-import Backend from "i18next-xhr-backend";
+import Backend from "i18next-fs-backend";
+import Backend1 from "i18next-xhr-backend";
+import { resolve } from "path";
 import { initReactI18next } from "react-i18next";
-
-import englishTranslation from "./locales/en/translation.json";
-import russianTranslation from "./locales/ru/translation.json";
 
 export interface IInitLocalizationParams {
   initLang?: string;
@@ -17,17 +15,12 @@ type IAvailableLanguages = "ru" | "en";
 
 const LngDetector = new LanguageDetector(null, { caches: ["cookie"] });
 
-const translations = {
-  ru: russianTranslation,
-  en: englishTranslation,
-};
-
 export const initLocalization = ({
   initLang = "en",
   isServer,
 }: IInitLocalizationParams) => {
   if (isServer) {
-    return i18next.use(BackendExpress).init({
+    return i18next.use<any>(Backend).init({
       fallbackLng: initLang,
       lng: initLang,
       interpolation: {
@@ -37,12 +30,13 @@ export const initLocalization = ({
       debug: false,
       load: "languageOnly",
       backend: {
-        loadPath: "/locales/{{lng}}/{{ns}}.json",
+        loadPath: resolve(__dirname, "../locales/{{lng}}/{{ns}}.json"),
+        jsonIndent: 2,
       },
     });
   } else {
     return i18next
-      .use(Backend)
+      .use(Backend1)
       .use(LngDetector)
       .use(initReactI18next)
       .init({
@@ -55,9 +49,7 @@ export const initLocalization = ({
           prefix: "",
         },
         backend: {
-          loadPath(language: IAvailableLanguages) {
-            return translations[language];
-          },
+          loadPath: resolve(__dirname, "/locales/{{lng}}/{{ns}}.json"),
         },
       });
   }

@@ -26,7 +26,6 @@ const client = {
       baseLoaders.scss,
       baseLoaders.less,
       baseLoaders.css,
-      baseLoaders.locales,
       ...baseLoaders.font,
       baseLoaders.file,
       baseLoaders.svg,
@@ -69,7 +68,7 @@ const server = {
     rules: [
       baseLoaders.ts,
       ...baseLoaders.font,
-      baseLoaders.scss_null_loader,
+      // baseLoaders.scss_null_loader,
     ],
   },
   plugins: [

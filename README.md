@@ -11,6 +11,7 @@ React Redux Server Side Rendering Application
   - Redux Toolkit
   - Reselect
   - i18next
+  - Express (SSR)
   - Luxon
   - Loadable Component (for code splitting)
   - CSS Modules
@@ -19,13 +20,17 @@ React Redux Server Side Rendering Application
 ### Installation
 ```sh
 $ git clone https://github.com/epifanovmd/react-template-app.git
+$ git checkout ssr
 $ cd react-template-app
 $ yarn
 ```
 
 ### Run
 ```sh
-$ yarn dev
+$ yarn prod:ssr
+```
+```sh
+Application listening on: http://localhost:8080
 ```
 
 License

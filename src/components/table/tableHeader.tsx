@@ -1,15 +1,20 @@
-import cn from "classnames";
 import React, { FC } from "react";
+import styled from "styled-components";
 
-import styles from "./styles.module.scss";
 import { ITableProps } from "./table";
 
 export const TableHeader: FC<ITableProps> = props => {
-  const { children, className, ...rest } = props;
+  const { children, ...rest } = props;
 
-  return (
-    <div className={cn(styles.header, className)} {...rest}>
-      {children}
-    </div>
-  );
+  return <HeaderWrap {...rest}>{children}</HeaderWrap>;
 };
+
+const HeaderWrap = styled.div`
+  font-weight: bold;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  @media only screen and (max-width: 599px) {
+    display: none;
+  }
+`;

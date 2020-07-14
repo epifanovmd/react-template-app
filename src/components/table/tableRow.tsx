@@ -1,15 +1,23 @@
-import cn from "classnames";
 import React, { FC } from "react";
+import styled from "styled-components";
 
-import styles from "./styles.module.scss";
 import { ITableProps } from "./table";
 
 export const TableRow: FC<ITableProps> = props => {
-  const { children, className, ...rest } = props;
+  const { children, ...rest } = props;
 
-  return (
-    <div className={cn(styles.row, className)} {...rest}>
-      {children}
-    </div>
-  );
+  return <RowWrap {...rest}>{children}</RowWrap>;
 };
+
+const RowWrap = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  @media only screen and (max-width: 599px) {
+    display: block;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 3px;
+    margin: 5px 0;
+  }
+`;

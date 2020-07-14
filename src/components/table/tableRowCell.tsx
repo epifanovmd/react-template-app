@@ -1,16 +1,41 @@
-import cn from "classnames";
 import React, { FC } from "react";
+import styled from "styled-components";
 
-import styles from "./styles.module.scss";
 import { ITableProps } from "./table";
 
 export const TableRowCell: FC<ITableProps & { label?: string }> = props => {
-  const { children, className, label, ...rest } = props;
+  const { children, label, ...rest } = props;
 
   return (
-    <div className={cn(styles["row-cell"], className)} {...rest}>
-      <div className={cn(styles.title)}>{label}</div>
-      <div className={cn(styles.value)}>{children}</div>
-    </div>
+    <Cell {...rest}>
+      <Label>{label}</Label>
+      <Value>{children}</Value>
+    </Cell>
   );
 };
+
+const Cell = styled.div`
+  flex-grow: 1;
+  flex-basis: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+const Label = styled.div`
+  font-weight: bold;
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: none;
+`;
+const Value = styled.div`
+  flex-grow: 1;
+  flex-basis: 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;

@@ -1,14 +1,13 @@
+import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
 import React, { ChangeEvent, FC, memo } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-import { routes } from "../../../routes";
+import { routes } from "@/routes";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();
-  const dispatch = useDispatch();
 
   const changeLang = async ({
     target: { value },
@@ -21,8 +20,10 @@ export const Header: FC = memo(() => {
       <menu>
         <Items>
           {routes.map(({ path, pathName }) => (
-            <li key={path}>
-              <NavLink to={path}>{t(pathName)}</NavLink>
+            <li style={{ maxWidth: "50px" }} key={path}>
+              <TextEllipsisWithTooltip text={t(pathName)}>
+                <NavLink to={path}>{t(pathName)}</NavLink>
+              </TextEllipsisWithTooltip>
             </li>
           ))}
           <li>

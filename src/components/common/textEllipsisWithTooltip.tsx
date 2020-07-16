@@ -32,6 +32,7 @@ export const TextEllipsisWithTooltip: FC<IProps> = ({
     setTimeout(() => {
       updateClamped();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width]);
 
   const content = !dangerouslySetInnerHTML ? (

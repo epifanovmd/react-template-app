@@ -1,14 +1,8 @@
 import { Modal } from "antd";
 import { ModalProps } from "antd/es/modal";
 import { EventNames, eventRegister } from "Common/eventRegister";
-import React, {
-  FC,
-  memo,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { FC, memo, useCallback, useEffect, useState } from "react";
+import { v1 } from "uuid";
 
 export interface IModalProps extends ModalProps {
   title: string;
@@ -32,7 +26,7 @@ export const Popup: FC = memo(() => {
           modals: [
             ..._state.modals,
             {
-              id: Math.random().toString(),
+              id: v1(),
               isOpen: true,
               ...data,
             },
@@ -47,6 +41,8 @@ export const Popup: FC = memo(() => {
   }, [eventRegister, state, setState]);
 
   const { modals } = state;
+
+  console.log(modals);
 
   const closeModalById = useCallback(
     (id: string) => {
@@ -74,24 +70,19 @@ export const Popup: FC = memo(() => {
   );
 
   const onOk = useCallback(
-    (id, onSuccess) => () => {
+    onSuccess => () => {
       onSuccess && onSuccess();
-      closeModalById(id);
     },
-    [closeModalById],
+    [],
   );
 
   useEffect(() => {
-    const timoutId = setTimeout(() => {
-      setState({
-        ...state,
-        modals: modals.filter(item => item.isOpen),
-      });
-    }, 300);
-
-    return () => clearTimeout(timoutId);
+    setState(state => ({
+      ...state,
+      modals: modals.filter(item => item.isOpen),
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [useMemo(() => state.modals.some(item => !item.isOpen), [state.modals])]);
+  }, [modals.length]);
 
   return (
     <div>
@@ -103,9 +94,9 @@ export const Popup: FC = memo(() => {
             title={title}
             visible={isOpen}
             onCancel={onClose(id, onFailure)}
-            onOk={onOk(id, onSuccess)}
+            onOk={onOk(onSuccess)}
           >
-            {render(onOk(id, onSuccess), onClose(id, onFailure))}
+            {render(onOk(onSuccess), onClose(id, onFailure))}
           </Modal>
         ),
       )}

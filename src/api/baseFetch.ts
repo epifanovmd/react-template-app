@@ -28,6 +28,7 @@ export const baseFetch = async <R, P>(
     const res = await fetch(urlResult, {
       method,
       ...body,
+      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

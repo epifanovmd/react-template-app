@@ -2,7 +2,7 @@ import { LoadState } from "Common/loadState";
 import { IUsersState } from "Modules/users/IUsersState";
 
 export interface IReduxData<T> {
-  loadState?: LoadState;
+  loadState: LoadState;
   count?: number;
   page?: number;
   limit?: number;

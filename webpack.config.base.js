@@ -61,7 +61,11 @@ const baseConfigServer = {
     extensions: [".ts", ".tsx", ".js", ".scss"],
     alias,
   },
-  externals: [nodeExternals()],
+  externals: [
+    nodeExternals({
+      whitelist: [/\.(?!(?:jsx?|json)$).{1,5}$/i],
+    }),
+  ],
 };
 
 const baseLoaders = {
@@ -149,7 +153,10 @@ const baseLoaders = {
     test: /\.(sa|sc)ss$/,
     use: [
       {
-        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+        loader:
+          IS_PRODUCTION || IS_SSR
+            ? MiniCssExtractPlugin.loader
+            : "style-loader",
       },
       {
         loader: "css-loader",
@@ -180,7 +187,10 @@ const baseLoaders = {
     test: /\.less$/,
     use: [
       {
-        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+        loader:
+          IS_PRODUCTION || IS_SSR
+            ? MiniCssExtractPlugin.loader
+            : "style-loader",
       },
       {
         loader: "css-loader",
@@ -212,7 +222,10 @@ const baseLoaders = {
     test: /\.css$/,
     use: [
       {
-        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+        loader:
+          IS_PRODUCTION || IS_SSR
+            ? MiniCssExtractPlugin.loader
+            : "style-loader",
       },
       {
         loader: "css-loader",
@@ -229,15 +242,11 @@ const baseLoaders = {
       },
     ],
   },
-  scss_null_loader: {
-    test: /\.(sa|sc|c)ss$/,
-    loader: "null-loader",
-  },
 };
 
 const basePlugins = [
   new ForkTsCheckerWebpackPlugin({ async: true }),
-  ...(IS_PRODUCTION
+  ...(IS_PRODUCTION || IS_SSR
     ? [
         new MiniCssExtractPlugin({
           filename: "styles/[contenthash].css",

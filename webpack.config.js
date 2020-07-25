@@ -20,13 +20,14 @@ const client = {
   mode: IS_PRODUCTION ? "production" : "development",
   module: {
     rules: [
-      baseLoaders.tsNew,
+      baseLoaders.ts,
       baseLoaders.scss,
       baseLoaders.less,
       baseLoaders.css,
       baseLoaders.locales,
       ...baseLoaders.font,
       baseLoaders.file,
+      baseLoaders.svg,
     ],
   },
   plugins: [

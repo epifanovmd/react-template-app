@@ -43,11 +43,6 @@ const baseLoaders = {
   ts: {
     test: /\.tsx?$/,
     exclude: /node_modules/,
-    use: ["babel-loader", "ts-loader", "eslint-loader"],
-  },
-  tsNew: {
-    test: /\.tsx?$/,
-    exclude: /node_modules/,
     use: [
       { loader: "babel-loader" },
       { loader: "cache-loader" },

@@ -1,5 +1,3 @@
-import "antd/dist/antd.css";
-
 import { Header } from "Components/layouts/header/header";
 import { Popup } from "Components/popup/popup";
 import React from "react";

@@ -17,13 +17,10 @@ const cookie = new Cookies();
 const history = createBrowserHistory();
 
 initLocalization({ initLang: cookie.get("i18next") }).finally();
-export const store = createSimpleStore(history, { ...window.REDUX_DATA });
-
-const renderMethod =
-  typeof window === "undefined" ? ReactDOM.hydrate : ReactDOM.render;
+export const store = createSimpleStore(history);
 
 const renderApp = (Comp?: any) => {
-  renderMethod(
+  ReactDOM.render(
     <Provider store={store}>
       <Suspense fallback={"Loading..."}>
         <Router history={history}>

@@ -3,6 +3,8 @@ import { RequestType } from "Common/requestType";
 import fetch from "isomorphic-unfetch";
 import querystring from "query-string";
 
+import { PORT } from "@/server";
+
 export interface IResponse<R> {
   data: R;
   status: number;
@@ -26,7 +28,7 @@ export const baseFetch = async <R, P>(
       : `/api/${url}${hasParams ? "?" : ""}${querystring.stringify(params)}`;
 
   try {
-    const res = await fetch(`http://localhost:8080${urlResult}`, {
+    const res = await fetch(`http://localhost:${PORT}${urlResult}`, {
       method,
       ...body,
       credentials: "include",

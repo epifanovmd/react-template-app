@@ -6,7 +6,8 @@ import proxy from "../../proxy.json";
 import { serverRenderer } from "./render";
 
 const app = express();
-const port = process.env.PORT || 8080;
+
+export const PORT = process.env.PORT || 8080;
 
 if (proxy) {
   Object.keys(proxy).forEach(context => {
@@ -18,6 +19,6 @@ app.use(express.static("build"));
 app.use(cookieParser());
 app.use(serverRenderer());
 
-app.listen(port, () => {
-  console.log(`Application listening on: http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Application listening on: http://localhost:${PORT}`);
 });

@@ -1,3 +1,5 @@
+import { PORT } from "@/server";
+
 import { RequestType } from "../common/requestType";
 import { IResponse } from "./baseFetch";
 
@@ -26,7 +28,7 @@ export const uploadFile = async <P, R>({
   formData.append(filePropertyName, file, fileName);
 
   try {
-    const res = await fetch(urlResult, {
+    const res = await fetch(`http://localhost:${PORT}${urlResult}`, {
       method,
       body: formData,
       headers: { ...headers },

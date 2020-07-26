@@ -9,6 +9,7 @@ const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 const alias = {
+  "react-dom": "@hot-loader/react-dom",
   "@": path.resolve(__dirname, "src/"),
   Store: path.resolve(__dirname, "src/store"),
   Api: path.resolve(__dirname, "src/api"),

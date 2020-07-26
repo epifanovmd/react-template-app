@@ -7,7 +7,7 @@ import { serverRenderer } from "./render";
 
 const app = express();
 
-export const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
 if (proxy) {
   Object.keys(proxy).forEach(context => {

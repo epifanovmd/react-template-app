@@ -3,14 +3,14 @@ import { RequestType } from "Common/requestType";
 import fetch from "isomorphic-unfetch";
 import querystring from "query-string";
 
-import { PORT } from "@/server";
-
 export interface IResponse<R> {
   data: R;
   status: number;
   error?: Error;
   message?: string;
 }
+
+const PORT = process.env.PORT || 8080;
 
 export const baseFetch = async <R, P>(
   url: string,

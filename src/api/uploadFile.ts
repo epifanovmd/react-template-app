@@ -1,6 +1,5 @@
-import { PORT } from "@/server";
+import { RequestType } from "Common/requestType";
 
-import { RequestType } from "../common/requestType";
 import { IResponse } from "./baseFetch";
 
 interface IParams<P> {
@@ -12,6 +11,8 @@ interface IParams<P> {
   filePropertyName?: string;
   fileName?: string;
 }
+
+const PORT = process.env.PORT || 8080;
 
 export const uploadFile = async <P, R>({
   url,

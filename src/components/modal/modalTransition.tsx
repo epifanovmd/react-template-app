@@ -119,7 +119,7 @@ export const Modal: FC<IModalProps> = memo(
       </CSSTransition>
     );
 
-    return disablePortal
+    return disablePortal || typeof document === "undefined"
       ? modal
       : ReactDOM.createPortal(modal, document.getElementById("root")!);
   },

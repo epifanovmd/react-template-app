@@ -1,15 +1,15 @@
 import { Button } from "antd";
+import { useModal } from "Common/hooks/useModal";
 import { INormalizeData } from "Common/normalaizer";
-import { popup } from "Common/popup";
-import React, { FC, memo, useCallback } from "react";
+import { ModalAntd } from "Components/modal/modalAntd";
+import { Modal } from "Components/modal/modalTransition";
+import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { IUser } from "src/api/dto/Users.g";
 
 import { UsersActions } from "@/modules/users/reduxToolKit";
 
-// @ts-ignore
-import * as img from "../../assets/images/layout1.jpg";
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";
 import { TableRow } from "../table/tableRow";
@@ -23,44 +23,8 @@ export const UserList: FC<IProps> = memo(({ users }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const openModal = useCallback(() => {
-    popup.modal({
-      title: t("users"),
-      params: { cancelText: "Закрыть", okButtonProps: { hidden: true } },
-      render: () => (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableRowCell>{t("username")}</TableRowCell>
-              <TableRowCell>{t("email")}</TableRowCell>
-            </TableRow>
-          </TableHeader>
-
-          {users &&
-            (users.keys || []).map(key => {
-              const item = users.values[key];
-
-              return (
-                item && (
-                  <TableRow
-                    key={item.id}
-                    // eslint-disable-next-line react/jsx-no-bind
-                    onClick={() => {
-                      dispatch(UsersActions.remove(item.id));
-                    }}
-                  >
-                    <TableRowCell label={t("username")}>
-                      {item.username}
-                    </TableRowCell>
-                    <TableRowCell label={t("email")}>{item.email}</TableRowCell>
-                  </TableRow>
-                )
-              );
-            })}
-        </Table>
-      ),
-    });
-  }, [dispatch, t, users]);
+  const [onOpen] = useModal("modal-antd");
+  const [onOpen1] = useModal("modal-transition");
 
   return (
     <Table>
@@ -113,7 +77,43 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         Добавить
       </Button>
 
-      <Button onClick={openModal}>Открыть модальное окно</Button>
+      <Modal name={"modal-transition"}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableRowCell>{t("username")}</TableRowCell>
+              <TableRowCell>{t("email")}</TableRowCell>
+            </TableRow>
+          </TableHeader>
+
+          {users &&
+            (users.keys || []).map(key => {
+              const item = users.values[key];
+
+              return (
+                item && (
+                  <TableRow
+                    key={item.id}
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onClick={() => {
+                      dispatch(UsersActions.remove(item.id));
+                    }}
+                  >
+                    <TableRowCell label={t("username")}>
+                      {item.username}
+                    </TableRowCell>
+                    <TableRowCell label={t("email")}>{item.email}</TableRowCell>
+                  </TableRow>
+                )
+              );
+            })}
+        </Table>
+      </Modal>
+      <ModalAntd name={"modal-antd"}>
+        <Button onClick={onOpen1}>Открыть модальное окно</Button>
+      </ModalAntd>
+
+      <Button onClick={onOpen}>Открыть модальное окно</Button>
     </Table>
   );
 });

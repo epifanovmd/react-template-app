@@ -3,10 +3,10 @@ interface IListenerHandler {
   id: string;
 }
 
-export const EventNames = { modal: "actions" };
+export const EventNames = { modalActions: "modalActions" };
 
 class EventRegister {
-  addEventListener(eventName: string, callback: (data: any) => void) {
+  addEventListener<T>(eventName: string, callback: (data: T) => void) {
     const callbacks = this.getOrCreateListeners(eventName);
     const listenerId = eventName + callbacks.length;
 
@@ -36,7 +36,7 @@ class EventRegister {
     this.listeners.delete(eventName);
   }
 
-  emitEvent(eventName: string, data?: any) {
+  emitEvent<T>(eventName: string, data?: T) {
     const listeners = this.listeners.get(eventName);
 
     if (listeners != null) {

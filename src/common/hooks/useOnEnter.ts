@@ -5,5 +5,6 @@ export function useOnEnter(callback: Function, dependencies: DependencyList) {
     if (event.key === "Enter") {
       callback();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 }

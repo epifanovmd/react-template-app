@@ -1,17 +1,34 @@
+import {
+  IModalActionParams,
+  ModalActions,
+} from "Components/modal/modalTransition";
 import { useCallback, useState } from "react";
 
-type Modal = [boolean, () => void, () => void];
+import { EventNames, eventRegister } from "../eventRegister";
 
-export function useModal(): Modal {
-  const [open, setOpen] = useState(false);
+export type TUseModalControl = [() => void, () => void, boolean];
 
+export const useModal = (name?: string): TUseModalControl => {
+  const [open, changeOpen] = useState(false);
   const onOpen = useCallback(() => {
-    setOpen(true);
-  }, [setOpen]);
+    if (name) {
+      eventRegister.emitEvent<IModalActionParams>(EventNames.modalActions, {
+        action: ModalActions.OPEN,
+        modalName: name,
+      });
+    }
+    changeOpen(true);
+  }, [name]);
 
   const onClose = useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
+    if (name) {
+      eventRegister.emitEvent<IModalActionParams>(EventNames.modalActions, {
+        action: ModalActions.CLOSE,
+        modalName: name,
+      });
+    }
+    changeOpen(false);
+  }, [name]);
 
-  return [open, onOpen, onClose];
-}
+  return [onOpen, onClose, open];
+};

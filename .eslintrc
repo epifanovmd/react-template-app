@@ -92,7 +92,6 @@
     "jsx-quotes": "error",
     "key-spacing": "error",
     "keyword-spacing": ["error", { "after": true, "before": true }],
-    "multiline-ternary": ["error", "always"],
     "new-cap": "error",
     "new-parens": "error",
     "no-array-constructor": "error",

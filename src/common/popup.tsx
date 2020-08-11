@@ -1,8 +1,5 @@
 import { message, Modal, notification } from "antd";
-import { IModalProps } from "Components/popup/popup";
 import React from "react";
-
-import { EventNames, eventRegister } from "./eventRegister";
 
 export const popup = {
   message: {
@@ -34,20 +31,4 @@ export const popup = {
   warn: Modal.warn,
   warning: Modal.warning,
   destroyAll: Modal.destroyAll,
-
-  modal({
-    title,
-    render,
-    params,
-  }: {
-    title: string;
-    render: (onOk: () => void, onClose: () => void) => JSX.Element | string;
-    params?: Omit<Partial<IModalProps>, "title" | "render">;
-  }) {
-    eventRegister.emitEvent(EventNames.modal, {
-      ...params,
-      title,
-      render,
-    } as IModalProps);
-  },
 };

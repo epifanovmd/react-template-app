@@ -8,6 +8,8 @@ import { IUser } from "src/api/dto/Users.g";
 
 import { UsersActions } from "@/modules/users/reduxToolKit";
 
+// @ts-ignore
+import * as img from "../../assets/images/layout1.jpg";
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";
 import { TableRow } from "../table/tableRow";

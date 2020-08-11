@@ -20,7 +20,9 @@
     "lint": "eslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*{.ts,.tsx}\"",
     "prettier:fix": "prettier --parser typescript --write src/**/*.{json,ts,tsx}",
-    "check-packages-updates": "yarn outdated"
+    "check-packages-updates": "yarn outdated",
+    "analizer": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+
   },
   "dependencies": {
     "@loadable/component": "^5.12.0",
@@ -52,6 +54,7 @@
     "socket.io-client": "^2.3.0",
     "styled-components": "^5.0.1",
     "uuid": "^8.2.0",
+    "webpack-bundle-analyzer": "^3.8.0",
     "yup": "^0.28.3"
   },
   "devDependencies": {

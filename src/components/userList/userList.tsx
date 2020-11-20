@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { IUser } from "src/api/dto/Users.g";
 
-import { UsersActions } from "@/modules/users/reduxToolKit";
+import { UsersActions } from "@/pages/users/reduxToolKit";
 
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";

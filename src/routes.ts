@@ -1,16 +1,16 @@
 import loadable from "@loadable/component";
 import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
 import { IResponse } from "Api/baseFetch";
-import { TestComponents } from "Modules/test/testComponents";
-import { fetchUsers } from "Modules/users/reduxToolKit";
+import { TestComponents } from "Pages/test/testComponents";
+import { fetchUsers } from "Pages/users/reduxToolKit";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Action } from "redux";
 import { IAppState } from "Store/IAppState";
 import { IExtraArguments } from "Store/store";
 
-const Users = loadable(() => import("./modules/users/Users"));
-const Form = loadable(() => import("./modules/form/form"));
+const Users = loadable(() => import("./pages/users/Users"));
+const Form = loadable(() => import("./pages/form/form"));
 
 export enum Roles {
   User = "User",

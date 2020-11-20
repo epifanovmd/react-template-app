@@ -4,7 +4,7 @@ import { LoadState } from "Common/loadState";
 import { createNormalize } from "Common/normalizer";
 import { popup } from "Common/popup";
 import { RequestType } from "Common/requestType";
-import { IUsersState, usersInitialState } from "Modules/users/IUsersState";
+import { IUsersState, usersInitialState } from "Pages/users/IUsersState";
 import { callApiToolkit } from "Store/common/apiActionsAsync";
 
 export const fetchUsers = callApiToolkit<IUser[]>({

@@ -15,7 +15,7 @@ const alias = {
   "@": path.resolve(__dirname, "src/"),
   Store: path.resolve(__dirname, "src/store"),
   Api: path.resolve(__dirname, "src/api"),
-  Modules: path.resolve(__dirname, "src/modules"),
+  Pages: path.resolve(__dirname, "src/pages"),
   Common: path.resolve(__dirname, "src/common"),
   Components: path.resolve(__dirname, "src/components"),
 };

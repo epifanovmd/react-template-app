@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "Api/dto/Users.g";
 import { LoadState } from "Common/loadState";
-import { createNormalize } from "Common/normalaizer";
+import { createNormalize } from "Common/normalizer";
 import { popup } from "Common/popup";
 import { RequestType } from "Common/requestType";
 import { IUsersState, usersInitialState } from "Modules/users/IUsersState";

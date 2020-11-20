@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { useModal } from "Common/hooks/useModal";
-import { INormalizeData } from "Common/normalaizer";
+import { INormalizeData } from "Common/normalizer";
 import { ModalAntd } from "Components/modal/modalAntd";
 import { Modal } from "Components/modal/modalTransition";
 import React, { FC, memo } from "react";

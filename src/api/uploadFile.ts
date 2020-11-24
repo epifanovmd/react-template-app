@@ -42,7 +42,7 @@ export const uploadFile = async <P, R>({
       };
     }
 
-    const json = (await res.json()) || {};
+    const json = (await res?.json().catch(() => ({}))) || {};
 
     return {
       data: json as R,

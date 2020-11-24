@@ -21,15 +21,15 @@ export const createNormalize = <T extends object, S>() => {
     const values: { [key in number]?: T } = {};
 
     array &&
-    array.forEach(item => {
-      keys.add(item[key]);
-      if (values[item[key] as any]) {
-        console.error(
-          `createNormalize: The key by which you group is not unique: "fromResponse(array, "${key}" <---)"`,
-        );
-      }
-      values[item[key] as any] = item;
-    });
+      array.forEach(item => {
+        keys.add(item[key]);
+        if (values[item[key] as any]) {
+          console.error(
+            `createNormalize: The key by which you group is not unique: "fromResponse(array, "${key}" <---)"`,
+          );
+        }
+        values[item[key] as any] = item;
+      });
 
     return {
       values,
@@ -47,7 +47,7 @@ export const createNormalize = <T extends object, S>() => {
     set: <
       F extends { key: string | number; value: (values: T) => T },
       V extends { key: string | number; value: T }
-      >(
+    >(
       state: Draft<S>,
       { payload }: PayloadAction<F | V>,
     ) => {

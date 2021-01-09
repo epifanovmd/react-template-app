@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useCallback, useEffect, useMemo } from "react";
 import { ObjectSchema, Shape } from "yup";
 
@@ -98,7 +99,13 @@ export const useForm = <T extends object>(
                 }
               });
 
-              if (Object.keys(prevErrors).length !== Object.keys(e).length) {
+              const prevKeys = Object.keys(prevErrors);
+              const eKeys = Object.keys(e);
+
+              if (
+                prevKeys.length !== eKeys.length ||
+                prevKeys.some(key => prevErrors[key] !== e[key])
+              ) {
                 // eslint-disable-next-line no-param-reassign
                 e = { ...e };
               }
@@ -113,7 +120,7 @@ export const useForm = <T extends object>(
           : null;
 
         setErrors(err => (e ? e : err));
-        _finally && _finally(_values, { ...e });
+        _finally && _finally(_values, { ...(e as any) });
       }
 
       return _values;
@@ -256,7 +263,7 @@ export const useForm = <T extends object>(
           }));
       },
     }),
-    [setValues, _validate, watch],
+    [_validate, watch, touchedValues],
   );
 
   const fieldsIterate = useCallback(

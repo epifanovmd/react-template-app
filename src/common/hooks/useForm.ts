@@ -325,6 +325,16 @@ export const useForm = <T extends object>(
           : target?.value;
       const name = target?.name;
 
+      if (
+        (target?.type === "checkbox" || target?.type === "radio") &&
+        !touchedValues[name as keyof T]
+      ) {
+        setTouchedValues(state => ({
+          ...state,
+          [name]: true,
+        }));
+      }
+
       setValues(state => {
         state[name as keyof T] = value;
         let newValues = state;
@@ -445,7 +455,10 @@ export const useForm = <T extends object>(
     [values, onSubmit, _validate],
   );
 
+  const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
+
   return {
+    valid,
     values,
     touchedValues,
     errors,

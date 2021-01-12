@@ -4,6 +4,8 @@ import { Input } from "Components/controls/Input";
 import React, { FC, memo } from "react";
 import { array, object, string } from "yup";
 
+import EmailIcon from "../../icons/email.svg";
+
 export const TestComponents: FC = memo(() => {
   const validateSchema = object().shape({
     inp: string().required("Поле 'inp' явялется обязательным"),
@@ -48,8 +50,10 @@ export const TestComponents: FC = memo(() => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
+        icon={<EmailIcon />}
         label={"setFieldValue"}
         // value={values.inp}
+        placeholder={"Email"}
         onChange={onSetValue}
         name={fieldNames.inp}
         onBlur={handleBlur}

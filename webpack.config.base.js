@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
+const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -28,7 +29,11 @@ function getScssLoaders(modules = false) {
     {
       loader: "css-loader",
       options: {
-        modules,
+        modules: modules
+          ? {
+              getLocalIdent: getCSSModuleLocalIdent,
+            }
+          : false,
         sourceMap: true,
       },
     },

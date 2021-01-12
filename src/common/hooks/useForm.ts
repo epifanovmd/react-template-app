@@ -156,6 +156,10 @@ export const useForm = <T extends object>(
     return obj;
   }, [initialValues]);
 
+  useEffect(() => {
+    setValues(initialValues);
+  }, [initialValues]);
+
   const fieldNames = useMemo(() => getFields(), [getFields]);
 
   const fieldsHelper = useMemo(
@@ -416,7 +420,7 @@ export const useForm = <T extends object>(
   );
 
   const handleSubmit = useCallback(
-    (event?: React.FormEvent<HTMLFormElement>) => {
+    (event?: React.FormEvent<HTMLFormElement> | React.MouseEvent<any>) => {
       event?.preventDefault();
       _validate(values, ({}, e) => {
         setTouchedValues(
@@ -456,9 +460,13 @@ export const useForm = <T extends object>(
   );
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
+  const dirty = useMemo(() => {
+    JSON.stringify(initialValues) !== JSON.stringify(values);
+  }, [initialValues, values]);
 
   return {
     valid,
+    dirty,
     values,
     touchedValues,
     errors,

@@ -7,24 +7,10 @@ module.exports = {
   ],
   env: {
     development: {
-      plugins: [
-        [
-          "babel-plugin-styled-components",
-          {
-            displayName: true,
-          },
-        ],
-      ],
+      plugins: [],
     },
     production: {
-      plugins: [
-        [
-          "babel-plugin-styled-components",
-          {
-            displayName: false,
-          },
-        ],
-      ],
+      plugins: [],
     },
   },
 };

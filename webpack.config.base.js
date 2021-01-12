@@ -50,6 +50,10 @@ const baseLoaders = {
       { loader: "babel-loader" },
       { loader: "cache-loader" },
       {
+        loader: "astroturf/loader",
+        options: { extension: ".module.scss" },
+      },
+      {
         loader: "thread-loader",
         options: {
           workers: require("os").cpus().length - 1,

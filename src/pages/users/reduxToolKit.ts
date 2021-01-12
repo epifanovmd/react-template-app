@@ -1,8 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "Api/dto/Users.g";
 import { LoadState } from "Common/loadState";
 import { createNormalize } from "Common/normalizer";
-import { popup } from "Common/popup";
 import { RequestType } from "Common/requestType";
 import { IUsersState, usersInitialState } from "Pages/users/IUsersState";
 import { callApiToolkit } from "Store/common/apiActionsAsync";
@@ -12,7 +11,7 @@ export const fetchUsers = callApiToolkit<IUser[]>({
   method: RequestType.GET,
   actionType: "USERS/GET_USERS",
   onFail: ({ error, extraArguments: { i18next } }) => {
-    popup.notification.error({
+    console.log(i18next.t("error"), {
       message: i18next.t("error"),
       description: error?.message,
     });

@@ -10,7 +10,6 @@ import { IAppState } from "Store/IAppState";
 import { IExtraArguments } from "Store/store";
 
 const Users = loadable(() => import("./pages/users/Users"));
-const Form = loadable(() => import("./pages/form/form"));
 
 export enum Roles {
   User = "User",
@@ -55,7 +54,6 @@ export const getRoutsFromRole = (
 export const routepaths = {
   ROOT: "/",
   USERS: "/users",
-  FORM: "/form",
   TESTCOMPONENTS: "/testComponents",
 };
 
@@ -66,12 +64,6 @@ export const routes: IRoute[] = [
     component: Users,
     exact: true,
     getInitialData: fetchUsers(),
-  },
-  {
-    path: routepaths.FORM,
-    pathName: "form",
-    component: Form,
-    exact: true,
   },
   {
     path: routepaths.TESTCOMPONENTS,

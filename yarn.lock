@@ -1268,6 +1268,13 @@
     hoist-non-react-statics "^3.3.1"
     react-is "^16.12.0"
 
+"@loadable/server@^5.12.0":
+  version "5.14.0"
+  resolved "https://registry.yarnpkg.com/@loadable/server/-/server-5.14.0.tgz#8aa83166aaad7401a14d8a1b04a7e1cc169ca6c4"
+  integrity sha512-oiZiHzUdkOsDzZNXU6fsZ7U0W3+nWZRljVCFCeR8CZSXEKUfXAllUf8tx5G385q7vapAQpXM7U8EzgDns3Q4vQ==
+  dependencies:
+    lodash "^4.17.15"
+
 "@loadable/webpack-plugin@^5.14.0":
   version "5.14.0"
   resolved "https://registry.yarnpkg.com/@loadable/webpack-plugin/-/webpack-plugin-5.14.0.tgz#656cb298c4b30d3b93cfe6ebf227d9709685f357"
@@ -1582,6 +1589,13 @@
   integrity sha512-IrSHl2u6AWXduUaDLqYpt45tLVCtYv7o4Z0s1KghBCDgIIS9oW5K1H8mZG/A2CfeLdEa7rTd1ACOiHBc1EMT2Q==
   dependencies:
     "@types/node" "*"
+
+"@types/i18next-node-fs-backend@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/i18next-node-fs-backend/-/i18next-node-fs-backend-2.1.0.tgz#83616bc8589f155438f150b83ec59b92e5347668"
+  integrity sha512-bOOeT89UO/bYLJoQHdN5S3pggj7mMmFfQMBpDdUQOQIQkENGpnTwhNsIM/kjl1NE2HEihjlRZUNVV60Ze86UZA==
+  dependencies:
+    i18next ">=17.0.11"
 
 "@types/json-schema@*", "@types/json-schema@^7.0.4", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.6":
   version "7.0.6"
@@ -5775,7 +5789,19 @@ i18next-browser-languagedetector@^6.0.1:
   dependencies:
     "@babel/runtime" "^7.5.5"
 
-i18next@^19.8.4:
+i18next-fs-backend@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/i18next-fs-backend/-/i18next-fs-backend-1.0.7.tgz#00ca4587e306f8948740408389dda73461a5d07f"
+  integrity sha512-aAZ3rvshe1Zbl6JSCWrWWqbZS5JpmVNG+84YqLcgdYcm9uAxzw4xWxnA/a3044Nm2PKXE62CT+pIZjk7OEYtTw==
+
+i18next-xhr-backend@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/i18next-xhr-backend/-/i18next-xhr-backend-3.2.2.tgz#769124441461b085291f539d91864e3691199178"
+  integrity sha512-OtRf2Vo3IqAxsttQbpjYnmMML12IMB5e0fc5B7qKJFLScitYaXa1OhMX0n0X/3vrfFlpHL9Ro/H+ps4Ej2j7QQ==
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+
+i18next@>=17.0.11, i18next@^19.8.4:
   version "19.8.4"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-19.8.4.tgz#447718f2a26319b8debdbcc6fbc1a9761be7316b"
   integrity sha512-FfVPNWv+felJObeZ6DSXZkj9QM1Ivvh7NcFCgA8XPtJWHz0iXVa9BUy+QY8EPrCLE+vWgDfV/sc96BgXVo6HAA==
@@ -9652,6 +9678,13 @@ serialize-javascript@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
   integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
+
+serialize-javascript@^3.0.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-3.1.0.tgz#8bf3a9170712664ef2561b44b691eafe399214ea"
+  integrity sha512-JIJT1DGiWmIKhzRsG91aS6Ze4sFUrYbltlkg2onR5OrnNM02Kl/hnY/T4FN2omvyeBbQmMJv+K4cPOpGzOTFBg==
+  dependencies:
+    randombytes "^2.1.0"
 
 serialize-javascript@^5.0.1:
   version "5.0.1"

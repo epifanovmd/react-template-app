@@ -17,7 +17,7 @@ export const initLocalization = ({
   isServer,
 }: IInitLocalizationParams) => {
   if (isServer) {
-    return i18next.use<any>(Backend).init({
+    return i18next.init({
       fallbackLng: initLang,
       lng: initLang,
       interpolation: {
@@ -33,7 +33,6 @@ export const initLocalization = ({
     });
   } else {
     return i18next
-      .use(Backend1)
       .use(LngDetector)
       .use(initReactI18next)
       .init({

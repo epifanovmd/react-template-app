@@ -1,7 +1,7 @@
+import styled from "astroturf";
 import { useWindowSize } from "Common/hooks/useWindowSize";
 import Tooltip from "rc-tooltip";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 
 export interface IProps {
   className?: string;

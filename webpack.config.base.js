@@ -20,6 +20,33 @@ const alias = {
   Components: path.resolve(__dirname, "src/components"),
 };
 
+function getScssLoaders(modules = false) {
+  return [
+    {
+      loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
+    },
+    {
+      loader: "css-loader",
+      options: {
+        modules,
+        sourceMap: true,
+      },
+    },
+    {
+      loader: "postcss-loader",
+      options: {
+        sourceMap: true,
+      },
+    },
+    {
+      loader: "sass-loader",
+      options: {
+        sourceMap: true,
+      },
+    },
+  ];
+}
+
 const baseConfigClient = {
   name: "client",
   target: "web",
@@ -48,19 +75,23 @@ const baseLoaders = {
     exclude: /node_modules/,
     use: [
       { loader: "babel-loader" },
-      { loader: "cache-loader" },
-      {
-        loader: "thread-loader",
-        options: {
-          workers: require("os").cpus().length - 1,
-        },
-      },
+      // { loader: "cache-loader" },
+      // {
+      //   loader: "thread-loader",
+      //   options: {
+      //     workers: require("os").cpus().length - 1,
+      //   },
+      // },
       {
         loader: "ts-loader",
         options: {
           // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
           happyPackMode: true,
         },
+      },
+      {
+        loader: "astroturf/loader",
+        options: { extension: ".module.scss" },
       },
     ],
   },
@@ -118,29 +149,12 @@ const baseLoaders = {
   ],
   scss: {
     test: /\.(sa|sc)ss$/,
-    use: [
-      {
-        loader: IS_PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader",
-      },
-      {
-        loader: "css-loader",
-        options: {
-          sourceMap: true,
-        },
-      },
-      {
-        loader: "postcss-loader",
-        options: {
-          sourceMap: true,
-        },
-      },
-      {
-        loader: "sass-loader",
-        options: {
-          sourceMap: true,
-        },
-      },
-    ],
+    exclude: /\.module\.scss$/,
+    use: getScssLoaders(false),
+  },
+  modules: {
+    test: /\.module\.scss$/,
+    use: getScssLoaders(true),
   },
   less: {
     test: /\.less$/,

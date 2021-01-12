@@ -1,5 +1,5 @@
+import styled from "astroturf";
 import React, { FC, useCallback } from "react";
-import styled from "styled-components";
 
 interface IProps {
   active: boolean;
@@ -26,9 +26,12 @@ export const DropdownItem: FC<IProps> = ({
 };
 
 const Wrap = styled.div<{ active?: boolean }>`
-  background: ${({ active }) => (active ? "#F5F8FA" : "#FFFFFF")};
+  background: #ffffff;
   &:hover {
-    background: ${({ active }) => (active ? "#F5F8FA" : "#f5f8fa90")};
+    background: #f5f8fa90;
+  }
+  &.active {
+    background: #f5f8fa;
   }
   padding: 10px 19px;
   font: normal normal normal 14px/32px Roboto;

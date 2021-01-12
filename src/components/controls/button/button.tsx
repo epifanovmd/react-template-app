@@ -1,6 +1,6 @@
+import styled from "astroturf";
 import { Spinner } from "Components/controls/spinner/spinner";
 import React, { FC } from "react";
-import styled from "styled-components";
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   loading?: boolean;
@@ -20,7 +20,7 @@ export const Button: FC<IProps> = ({
 );
 
 const Wrap = styled.div<{ disabled?: boolean }>`
-  background: ${({ disabled }) => (disabled ? "#A2A2A2" : "#0094ff")};
+  background: #0094ff;
   border-radius: 31px;
   width: 100%;
   font: normal normal normal 18px/22px Roboto;
@@ -30,7 +30,11 @@ const Wrap = styled.div<{ disabled?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: ${({ disabled }) => (disabled ? "default" : "pointer")};
+  cursor: pointer;
+  &.disabled {
+    cursor: default;
+    background: #a2a2a2;
+  }
   position: relative;
   line-height: 31px;
 `;

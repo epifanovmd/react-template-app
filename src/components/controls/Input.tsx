@@ -1,5 +1,5 @@
+import styled from "astroturf";
 import React, { CSSProperties, FC } from "react";
-import styled from "styled-components";
 
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   touch?: boolean;
@@ -57,8 +57,9 @@ const StyledInput = styled.input<{ hasIcon?: boolean }>`
   height: 100%;
   background: transparent;
   border-radius: 8px;
-
-  padding-left: ${({ hasIcon }) => (hasIcon ? 52 : 17)}px;
+  &.hasIcon {
+    padding-left: 52px;
+  }
   &::placeholder {
     font: normal normal normal 14px/17px Roboto;
     color: #a2a2a2;

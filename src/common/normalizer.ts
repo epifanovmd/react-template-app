@@ -6,6 +6,13 @@ export interface INormalizeData<T, K extends keyof T> {
 }
 
 export const createNormalize = <T extends object, S>() => {
+  const merge = <K extends keyof T>(
+    oldData: INormalizeData<T, K>,
+    newData: INormalizeData<T, K>,
+  ): INormalizeData<T, K> => ({
+    values: { ...oldData.values, ...newData.values },
+    keys: [...oldData.keys, ...newData.keys],
+  });
   const fromResponse = <K extends keyof T>(
     array: T[],
     key: K,
@@ -57,5 +64,6 @@ export const createNormalize = <T extends object, S>() => {
   return {
     fromResponse,
     reducers,
+    merge,
   };
 };

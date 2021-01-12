@@ -1,5 +1,5 @@
 import { LoadState } from "Common/loadState";
-import { IUsersState } from "Modules/users/IUsersState";
+import { IUsersState } from "Pages/users/IUsersState";
 
 export interface IReduxData<T> {
   loadState: LoadState;

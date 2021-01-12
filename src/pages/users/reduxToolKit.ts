@@ -1,23 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUser } from "Api/dto/Users.g";
 import { LoadState } from "Common/loadState";
-import { createNormalize } from "Common/normalaizer";
-import { popup } from "Common/popup";
+import { createNormalize } from "Common/normalizer";
 import { RequestType } from "Common/requestType";
-import { IUsersState, usersInitialState } from "Modules/users/IUsersState";
+import { IUsersState, usersInitialState } from "Pages/users/IUsersState";
 import { callApiToolkit } from "Store/common/apiActionsAsync";
 
 export const fetchUsers = callApiToolkit<IUser[]>({
   url: "users",
   method: RequestType.GET,
   actionType: "USERS/GET_USERS",
-  onFail: ({ error, extraArguments: { i18next } }) => {
-    document &&
-      popup.notification.error({
-        message: i18next.t("error"),
-        description: error?.message,
-      });
-  },
 });
 
 const { fromResponse, reducers } = createNormalize<IUser, IUsersState>();

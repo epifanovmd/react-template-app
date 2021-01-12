@@ -3,7 +3,7 @@ export function assertNotNull<T>(
   message?: string,
 ): T {
   if (item === null || item === undefined) {
-    throw new Error(`Object can not be null.${message}` ? message : "");
+    throw new Error(`Object can not be null.${message ? message : ""}`);
   }
 
   return item;

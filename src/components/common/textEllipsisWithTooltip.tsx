@@ -1,13 +1,20 @@
-import { Tooltip } from "antd";
-import { TooltipPlacement } from "antd/lib/tooltip";
 import { useWindowSize } from "Common/hooks/useWindowSize";
+import Tooltip from "rc-tooltip";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 export interface IProps {
   className?: string;
   text?: string;
-  placement?: TooltipPlacement;
+  placement?:
+    | "left"
+    | "right"
+    | "top"
+    | "bottom"
+    | "topLeft"
+    | "topRight"
+    | "bottomLeft"
+    | "bottomRight";
   dangerouslySetInnerHTML?: { __html: string };
 }
 
@@ -48,7 +55,7 @@ export const TextEllipsisWithTooltip: FC<IProps> = ({
   );
 
   return clamped ? (
-    <Tooltip title={text || children} placement={placement}>
+    <Tooltip overlay={text || children} placement={placement}>
       {content}
     </Tooltip>
   ) : (
@@ -56,7 +63,7 @@ export const TextEllipsisWithTooltip: FC<IProps> = ({
   );
 };
 
-const Container = styled.div<{ fluid?: boolean }>`
+const Container = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   user-select: none;

@@ -6,7 +6,7 @@
       "Store/*": ["src/store/*"],
       "Components/*": ["src/components/*"],
       "Api/*": ["src/api/*"],
-      "Modules/*": ["src/modules/*"],
+      "Pages/*": ["src/pages/*"],
       "Common/*": ["src/common/*"]
     },
     "target": "es5",

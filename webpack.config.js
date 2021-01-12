@@ -37,7 +37,9 @@ const client = {
     new ManifestPlugin({
       fileName: "asset-manifest.json",
     }),
-    new CopyPlugin([{ from: "public", to: "", ignore: ["*.html"] }]),
+    new CopyPlugin({
+      patterns: [{ from: "public", to: "" }],
+    }),
     new LoadablePlugin(),
     new webpack.NamedModulesPlugin(),
     ...(IS_DEVELOPMENT ? [new webpack.HotModuleReplacementPlugin()] : []),
@@ -56,7 +58,6 @@ const client = {
     minimizer: [
       new TerserPlugin({
         parallel: true,
-        sourceMap: true,
       }),
     ],
   },

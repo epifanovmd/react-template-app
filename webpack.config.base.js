@@ -1,10 +1,12 @@
 const webpack = require("webpack");
 const path = require("path");
-const autoprefixer = require("autoprefixer");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -15,7 +17,7 @@ const alias = {
   "@": path.resolve(__dirname, "src/"),
   Store: path.resolve(__dirname, "src/store"),
   Api: path.resolve(__dirname, "src/api"),
-  Modules: path.resolve(__dirname, "src/modules"),
+  Pages: path.resolve(__dirname, "src/pages"),
   Common: path.resolve(__dirname, "src/common"),
   Components: path.resolve(__dirname, "src/components"),
 };
@@ -86,13 +88,6 @@ const baseLoaders = {
         options: {
           // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
           happyPackMode: true,
-        },
-      },
-      {
-        loader: "eslint-loader",
-        options: {
-          cache: true,
-          emitWarning: true,
         },
       },
     ],
@@ -167,11 +162,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
           sourceMap: true,
         },
       },
@@ -201,11 +191,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
           sourceMap: true,
         },
       },
@@ -236,7 +221,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [autoprefixer()],
           sourceMap: true,
         },
       },
@@ -245,6 +229,10 @@ const baseLoaders = {
 };
 
 const basePlugins = [
+  new ESLintPlugin({
+    cache: true,
+    emitWarning: true,
+  }),
   new ForkTsCheckerWebpackPlugin({ async: true }),
   ...(IS_PRODUCTION || IS_SSR
     ? [
@@ -258,7 +246,7 @@ const basePlugins = [
   ...(!IS_SSR
     ? [
         new HtmlWebpackPlugin({
-          template: "public/index.html",
+          template: "index.html",
         }),
       ]
     : []),

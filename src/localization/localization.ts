@@ -1,9 +1,5 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-// @ts-ignore
-import Backend from "i18next-fs-backend";
-import Backend1 from "i18next-xhr-backend";
-import { resolve } from "path";
 import { initReactI18next } from "react-i18next";
 
 export interface IInitLocalizationParams {
@@ -11,9 +7,10 @@ export interface IInitLocalizationParams {
   isServer?: boolean;
 }
 
-type IAvailableLanguages = "ru" | "en";
-
 const LngDetector = new LanguageDetector(null, { caches: ["cookie"] });
+
+import { enLocale } from "./locales/en";
+import { ruLocale } from "./locales/ru";
 
 export const initLocalization = ({
   initLang = "en",
@@ -29,9 +26,9 @@ export const initLocalization = ({
       },
       debug: false,
       load: "languageOnly",
-      backend: {
-        loadPath: resolve(__dirname, "../locales/{{lng}}/{{ns}}.json"),
-        jsonIndent: 2,
+      resources: {
+        en: { translation: { ...enLocale } },
+        ru: { translation: { ...ruLocale } },
       },
     });
   } else {
@@ -48,8 +45,9 @@ export const initLocalization = ({
           escapeValue: false,
           prefix: "",
         },
-        backend: {
-          loadPath: resolve(__dirname, "/locales/{{lng}}/{{ns}}.json"),
+        resources: {
+          en: { translation: { ...enLocale } },
+          ru: { translation: { ...ruLocale } },
         },
       });
   }

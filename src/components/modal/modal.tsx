@@ -1,7 +1,5 @@
 import "./transition.scss";
 
-import { EventNames, eventRegister } from "Common/eventRegister";
-import { useModal } from "Common/hooks/useModal";
 import { useOutsideClick } from "Common/hooks/useOutsideClick";
 import React, { FC, memo, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
@@ -32,74 +30,18 @@ export interface ICssTransitionProps<
 }
 
 interface IModalProps extends ICssTransitionProps {
-  name: string;
   disablePortal?: boolean;
   open?: boolean;
   onClose?: () => void;
 }
 
-export enum ModalActions {
-  OPEN = "OPEN",
-  CLOSE = "CLOSE",
-}
-
-export interface IModalActionParams {
-  action: ModalActions;
-  modalName: string;
-}
-
 export const Modal: FC<IModalProps> = memo(
-  ({ name, disablePortal, children, timeout, open, onClose, ...rest }) => {
+  ({ disablePortal, children, timeout, open, onClose, ...rest }) => {
     let listenerId: string;
     const modalRef = useRef<any>();
-    const [onOpenModal, onCloseModal, openModal] = useModal();
-
-    useEffect(() => {
-      if (open) {
-        onOpenModal();
-      } else {
-        onCloseModal();
-        onClose && onClose();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [open]);
-
-    useEffect(() => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      listenerId = eventRegister.addEventListener<IModalActionParams>(
-        EventNames.modalActions,
-        ({ action, modalName }) => {
-          if (modalName === name) {
-            switch (action) {
-              case ModalActions.CLOSE: {
-                if (open) {
-                  onCloseModal();
-                  onClose && onClose();
-                }
-                break;
-              }
-              case ModalActions.OPEN: {
-                if (!open) {
-                  onOpenModal();
-                }
-                break;
-              }
-              default: {
-                break;
-              }
-            }
-          }
-        },
-      );
-
-      return () => {
-        eventRegister.removeEventListener(listenerId);
-      };
-    }, []);
 
     const ref = useOutsideClick(event => {
       if (modalRef.current === event.target) {
-        onCloseModal();
         onClose && onClose();
       }
     });
@@ -108,7 +50,7 @@ export const Modal: FC<IModalProps> = memo(
       <CSSTransition
         {...rest}
         classNames="modal"
-        in={openModal}
+        in={open}
         timeout={timeout || 300}
         mountOnEnter={true}
         unmountOnExit={true}

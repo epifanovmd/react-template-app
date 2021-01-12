@@ -1,8 +1,6 @@
-import { Button } from "antd";
-import { debounce } from "Common/debounce";
 import { useForm } from "Common/hooks/useForm";
-import { CustomRangePicker } from "Components/controls/customRangePicker";
-import { SearchInput } from "Components/controls/searchInput";
+import { Button } from "Components/controls/button/button";
+import { Input } from "Components/controls/Input";
 import React, { FC, memo } from "react";
 import { array, object, string } from "yup";
 
@@ -32,26 +30,7 @@ export const TestComponents: FC = memo(() => {
       initialValues: {
         inp: "",
         inp1: "",
-        inputs: [
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-          { input: "" },
-        ],
+        inputs: [{ input: "" }, { input: "" }],
       },
       validateSchema,
       validateOnInit: true,
@@ -68,8 +47,8 @@ export const TestComponents: FC = memo(() => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <SearchInput
-        title={"setFieldValue"}
+      <Input
+        label={"setFieldValue"}
         // value={values.inp}
         onChange={onSetValue}
         name={fieldNames.inp}
@@ -77,8 +56,8 @@ export const TestComponents: FC = memo(() => {
         touch={touchedValues.inp}
         error={errors.inp}
       />
-      <SearchInput
-        title={"handleChange"}
+      <Input
+        label={"handleChange"}
         // value={values.inp1}
         onChange={handleChange}
         name={fieldNames.inp1}
@@ -88,8 +67,9 @@ export const TestComponents: FC = memo(() => {
       />
 
       {fieldsIterate("inputs", inputs => (
-        <SearchInput
-          title={"inputs"}
+        <Input
+          key={inputs.index}
+          label={"inputs"}
           onChange={inputs.fieldsHelper.handleChange}
           name={inputs.fieldNames.input}
           onBlur={handleBlur}
@@ -98,7 +78,7 @@ export const TestComponents: FC = memo(() => {
         />
       ))}
 
-      <Button htmlType={"submit"}>Отправить</Button>
+      <Button onClick={handleSubmit as any}>Отправить</Button>
     </form>
   );
 });

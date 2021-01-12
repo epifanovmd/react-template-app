@@ -1,8 +1,6 @@
-import { Button } from "antd";
-import { useModal } from "Common/hooks/useModal";
+import { useBooleanState } from "Common/hooks/useBooleanState";
 import { INormalizeData } from "Common/normalizer";
-import { ModalAntd } from "Components/modal/modalAntd";
-import { Modal } from "Components/modal/modalTransition";
+import { Modal } from "Components/modal/modal";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -23,8 +21,7 @@ export const UserList: FC<IProps> = memo(({ users }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const [onOpen] = useModal("modal-antd");
-  const [onOpen1] = useModal("modal-transition");
+  const [open, onOpen, onClose] = useBooleanState();
 
   return (
     <Table>
@@ -56,7 +53,7 @@ export const UserList: FC<IProps> = memo(({ users }) => {
             )
           );
         })}
-      <Button
+      <button
         // eslint-disable-next-line react/jsx-no-bind
         onClick={() => {
           dispatch(
@@ -75,9 +72,9 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         }}
       >
         Добавить
-      </Button>
+      </button>
 
-      <Modal name={"modal-transition"}>
+      <Modal open={open} onClose={onClose}>
         <Table>
           <TableHeader>
             <TableRow>
@@ -109,11 +106,8 @@ export const UserList: FC<IProps> = memo(({ users }) => {
             })}
         </Table>
       </Modal>
-      <ModalAntd name={"modal-antd"}>
-        <Button onClick={onOpen1}>Открыть модальное окно</Button>
-      </ModalAntd>
 
-      <Button onClick={onOpen}>Открыть модальное окно</Button>
+      <button onClick={onOpen}>Открыть модальное окно</button>
     </Table>
   );
 });

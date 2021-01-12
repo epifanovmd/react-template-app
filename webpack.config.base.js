@@ -1,6 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
-const autoprefixer = require("autoprefixer");
+const ESLintPlugin = require("eslint-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
@@ -60,13 +60,6 @@ const baseLoaders = {
         options: {
           // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
           happyPackMode: true,
-        },
-      },
-      {
-        loader: "eslint-loader",
-        options: {
-          cache: true,
-          emitWarning: true,
         },
       },
     ],
@@ -138,11 +131,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
           sourceMap: true,
         },
       },
@@ -169,11 +157,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
           sourceMap: true,
         },
       },
@@ -201,7 +184,6 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [autoprefixer()],
           sourceMap: true,
         },
       },
@@ -210,6 +192,10 @@ const baseLoaders = {
 };
 
 const basePlugins = [
+  new ESLintPlugin({
+    cache: true,
+    emitWarning: true,
+  }),
   new ForkTsCheckerWebpackPlugin({ async: true }),
   ...(IS_PRODUCTION
     ? [
@@ -221,7 +207,7 @@ const basePlugins = [
       ]
     : []),
   new HtmlWebpackPlugin({
-    template: "public/index.html",
+    template: "index.html",
   }),
   new webpack.DefinePlugin({
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),

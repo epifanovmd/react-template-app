@@ -1,5 +1,4 @@
 import "./assets/global.scss";
-import "antd/dist/antd.css";
 
 import { loadableReady } from "@loadable/component";
 import { createBrowserHistory } from "history";

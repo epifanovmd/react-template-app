@@ -67,12 +67,10 @@ export const useForm = <T extends object>(
           })
           .catch(err => {
             setErrors(e => {
-              const inner =
-                (err.inner || []) as
-                {
-                  path: keyof T;
-                  errors: string[];
-                }[];
+              const inner = (err.inner || []) as {
+                path: keyof T;
+                errors: string[];
+              }[];
               const prevErrors = { ...e };
 
               Object.keys(e).forEach(key => {
@@ -232,10 +230,9 @@ export const useForm = <T extends object>(
                     ...item,
                     [key]:
                       typeof value === "function"
-                        ? (
-                            value as
-                            (state: T) => TCheckArray<A>[keyof TCheckArray<A>]
-                          )(state)
+                        ? (value as (
+                            state: T,
+                          ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
                         : value,
                   }
                 : item,
@@ -283,11 +280,9 @@ export const useForm = <T extends object>(
         (value: A, index: number, array: A[]) => {
           const touched: Partial<{ [key in keyof A]: boolean }> = {};
           const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldNames: { [key in keyof A]: string } =
-            {} as
-            {
-              [key in keyof A]: string;
-            };
+          const fieldNames: { [key in keyof A]: string } = {} as {
+            [key in keyof A]: string;
+          };
 
           Object.keys(value).forEach(item => {
             fieldNames[item as keyof A] = `${name}[${index}].${item}`;
@@ -457,7 +452,13 @@ export const useForm = <T extends object>(
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
+  const dirty = useMemo(
+    () => JSON.stringify(values) !== JSON.stringify(initialValues),
+    [values, initialValues],
+  );
+
   return {
+    dirty,
     valid,
     values,
     touchedValues,

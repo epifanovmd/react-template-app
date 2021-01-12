@@ -50,10 +50,6 @@ const baseLoaders = {
       { loader: "babel-loader" },
       { loader: "cache-loader" },
       {
-        loader: "astroturf/loader",
-        options: { extension: ".module.scss" },
-      },
-      {
         loader: "thread-loader",
         options: {
           workers: require("os").cpus().length - 1,
@@ -142,11 +138,13 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
+          postcssOptions: {
+            basePlugins: [
+              autoprefixer({
+                overrideBrowserslist: ["cover 99.5%"],
+              }),
+            ],
+          },
           sourceMap: true,
         },
       },
@@ -173,11 +171,13 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [
-            autoprefixer({
-              overrideBrowserslist: ["cover 99.5%"],
-            }),
-          ],
+          postcssOptions: {
+            basePlugins: [
+              autoprefixer({
+                overrideBrowserslist: ["cover 99.5%"],
+              }),
+            ],
+          },
           sourceMap: true,
         },
       },
@@ -205,7 +205,13 @@ const baseLoaders = {
       {
         loader: "postcss-loader",
         options: {
-          plugins: [autoprefixer()],
+          postcssOptions: {
+            basePlugins: [
+              autoprefixer({
+                overrideBrowserslist: ["cover 99.5%"],
+              }),
+            ],
+          },
           sourceMap: true,
         },
       },

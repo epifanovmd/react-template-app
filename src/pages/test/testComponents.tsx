@@ -1,7 +1,7 @@
 import { useForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { Input } from "Components/controls/Input";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useCallback } from "react";
 import { array, object, string } from "yup";
 
 export const TestComponents: FC = memo(() => {
@@ -60,9 +60,12 @@ export const TestComponents: FC = memo(() => {
 
   console.log("render");
 
-  const onSetValue = ({ target }: any) => {
-    setFieldValue("inp", target.value);
-  };
+  const onSetValue = useCallback(
+    ({ target }: any) => {
+      setFieldValue("inp", target.value);
+    },
+    [setFieldValue],
+  );
 
   return (
     <form onSubmit={handleSubmit}>

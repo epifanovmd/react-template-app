@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useCallback, useEffect, useMemo } from "react";
-import { ObjectSchema, Shape } from "yup";
+import { ObjectSchema } from "yup";
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
 
@@ -15,7 +15,7 @@ interface IUseForm<T> {
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
   validate?: (values: T) => Partial<Record<keyof T | string, string>>;
-  validateSchema?: ObjectSchema<Shape<object, Partial<Record<keyof T, any>>>>;
+  validateSchema?: ObjectSchema<any>;
   validateOnInit?: boolean;
 }
 
@@ -67,12 +67,10 @@ export const useForm = <T extends object>(
           })
           .catch(err => {
             setErrors(e => {
-              const inner =
-                (err.inner || []) as
-                {
-                  path: keyof T;
-                  errors: string[];
-                }[];
+              const inner = (err.inner || []) as {
+                path: keyof T;
+                errors: string[];
+              }[];
               const prevErrors = { ...e };
 
               Object.keys(e).forEach(key => {
@@ -236,10 +234,9 @@ export const useForm = <T extends object>(
                     ...item,
                     [key]:
                       typeof value === "function"
-                        ? (
-                            value as
-                            (state: T) => TCheckArray<A>[keyof TCheckArray<A>]
-                          )(state)
+                        ? (value as (
+                            state: T,
+                          ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
                         : value,
                   }
                 : item,
@@ -287,11 +284,9 @@ export const useForm = <T extends object>(
         (value: A, index: number, array: A[]) => {
           const touched: Partial<{ [key in keyof A]: boolean }> = {};
           const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldNames: { [key in keyof A]: string } =
-            {} as
-            {
-              [key in keyof A]: string;
-            };
+          const fieldNames: { [key in keyof A]: string } = {} as {
+            [key in keyof A]: string;
+          };
 
           Object.keys(value).forEach(item => {
             fieldNames[item as keyof A] = `${name}[${index}].${item}`;

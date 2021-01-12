@@ -1,6 +1,6 @@
 import styled from "astroturf";
 import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
-import React, { ChangeEvent, FC, memo } from "react";
+import React, { ChangeEvent, FC, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 
@@ -9,11 +9,12 @@ import { routes } from "@/routes";
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();
 
-  const changeLang = async ({
-    target: { value },
-  }: ChangeEvent<HTMLSelectElement>) => {
-    await i18n.changeLanguage(value);
-  };
+  const changeLang = useCallback(
+    async ({ target: { value } }: ChangeEvent<HTMLSelectElement>) => {
+      await i18n.changeLanguage(value);
+    },
+    [i18n],
+  );
 
   return (
     <HeaderWrap>

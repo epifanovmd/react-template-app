@@ -1,5 +1,6 @@
 import { useBooleanState } from "Common/hooks/useBooleanState";
 import { INormalizeData } from "Common/normalizer";
+import { Button } from "Components/controls/button/button";
 import { Modal } from "Components/modal/modal";
 import React, { FC, memo } from "react";
 import { useTranslation } from "react-i18next";
@@ -53,7 +54,7 @@ export const UserList: FC<IProps> = memo(({ users }) => {
             )
           );
         })}
-      <button
+      <Button
         // eslint-disable-next-line react/jsx-no-bind
         onClick={() => {
           dispatch(
@@ -72,7 +73,7 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         }}
       >
         Добавить
-      </button>
+      </Button>
 
       <Modal open={open} onClose={onClose}>
         <Table>
@@ -107,7 +108,7 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         </Table>
       </Modal>
 
-      <button onClick={onOpen}>Открыть модальное окно</button>
+      <Button onClick={onOpen}>Открыть модальное окно</Button>
     </Table>
   );
 });

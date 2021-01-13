@@ -1,9 +1,14 @@
 import styled from "astroturf";
 import { useWindowSize } from "Common/hooks/useWindowSize";
 import Tooltip from "rc-tooltip";
+import { TooltipProps } from "rc-tooltip/lib/Tooltip";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 
-export interface IProps {
+export interface IProps
+  extends Omit<
+    TooltipProps,
+    "placement" | "overlay" | "children" | "destroyTooltipOnHide"
+  > {
   className?: string;
   text?: string;
   placement?:
@@ -20,10 +25,11 @@ export interface IProps {
 
 export const TextEllipsisWithTooltip: FC<IProps> = ({
   className,
-  placement,
+  placement = "top",
   text,
   children,
   dangerouslySetInnerHTML,
+  ...rest
 }) => {
   const { width } = useWindowSize();
   const [clamped, setClamped] = useState(false);
@@ -55,7 +61,12 @@ export const TextEllipsisWithTooltip: FC<IProps> = ({
   );
 
   return clamped ? (
-    <Tooltip overlay={text || children} placement={placement}>
+    <Tooltip
+      {...rest}
+      destroyTooltipOnHide={{ keepParent: true }}
+      overlay={text || children}
+      placement={placement}
+    >
       {content}
     </Tooltip>
   ) : (

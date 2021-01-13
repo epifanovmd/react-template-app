@@ -1,4 +1,5 @@
 import styled from "astroturf";
+import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
 import React, { FC } from "react";
 
 import { ITableProps } from "./table";
@@ -21,7 +22,7 @@ const Cell = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 `;
-const Label = styled.div`
+const Label = styled(TextEllipsisWithTooltip)`
   font-weight: bold;
   flex-grow: 1;
   flex-basis: 0;
@@ -31,7 +32,7 @@ const Label = styled.div`
   text-overflow: ellipsis;
   display: none;
 `;
-const Value = styled.div`
+const Value = styled(TextEllipsisWithTooltip)`
   flex-grow: 1;
   flex-basis: 0;
   min-width: 0;

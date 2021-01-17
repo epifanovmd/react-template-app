@@ -1,3 +1,5 @@
+import "rc-tooltip/assets/bootstrap.css";
+
 import { Header } from "Components/layouts/header/header";
 import React from "react";
 import { useTranslation } from "react-i18next";

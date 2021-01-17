@@ -1,7 +1,8 @@
 import { useBooleanState } from "Common/hooks/useBooleanState";
-import { INormalizeData } from "Common/normalizer";
+import { INormalizeData, useDeNormalizer } from "Common/normalizer";
+import { Button } from "Components/controls/button/button";
 import { Modal } from "Components/modal/modal";
-import React, { FC, memo } from "react";
+import React, { FC, memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { IUser } from "src/api/dto/Users.g";
@@ -23,6 +24,42 @@ export const UserList: FC<IProps> = memo(({ users }) => {
 
   const [open, onOpen, onClose] = useBooleanState();
 
+  const onAddUser = useCallback(() => {
+    dispatch(
+      UsersActions.set({
+        key: 12344,
+        value: () => ({
+          name: "1234",
+          email: "43254325",
+          id: 12344,
+          phone: "123456789654",
+          username: "username",
+          website: "dfsfsdgfdgfdgfd",
+        }),
+      }),
+    );
+  }, [dispatch]);
+
+  const userList = useDeNormalizer(users, [users.keys]);
+
+  const onRemove = useCallback(
+    (id: number) => () => {
+      dispatch(UsersActions.remove(id));
+    },
+    [dispatch],
+  );
+
+  const list = useMemo(
+    () =>
+      userList.map(item => (
+        <TableRow key={item.id} onClick={onRemove(item.id)}>
+          <TableRowCell label={t("username")}>{item.username}</TableRowCell>
+          <TableRowCell label={t("email")}>{item.email}</TableRowCell>
+        </TableRow>
+      )),
+    [onRemove, t, userList],
+  );
+
   return (
     <Table>
       <TableHeader>
@@ -32,47 +69,9 @@ export const UserList: FC<IProps> = memo(({ users }) => {
         </TableRow>
       </TableHeader>
 
-      {users &&
-        (users.keys || []).map(key => {
-          const item = users.values[key];
+      {list}
 
-          return (
-            item && (
-              <TableRow
-                key={item.id}
-                // eslint-disable-next-line react/jsx-no-bind
-                onClick={() => {
-                  dispatch(UsersActions.remove(item.id));
-                }}
-              >
-                <TableRowCell label={t("username")}>
-                  {item.username}
-                </TableRowCell>
-                <TableRowCell label={t("email")}>{item.email}</TableRowCell>
-              </TableRow>
-            )
-          );
-        })}
-      <button
-        // eslint-disable-next-line react/jsx-no-bind
-        onClick={() => {
-          dispatch(
-            UsersActions.set({
-              key: 12344,
-              value: () => ({
-                name: "1234",
-                email: "43254325",
-                id: 12344,
-                phone: "123456789654",
-                username: "username",
-                website: "dfsfsdgfdgfdgfd",
-              }),
-            }),
-          );
-        }}
-      >
-        Добавить
-      </button>
+      <Button onClick={onAddUser}>Добавить</Button>
 
       <Modal open={open} onClose={onClose}>
         <Table>
@@ -83,31 +82,11 @@ export const UserList: FC<IProps> = memo(({ users }) => {
             </TableRow>
           </TableHeader>
 
-          {users &&
-            (users.keys || []).map(key => {
-              const item = users.values[key];
-
-              return (
-                item && (
-                  <TableRow
-                    key={item.id}
-                    // eslint-disable-next-line react/jsx-no-bind
-                    onClick={() => {
-                      dispatch(UsersActions.remove(item.id));
-                    }}
-                  >
-                    <TableRowCell label={t("username")}>
-                      {item.username}
-                    </TableRowCell>
-                    <TableRowCell label={t("email")}>{item.email}</TableRowCell>
-                  </TableRow>
-                )
-              );
-            })}
+          {list}
         </Table>
       </Modal>
 
-      <button onClick={onOpen}>Открыть модальное окно</button>
+      <Button onClick={onOpen}>Открыть модальное окно</Button>
     </Table>
   );
 });

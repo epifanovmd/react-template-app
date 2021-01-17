@@ -1,9 +1,16 @@
 import { Draft, PayloadAction } from "@reduxjs/toolkit";
+import { DependencyList, useMemo } from "react";
 
 export interface INormalizeData<T, K extends keyof T> {
   values: { [key in number]?: T };
   keys: T[K][];
 }
+
+export const useDeNormalizer = <V>(
+  data: INormalizeData<V, keyof V>,
+  dependencies: DependencyList,
+): V[] =>
+  useMemo(() => data.keys.map(key => (data.values as any)[key]), dependencies);
 
 export const createNormalize = <T extends object, S>() => {
   const merge = <K extends keyof T>(

@@ -12,6 +12,17 @@ export interface IResponse<R> {
 
 const PORT = process.env.PORT || 8080;
 
+const getUrl = (
+  url: string,
+  method: RequestType,
+  params: { [key in string]: any },
+) =>
+  method !== RequestType.GET
+    ? `/api/${url}`
+    : `/api/${url}${
+        Object.keys(params).length > 0 ? "?" : ""
+      }${querystring.stringify(params)}`;
+
 export const baseFetch = async <R, P>(
   url: string,
   params: P | IEmpty = {},
@@ -21,23 +32,20 @@ export const baseFetch = async <R, P>(
   const body =
     method !== RequestType.GET ? { body: JSON.stringify(params) } : {};
 
-  const hasParams = Object.keys(params).length > 0;
-  const urlResult =
-    method !== RequestType.GET
-      ? `/api/${url}`
-      : `/api/${url}${hasParams ? "?" : ""}${querystring.stringify(params)}`;
-
   try {
-    const res = await fetch(`http://localhost:${PORT}${urlResult}`, {
-      method,
-      ...body,
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        ...headers,
+    const res = await fetch(
+      `http://localhost:${PORT}${getUrl(url, method, params)}`,
+      {
+        method,
+        ...body,
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          ...headers,
+        },
       },
-    });
+    );
 
     const json = (await res?.json().catch(() => ({}))) || {};
     const status = res.status;

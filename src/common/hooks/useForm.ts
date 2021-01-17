@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useCallback, useEffect, useMemo } from "react";
 import { ObjectSchema, Shape } from "yup";
 
@@ -17,6 +16,7 @@ interface IUseForm<T> {
   validate?: (values: T) => Partial<Record<keyof T | string, string>>;
   validateSchema?: ObjectSchema<Shape<object, Partial<Record<keyof T, any>>>>;
   validateOnInit?: boolean;
+  enableReinitialize?: boolean;
 }
 
 export const useForm = <T extends object>(
@@ -27,16 +27,31 @@ export const useForm = <T extends object>(
     validate,
     validateSchema,
     validateOnInit,
+    enableReinitialize,
   }: IUseForm<T>,
   watch?: (keyof T)[],
 ) => {
   const [values, setValues] = React.useState<T>(initialValues);
+  const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T | string, boolean>>
   >({});
   const [errors, setErrors] = React.useState<
     Partial<Record<keyof T | string, string>>
   >({});
+  const getDirty = useCallback((a, b) => {
+    setDirty(JSON.stringify(a) !== JSON.stringify(b));
+  }, []);
+
+  useEffect(() => {
+    if (enableReinitialize) {
+      const newInitialValues = { ...initialValues };
+
+      setValues(newInitialValues);
+      _validate(newInitialValues);
+    }
+    // eslint-disable-next-line
+  }, [initialValues]);
 
   const _validate = useCallback(
     (
@@ -46,6 +61,7 @@ export const useForm = <T extends object>(
         errors: Partial<Record<keyof T | string, string>>,
       ) => void,
     ) => {
+      getDirty(_values, initialValues);
       if (validateSchema) {
         validateSchema
           .validate(_values, {
@@ -123,7 +139,7 @@ export const useForm = <T extends object>(
 
       return _values;
     },
-    [setErrors, validateSchema, validate],
+    [getDirty, initialValues, validateSchema, validate],
   );
 
   useEffect(() => {
@@ -141,7 +157,7 @@ export const useForm = <T extends object>(
       setValues(_values);
       _validate(_values);
     },
-    [setValues, _validate],
+    [_validate],
   );
 
   const getFields = useCallback(() => {
@@ -309,7 +325,7 @@ export const useForm = <T extends object>(
     setValues(initialValues);
     setErrors({});
     setTouchedValues({});
-  }, [setValues, initialValues, setErrors, setTouchedValues]);
+  }, [initialValues]);
 
   const handleChange = useCallback(
     (event: React.ChangeEvent<any>) => {
@@ -345,7 +361,7 @@ export const useForm = <T extends object>(
         return newValues;
       });
     },
-    [setValues, _validate, watch],
+    [touchedValues, watch, _validate],
   );
 
   const setFieldValue = useCallback(
@@ -378,7 +394,7 @@ export const useForm = <T extends object>(
           [name]: true,
         }));
     },
-    [setValues, setTouchedValues, _validate, touchedValues, watch],
+    [touchedValues, watch, _validate],
   );
 
   const handleBlur = useCallback(
@@ -451,11 +467,6 @@ export const useForm = <T extends object>(
   );
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
-
-  const dirty = useMemo(
-    () => JSON.stringify(values) !== JSON.stringify(initialValues),
-    [values, initialValues],
-  );
 
   return {
     dirty,

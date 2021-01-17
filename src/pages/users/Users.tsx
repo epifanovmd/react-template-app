@@ -18,9 +18,13 @@ const Users: FC<IProps> = memo(() => {
         onSuccess: ({ result }) => {
           console.log("-------", result.data);
         },
+        onFailure: err => {
+          console.log("Error", err.error?.message);
+        },
       }),
     );
   }, [dispatch]);
+
   const { t } = useTranslation();
   const users = useSelector((state: IAppState) => state.usersPage.users);
 

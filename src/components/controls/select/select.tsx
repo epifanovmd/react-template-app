@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { CSSTransition } from "react-transition-group";
@@ -17,10 +18,10 @@ interface IProps<T> {
   wrapStyle?: CSSProperties;
 
   items: T[];
+  value?: T;
 
   placeholder?: string;
   name?: string;
-  defaultValue?: T;
   onChange?: (value: T, name?: string) => void;
   onBlur?: (name: string) => void;
 }
@@ -31,15 +32,14 @@ export const Select = <T extends string | object>({
   error,
   touch,
   placeholder,
-  defaultValue,
   onBlur,
   onChange,
   name,
   items,
+  value,
 }: PropsWithChildren<IProps<T>>) => {
   const [blur, setBlur] = useState(false);
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<T>(defaultValue || ("" as any));
   const ref = useOutsideClick(() => {
     setOpen(false);
     if (open && !blur) {
@@ -56,13 +56,6 @@ export const Select = <T extends string | object>({
     // eslint-disable-next-line
   }, [blur]);
 
-  useEffect(() => {
-    if (!value && defaultValue) {
-      setValue(defaultValue);
-    }
-    // eslint-disable-next-line
-  }, [defaultValue]);
-
   const toggleOpen = useCallback(() => {
     setOpen(state => !state);
 
@@ -75,7 +68,6 @@ export const Select = <T extends string | object>({
   const handleSetValue = useCallback(
     (value: any) => {
       onChange && onChange(value, name);
-      setValue(value);
       setOpen(false);
       if (open && !blur) {
         onBlur && name && onBlur(name);
@@ -85,21 +77,40 @@ export const Select = <T extends string | object>({
     [open, onBlur, name, blur, onChange],
   );
 
+  const simpleValue = useMemo(
+    () =>
+      typeof value === "object"
+        ? (value as any).name || (value as any).label
+        : value || placeholder,
+    [placeholder, value],
+  );
+
+  const getActive = useCallback(
+    item =>
+      item &&
+      (typeof item === "object"
+        ? (item.key !== undefined && item.key === (value as any).key) ||
+          (item.value !== undefined && item.value === (value as any).value)
+        : item === value),
+    [value],
+  );
+
+  const getValue = useCallback(
+    item => (typeof item === "object" ? item.name || item.label : item),
+    [],
+  );
+
   return (
     <Wrap ref={ref} style={wrapStyle}>
       {label && <Label>{label}</Label>}
-      <SimpleDropdown onClick={toggleOpen}>
-        {typeof value === "object"
-          ? (value as any).value || (value as any).key
-          : value || placeholder}
-      </SimpleDropdown>
+      <SimpleDropdown onClick={toggleOpen}>{simpleValue}</SimpleDropdown>
       <CSSTransition in={open} timeout={0} unmountOnExit={true}>
         <DropdownList>
           {items.map((item: any, index) => (
             <DropdownItem
               key={index}
-              active={item === value}
-              value={typeof item === "object" ? item.value || item.key : item}
+              active={getActive(item)}
+              value={getValue(item)}
               item={item}
               onSetValue={handleSetValue}
             />
@@ -128,6 +139,7 @@ const SimpleDropdown = styled.div`
   width: 100%;
   height: 100%;
   cursor: pointer;
+  min-height: 51px;
 `;
 
 const DropdownList = styled.div`
@@ -140,6 +152,8 @@ const DropdownList = styled.div`
   box-shadow: 0 3px 8px #00000026;
   border-radius: 8px;
   width: 100%;
+  max-height: 300px;
+  overflow: auto;
 `;
 const Error = styled.div`
   font: normal normal normal 10px/13px Roboto;

@@ -1,5 +1,5 @@
-import styled from "astroturf";
 import React, { FC, useMemo } from "react";
+import styled from "styled-components";
 
 interface IProps {
   className?: string;
@@ -24,7 +24,6 @@ export const Spinner: FC<IProps> = ({ className, size = 25 }) => {
         height: `${size}px`,
       }}
       className={className}
-      size={size}
     >
       <div style={style} />
       <div style={style} />
@@ -34,7 +33,7 @@ export const Spinner: FC<IProps> = ({ className, size = 25 }) => {
   );
 };
 
-const Wrap = styled.div<{ size: number }>`
+const Wrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

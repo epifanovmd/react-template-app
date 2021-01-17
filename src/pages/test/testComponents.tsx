@@ -5,7 +5,7 @@ import { Select } from "Components/controls/select/select";
 import React, { FC, memo, useCallback } from "react";
 import { array, object, string } from "yup";
 
-// import EmailIcon from "../../icons/email.svg";
+import EmailIcon from "../../icons/email.svg";
 
 export const TestComponents: FC = memo(() => {
   const validateSchema = object().shape({
@@ -55,7 +55,7 @@ export const TestComponents: FC = memo(() => {
   return (
     <form onSubmit={handleSubmit}>
       <Input
-        // icon={<EmailIcon />}
+        icon={<EmailIcon />}
         label={"setFieldValue"}
         placeholder={"Email"}
         onChange={handleChange}

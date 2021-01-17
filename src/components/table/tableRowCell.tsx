@@ -1,6 +1,6 @@
-import styled from "astroturf";
 import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
 import React, { FC } from "react";
+import styled from "styled-components";
 
 import { ITableProps } from "./table";
 

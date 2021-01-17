@@ -1,4 +1,3 @@
-import styled from "astroturf";
 import { useOutsideClick } from "Common/hooks/useOutsideClick";
 import { DropdownItem } from "Components/controls/select/selectItem";
 import React, {
@@ -10,6 +9,7 @@ import React, {
   useState,
 } from "react";
 import { CSSTransition } from "react-transition-group";
+import styled from "styled-components";
 
 export interface ISelectItem {
   key: string | number;

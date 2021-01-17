@@ -1,8 +1,8 @@
-import styled from "astroturf";
 import { useWindowSize } from "Common/hooks/useWindowSize";
 import Tooltip from "rc-tooltip";
 import { TooltipProps } from "rc-tooltip/lib/Tooltip";
 import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
 export interface IProps
   extends Omit<

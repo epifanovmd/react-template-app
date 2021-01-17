@@ -1,6 +1,5 @@
 import "./transition.scss";
 
-import styled from "astroturf";
 import { useOutsideClick } from "Common/hooks/useOutsideClick";
 import React, { FC, memo, useEffect, useRef } from "react";
 import ReactDOM from "react-dom";
@@ -12,6 +11,7 @@ import {
   ExitHandler,
   TransitionChildren,
 } from "react-transition-group/Transition";
+import styled from "styled-components";
 
 export interface ICssTransitionProps<
   RefElement extends undefined | HTMLElement = undefined

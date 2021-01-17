@@ -20,10 +20,10 @@ export interface IFetchParams<R, QP, P> {
         args: QP extends void
           ? P extends void
             ? void
-            : P
+            : { args: P }
           : P extends void
           ? { params: QP }
-          : { params: QP } & P,
+          : { params: QP } & { args: P },
       ) => string)
     | string;
   method: RequestType;

@@ -45,8 +45,10 @@ export const useForm = <T extends object>(
 
   useEffect(() => {
     if (enableReinitialize) {
-      setValues({ ...initialValues });
-      setDirty(false);
+      const newInitialValues = { ...initialValues };
+
+      setValues(newInitialValues);
+      _validate(newInitialValues);
     }
     // eslint-disable-next-line
   }, [initialValues]);

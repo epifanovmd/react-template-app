@@ -11,7 +11,12 @@ import React, {
 } from "react";
 import { CSSTransition } from "react-transition-group";
 
-interface IProps<T> {
+export interface ISelectItem {
+  key: string | number;
+  label: string;
+}
+
+interface IProps<T extends ISelectItem> {
   touch?: boolean;
   error?: string;
   label?: string;
@@ -19,14 +24,13 @@ interface IProps<T> {
 
   items: T[];
   value?: T;
-
   placeholder?: string;
   name?: string;
   onChange?: (value: T, name?: string) => void;
   onBlur?: (name: string) => void;
 }
 
-export const Select = <T extends string | object>({
+export const Select = <T extends ISelectItem>({
   label,
   wrapStyle,
   error,
@@ -88,17 +92,13 @@ export const Select = <T extends string | object>({
   const getActive = useCallback(
     item =>
       item &&
-      (typeof item === "object"
-        ? (item.key !== undefined && item.key === (value as any).key) ||
-          (item.value !== undefined && item.value === (value as any).value)
-        : item === value),
+      value &&
+      item.key !== undefined &&
+      item.key === (value as any).key,
     [value],
   );
 
-  const getValue = useCallback(
-    item => (typeof item === "object" ? item.name || item.label : item),
-    [],
-  );
+  const getValue = useCallback(item => item.label, []);
 
   return (
     <Wrap ref={ref} style={wrapStyle}>

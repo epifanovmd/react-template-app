@@ -9,6 +9,17 @@ export interface IResponse<R> {
   message?: string;
 }
 
+const getUrl = (
+  url: string,
+  method: RequestType,
+  params: { [key in string]: any },
+) =>
+  method !== RequestType.GET
+    ? `/api/${url}`
+    : `/api/${url}${
+        Object.keys(params).length > 0 ? "?" : ""
+      }${querystring.stringify(params)}`;
+
 export const baseFetch = async <R, P>(
   url: string,
   params: P | IEmpty = {},
@@ -18,14 +29,8 @@ export const baseFetch = async <R, P>(
   const body =
     method !== RequestType.GET ? { body: JSON.stringify(params) } : {};
 
-  const hasParams = Object.keys(params).length > 0;
-  const urlResult =
-    method !== RequestType.GET
-      ? `/api/${url}`
-      : `/api/${url}${hasParams ? "?" : ""}${querystring.stringify(params)}`;
-
   try {
-    const res = await fetch(urlResult, {
+    const res = await fetch(getUrl(url, method, params), {
       method,
       ...body,
       credentials: "include",

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { IUser } from "Api/dto/Users.g";
 import { LoadState } from "Common/loadState";
 import { createNormalize } from "Common/normalizer";

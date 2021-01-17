@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AsyncThunk, createAsyncThunk } from "@reduxjs/toolkit";
 import { baseFetch, IResponse } from "Api/baseFetch";
 import { RequestType } from "Common/requestType";
 import { Action } from "redux";
@@ -7,10 +7,26 @@ import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "../IAppState";
 import { IExtraArguments } from "../store";
 
+export type IThunkDispatch = ThunkDispatch<IAppState, IExtraArguments, Action>;
+
 type TSuccessCallback<R> = (params: {
   getState: () => IAppState;
-  dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
+  dispatch: IThunkDispatch;
   result: IResponse<R>;
+  extraArguments: IExtraArguments;
+}) => void;
+
+type TConditionalTrowError<R> = (params: {
+  getState: () => IAppState;
+  dispatch: IThunkDispatch;
+  result: IResponse<R>;
+  extraArguments: IExtraArguments;
+}) => void | Error;
+
+type TFailureCallback = (params: {
+  error?: Error;
+  getState: () => IAppState;
+  dispatch: IThunkDispatch;
   extraArguments: IExtraArguments;
 }) => void;
 
@@ -27,16 +43,13 @@ export interface IFetchParams<R, QP, P> {
       ) => string)
     | string;
   method: RequestType;
+  additionalParams?: { [key in string]: string | number };
   headers?: { [key: string]: string };
   actionType: string;
   transformData?: (result: R, getState: () => IAppState) => R;
   onSuccess?: TSuccessCallback<R>;
-  onFail?: (params: {
-    error?: Error;
-    getState: () => IAppState;
-    dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
-    extraArguments: IExtraArguments;
-  }) => void;
+  onFailure?: TFailureCallback;
+  conditionalThrowError?: TConditionalTrowError<R>;
 }
 
 type TCalcType<QP, P> = QP extends void
@@ -45,61 +58,84 @@ type TCalcType<QP, P> = QP extends void
   ? { params: QP }
   : { args: P } & { params: QP };
 
+type TThunkArg<R, QP, P> = QP extends void
+  ? P extends void
+    ? { onSuccess?: TSuccessCallback<R>; onFailure?: TFailureCallback } | void
+    : {
+        onSuccess?: TSuccessCallback<R>;
+        onFailure?: TFailureCallback;
+      } & TCalcType<QP, P>
+  : {
+      onSuccess?: TSuccessCallback<R>;
+      onFailure?: TFailureCallback;
+    } & TCalcType<QP, P>;
+
+interface IThunkApiConfig {
+  dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
+  state: IAppState;
+  extra: IExtraArguments;
+}
+
 export const callApiToolkit = <R, QP = void, P = void>({
   url,
   method,
   headers,
   actionType,
   transformData,
+  additionalParams = {},
   onSuccess: _onSuccess,
-  onFail,
-}: IFetchParams<R, QP, P>) =>
-  createAsyncThunk<
-    IResponse<R>,
-    QP extends void
-      ? P extends void
-        ? { onSuccess?: TSuccessCallback<R> } | void
-        : { onSuccess?: TSuccessCallback<R> } & TCalcType<QP, P>
-      : { onSuccess?: TSuccessCallback<R> } & TCalcType<QP, P>,
-    {
-      dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
-      state: IAppState;
-      extra: IExtraArguments;
-    }
-  >(actionType, async (args, { extra, getState, dispatch }) => {
-    const { onSuccess, params, ...rest } = args || ({} as any);
-    const { data, status, message, error } = await baseFetch<R, QP>(
-      typeof url === "function" ? url({ params, ...rest } as any) : url,
-      params || {},
-      method,
-      headers,
-    );
+  onFailure: _onFail,
+  conditionalThrowError,
+}: IFetchParams<R, QP, P>): AsyncThunk<
+  IResponse<R>,
+  TThunkArg<R, QP, P>,
+  IThunkApiConfig
+> =>
+  createAsyncThunk<IResponse<R>, TThunkArg<R, QP, P>, IThunkApiConfig>(
+    actionType,
+    async (args, { extra, getState, dispatch }) => {
+      const { onSuccess, onFailure, params, ...rest } = args || ({} as any);
 
-    if (status >= 400 || data === null || error) {
-      onFail &&
-        onFail({
-          error: new Error(
-            (data as any)?.message || message || status.toString(),
-          ),
+      const newParams = { ...params, ...additionalParams };
+
+      const { data, status, message, error } = await baseFetch<R, QP>(
+        typeof url === "function"
+          ? url({ params: newParams, ...rest } as any)
+          : url,
+        newParams || {},
+        method,
+        headers,
+      );
+
+      if (status >= 400 || data === null || error) {
+        const failureParams = {
+          error: error || new Error(message || status.toString()),
           getState,
           dispatch,
           extraArguments: extra,
-        });
-      throw new Error((data as any)?.message || message || status.toString());
-    } else {
-      const transformedResult = transformData
-        ? transformData(data, getState)
-        : data;
-      const payload = {
-        getState,
-        dispatch,
-        result: { data: transformedResult, message, status },
-        extraArguments: extra,
-      };
+        };
 
-      onSuccess && onSuccess(payload);
-      _onSuccess && _onSuccess(payload);
+        _onFail && _onFail(failureParams);
+        onFailure && onFailure(failureParams);
 
-      return { data: transformedResult, message, status };
-    }
-  });
+        throw error || new Error(message || status.toString());
+      } else {
+        const transformedResult = transformData
+          ? transformData(data, getState)
+          : data;
+        const payload = {
+          getState,
+          dispatch,
+          result: { data: transformedResult, message, status },
+          extraArguments: extra,
+        };
+
+        conditionalThrowError && conditionalThrowError(payload);
+
+        onSuccess && onSuccess(payload);
+        _onSuccess && _onSuccess(payload);
+
+        return { data: transformedResult, message, status };
+      }
+    },
+  );

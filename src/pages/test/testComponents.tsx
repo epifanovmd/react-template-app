@@ -1,7 +1,8 @@
 import { useForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { Input } from "Components/controls/Input";
-import React, { FC, memo } from "react";
+import { Select } from "Components/controls/select/select";
+import React, { FC, memo, useCallback } from "react";
 import { array, object, string } from "yup";
 
 import EmailIcon from "../../icons/email.svg";
@@ -9,7 +10,7 @@ import EmailIcon from "../../icons/email.svg";
 export const TestComponents: FC = memo(() => {
   const validateSchema = object().shape({
     inp: string().required("Поле 'inp' явялется обязательным"),
-    inp1: string().required("Поле 'inp1' явялется обязательным"),
+    select: object().required("Поле 'select' явялется обязательным"),
     inputs: array(
       object().shape({
         input: string().required("Поле 'inp' явялется обязательным"),
@@ -26,48 +27,60 @@ export const TestComponents: FC = memo(() => {
     handleChange,
     handleSubmit,
     setFieldValue,
+    setFieldBlur,
     fieldsIterate,
   } = useForm(
     {
       initialValues: {
         inp: "",
-        inp1: "",
+        select: undefined,
         inputs: [{ input: "" }, { input: "" }],
       },
       validateSchema,
       validateOnInit: true,
       onSubmit: vals => console.log("values", vals),
     },
-    ["inp", "inputs"],
+    ["select"],
   );
 
   console.log("render");
 
-  const onSetValue = ({ target }: any) => {
-    setFieldValue("inp", target.value);
-  };
+  const onChangeSelect = useCallback(
+    (value, name) => {
+      setFieldValue(name, value);
+    },
+    [setFieldValue],
+  );
 
   return (
     <form onSubmit={handleSubmit}>
       <Input
         icon={<EmailIcon />}
         label={"setFieldValue"}
-        // value={values.inp}
         placeholder={"Email"}
-        onChange={onSetValue}
+        onChange={handleChange}
         name={fieldNames.inp}
         onBlur={handleBlur}
         touch={touchedValues.inp}
         error={errors.inp}
       />
-      <Input
-        label={"handleChange"}
-        // value={values.inp1}
-        onChange={handleChange}
-        name={fieldNames.inp1}
-        onBlur={handleBlur}
-        touch={touchedValues.inp1}
-        error={errors.inp1}
+      <Select
+        name={"select"}
+        onBlur={setFieldBlur}
+        items={[
+          {
+            key: 1,
+            label: "1",
+          },
+          {
+            key: 2,
+            label: "2",
+          },
+        ]}
+        value={values.select}
+        onChange={onChangeSelect}
+        touch={touchedValues.select}
+        error={errors.select}
       />
 
       {fieldsIterate("inputs", inputs => (

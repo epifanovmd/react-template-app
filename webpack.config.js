@@ -70,6 +70,7 @@ const server = {
     rules: [
       baseLoaders.ts,
       ...baseLoaders.font,
+      baseLoaders.svg,
       baseLoaders.scss,
       baseLoaders.less,
       baseLoaders.css,

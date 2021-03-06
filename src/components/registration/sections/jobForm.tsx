@@ -1,3 +1,4 @@
+import styled from "astroturf";
 import { IForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { Input } from "Components/controls/Input";
@@ -29,7 +30,7 @@ export const JobForm: FC<IProps> = ({
 
   return (
     <>
-      <div>{errors.job}</div>
+      <Error>{errors.job}</Error>
       {fieldsIterate(
         "job",
         ({ fieldNames, fieldsHelper, value, index, error, touched }) => (
@@ -46,8 +47,8 @@ export const JobForm: FC<IProps> = ({
             />
 
             <Input
-              label={"Имя"}
-              placeholder={"Имя"}
+              label={"Стаж"}
+              placeholder={"Стаж"}
               defaultValue={value.experience}
               onChange={fieldsHelper.handleChange}
               name={fieldNames.experience}
@@ -60,8 +61,8 @@ export const JobForm: FC<IProps> = ({
               name={fieldNames.position}
               items={positionItems}
               value={value.position}
-              label={"Пол"}
-              placeholder={"Выберете пол"}
+              label={"Направление"}
+              placeholder={"Выберете Направление"}
               onChange={onSetPosition(index)}
               touch={touched.position}
               error={error.position}
@@ -70,9 +71,22 @@ export const JobForm: FC<IProps> = ({
         ),
       )}
 
-      <div>
-        <Button onClick={addJob}>Добавить место работы</Button>
-      </div>
+      <Actions>
+        <StyledButton onClick={addJob}>Добавить</StyledButton>
+      </Actions>
     </>
   );
 };
+
+const Actions = styled.div`
+  display: flex;
+`;
+const StyledButton = styled(Button)`
+  height: 32px;
+  width: 100%;
+`;
+const Error = styled.div`
+  display: flex;
+  color: red;
+  margin: 0 10px;
+`;

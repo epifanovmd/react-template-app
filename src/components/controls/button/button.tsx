@@ -22,7 +22,6 @@ export const Button: FC<IProps> = ({
 const Wrap = styled.div<{ disabled?: boolean }>`
   background: #0094ff;
   border-radius: 8px;
-  width: 100%;
   font: normal normal normal 16px Roboto;
   color: #ffffff;
   padding: 5px 20px;

@@ -32,7 +32,6 @@
     "@loadable/component": "^5.14.1",
     "@loadable/webpack-plugin": "^5.14.0",
     "@reduxjs/toolkit": "^1.5.0",
-    "@svgr/webpack": "^5.5.0",
     "i18next": "^19.8.4",
     "i18next-browser-languagedetector": "^6.0.1",
     "@loadable/server": "^5.12.0",

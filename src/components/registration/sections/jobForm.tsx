@@ -1,9 +1,9 @@
-import styled from "astroturf";
 import { IForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { Input } from "Components/controls/Input";
 import { ISelectItem, Select } from "Components/controls/select/select";
 import React, { FC, Fragment } from "react";
+import styled from "styled-components";
 
 import { IRegistrationForm, IRegistrationFormMeta } from "../registration";
 

@@ -1,7 +1,7 @@
 import loadable from "@loadable/component";
 import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
 import { IResponse } from "Api/baseFetch";
-import { TestComponents } from "Pages/test/testComponents";
+import { Auth } from "Pages/auth/auth";
 import { fetchUsers } from "Pages/users/reduxToolKit";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
@@ -54,7 +54,7 @@ export const getRoutsFromRole = (
 export const routepaths = {
   ROOT: "/",
   USERS: "/users",
-  TESTCOMPONENTS: "/testComponents",
+  AUTH: "/auth",
 };
 
 export const routes: IRoute[] = [
@@ -66,9 +66,9 @@ export const routes: IRoute[] = [
     getInitialData: fetchUsers(),
   },
   {
-    path: routepaths.TESTCOMPONENTS,
-    pathName: "test",
-    component: TestComponents,
+    path: routepaths.AUTH,
+    pathName: "auth",
+    component: Auth,
     exact: true,
   },
 ];

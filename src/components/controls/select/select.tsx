@@ -14,6 +14,7 @@ import styled from "styled-components";
 export interface ISelectItem {
   key: string | number;
   label: string;
+  [key: string]: any;
 }
 
 interface IProps<T extends ISelectItem> {
@@ -83,9 +84,9 @@ export const Select = <T extends ISelectItem>({
 
   const simpleValue = useMemo(
     () =>
-      typeof value === "object"
+      (typeof value === "object"
         ? (value as any).name || (value as any).label
-        : value || placeholder,
+        : value) || placeholder,
     [placeholder, value],
   );
 

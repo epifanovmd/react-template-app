@@ -1,4 +1,3 @@
-import styled from "astroturf";
 import { useForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { ISelectItem } from "Components/controls/select/select";
@@ -116,5 +115,3 @@ export const Registration: FC = () => {
     </>
   );
 };
-
-const RegistrationForm = styled;

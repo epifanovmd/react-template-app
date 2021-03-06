@@ -1,9 +1,10 @@
+import styled from "astroturf";
 import { useForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { ISelectItem } from "Components/controls/select/select";
 import { InfoForm } from "Components/registration/sections/infoForm";
 import { JobForm } from "Components/registration/sections/jobForm";
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { array, object, string } from "yup";
 
 export interface IRegistrationForm {
@@ -115,3 +116,5 @@ export const Registration: FC = () => {
     </>
   );
 };
+
+const RegistrationForm = styled;

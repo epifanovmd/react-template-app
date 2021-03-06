@@ -110,7 +110,18 @@ const baseLoaders = {
   },
   svg: {
     test: /\.svg$/,
-    use: ["@svgr/webpack"],
+    use: [
+      "babel-loader",
+      {
+        loader: "react-svg-loader",
+        options: {
+          svgo: {
+            plugins: [{ removeTitle: false }],
+            floatPrecision: 2,
+          },
+        },
+      },
+    ],
   },
   file: {
     test: /\.(pdf|jpg|png|gif|ico|json)$/,

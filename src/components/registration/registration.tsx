@@ -65,7 +65,7 @@ const validateSchemes = [
 ];
 
 export const Registration: FC = () => {
-  const [validateSchema, setValidateSchema] = useState<any>(validateSchemes[0]);
+  const [validateSchema, setValidateSchema] = useState(validateSchemes[0]);
   const [result, changeResult] = useState({});
 
   const onSubmit = useCallback((values, meta) => {

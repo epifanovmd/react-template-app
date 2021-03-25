@@ -557,7 +557,10 @@ interface IUseForm<
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
   validate?: (values: T, meta: M) => Partial<Record<keyof T | string, string>>;
-  validateSchema?: ObjectSchema<Shape<object, Partial<Record<keyof T, any>>>>;
+  validateSchema?: ObjectSchema<
+    Shape<object | undefined, Partial<Record<keyof T, any>>>,
+    object
+  >;
   validateOnInit?: boolean;
   validateOnChange?: boolean;
   enableReinitialize?: boolean;

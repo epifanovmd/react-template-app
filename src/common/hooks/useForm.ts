@@ -163,7 +163,7 @@ export const useForm = <
   }, []);
 
   useEffect(() => {
-    !isInited && _validate(values);
+    isInited && _validate(values);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateSchema, validate]);
 

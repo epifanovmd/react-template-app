@@ -19,6 +19,7 @@ export const useForm = <
   watch?: (keyof T)[],
 ): IForm<T, M> => {
   const [values, setValues] = React.useState<T>(initialValues);
+  const [isInited, setInited] = React.useState(false);
   const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
     initialMeta,
   );
@@ -157,8 +158,14 @@ export const useForm = <
 
   useEffect(() => {
     validateOnInit && _validate(values);
+    setInited(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    !isInited && _validate(values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validateSchema, validate]);
 
   const onSetValues = useCallback(
     (_values: T) => {

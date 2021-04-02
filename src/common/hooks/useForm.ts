@@ -18,7 +18,7 @@ export const useForm = <
   }: IUseForm<T, M>,
   watch?: (keyof T)[],
 ): IForm<T, M> => {
-  const [values, setValues] = React.useState<T>(initialValues);
+  const [values, setValues] = React.useState<T>({ ...initialValues });
   const [isInited, setInited] = React.useState(false);
   const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
     initialMeta,
@@ -343,7 +343,7 @@ export const useForm = <
   );
 
   const handleClearForm = useCallback(() => {
-    setValues(initialValues);
+    setValues({ ...initialValues });
     setErrors({});
     setTouchedValues({});
   }, [initialValues]);

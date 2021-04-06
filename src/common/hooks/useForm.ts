@@ -7,7 +7,7 @@ export const useForm = <
 >(
   {
     initialValues,
-    initialMeta = {} as M,
+    initialMeta,
     onSubmit,
     onChange,
     validate,
@@ -21,7 +21,7 @@ export const useForm = <
   const [values, setValues] = React.useState<T>({ ...initialValues });
   const [isInited, setInited] = React.useState(false);
   const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
-    initialMeta,
+    initialMeta || ({} as M),
   );
   const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
@@ -45,7 +45,7 @@ export const useForm = <
   }, [initialValues]);
 
   useEffect(() => {
-    if (enableReinitialize) {
+    if (enableReinitialize && initialMeta) {
       const newInitialMeta = { ...initialMeta };
 
       changeMeta(newInitialMeta);

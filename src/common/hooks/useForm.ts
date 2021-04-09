@@ -311,7 +311,7 @@ export const useForm = <
         fieldsHelper: typeof fieldsHelper;
         index: number;
         array: A[];
-      }) => void,
+      }) => JSX.Element,
     ) =>
       ((values[name] as any) || []).map(
         (value: A, index: number, array: A[]) => {
@@ -539,6 +539,7 @@ export const useForm = <
 };
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
+type TObjectPartial<T> = T extends object ? Partial<T> : T;
 
 type SubType<Base, Condition> = Pick<
   Base,
@@ -577,7 +578,7 @@ export interface IFieldsHelper<T> {
   remove: (name: keyof SubType<T, Array<any>>, index: number) => void;
   append: <K extends keyof SubType<T, Array<any>>>(
     name: K,
-    value: T[K],
+    value: TObjectPartial<TCheckArray<T[K]>>,
   ) => void;
   handleChange: ({ target }: React.ChangeEvent<any>) => void;
   setFieldValue: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
@@ -631,8 +632,8 @@ export interface IForm<
       fieldsHelper: IFieldsHelper<T>;
       index: number;
       array: A[];
-    }) => void,
-  ) => void;
+    }) => JSX.Element,
+  ) => JSX.Element[];
   fieldsHelper: IFieldsHelper<T>;
   handleClearForm: () => void;
   validateForm: () => Promise<{

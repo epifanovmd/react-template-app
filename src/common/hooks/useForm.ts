@@ -206,6 +206,28 @@ export const useForm = <
 
           return state;
         });
+        setErrors(state => {
+          const newErrors = { ...state };
+
+          Object.keys(newErrors).forEach(key => {
+            if (key.includes(`[${index}]`)) {
+              delete newErrors[key];
+            }
+          });
+
+          return newErrors;
+        });
+        setTouchedValues(state => {
+          const newTouchedValues = { ...state };
+
+          Object.keys(newTouchedValues).forEach(key => {
+            if (key.includes(`[${index}]`)) {
+              delete newTouchedValues[key];
+            }
+          });
+
+          return newTouchedValues;
+        });
       },
       append: <K extends keyof T>(
         name: K,
@@ -265,7 +287,18 @@ export const useForm = <
           touch &&
           setTouchedValues(state => ({
             ...state,
-            [name]: true,
+            [`${name}[${index}].${key}`]: true,
+          }));
+      },
+      setFieldBlur: <K extends keyof T, A extends T[K]>(
+        name: K,
+        key: keyof TCheckArray<A>,
+        index: number,
+      ) => {
+        !touchedValues[name] &&
+          setTouchedValues(state => ({
+            ...state,
+            [`${name}[${index}].${key}`]: true,
           }));
       },
     }),
@@ -522,6 +555,11 @@ export interface IFieldsHelper<T> {
       | TCheckArray<A>[keyof TCheckArray<A>],
     index: number,
     touch?: boolean,
+  ) => void;
+  setFieldBlur: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
+    name: K,
+    key: keyof TCheckArray<A>,
+    index: number,
   ) => void;
 }
 

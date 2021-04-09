@@ -158,7 +158,7 @@ export const useForm = <
 
   useEffect(() => {
     validateOnInit && _validate(values);
-    setInited(false);
+    setInited(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -220,37 +220,6 @@ export const useForm = <
           validateOnChange && _validate(newState);
 
           return newState;
-        });
-      },
-      handleChange: ({ target }: React.ChangeEvent<any>) => {
-        const name: keyof T = (target?.name || "").split("[")[0];
-        const index = ((target?.name.match("\\[[0-9]{1,2}\\]") || [])[0] || -1)
-          .split("]")[0]
-          .split("[")[1];
-        const key = (target?.name || "").split(".")[1];
-        const value = target?.value;
-
-        setValues(state => {
-          state[name] = ((state[name] as any) || []).map(
-            (item: any, ind: number) =>
-              index && ind === +index
-                ? {
-                    ...item,
-                    [key]: value,
-                  }
-                : item,
-          );
-          let newValues = state;
-
-          if ((watch && watch.some(item => item === name)) || !watch) {
-            newValues = {
-              ...state,
-            };
-          }
-
-          validateOnChange && _validate(newValues);
-
-          return newValues;
         });
       },
       setFieldValue: <K extends keyof T, A extends T[K]>(
@@ -325,7 +294,7 @@ export const useForm = <
           };
 
           Object.keys(value).forEach(item => {
-            fieldNames[item as keyof A] = `${name}[${index}].${item}`;
+            fieldNames[item as keyof A] = item;
             touched[item as keyof A] =
               touchedValues[`${name}[${index}].${item}`];
             error[item as keyof A] = errors[`${name}[${index}].${item}`];
@@ -350,43 +319,6 @@ export const useForm = <
     setErrors({});
     setTouchedValues({});
   }, [initialValues]);
-
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<any>) => {
-      const target = event?.target;
-      const value =
-        target?.type === "checkbox" || target?.type === "radio"
-          ? target?.checked
-          : target?.value;
-      const name = target?.name;
-
-      if (
-        (target?.type === "checkbox" || target?.type === "radio") &&
-        !touchedValues[name as keyof T]
-      ) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
-      }
-
-      setValues(state => {
-        state[name as keyof T] = value;
-        let newValues = state;
-
-        if ((watch && watch.some(item => item === name)) || !watch) {
-          newValues = {
-            ...state,
-          };
-        }
-
-        validateOnChange && _validate(newValues);
-
-        return newValues;
-      });
-    },
-    [touchedValues, watch, validateOnChange, _validate],
-  );
 
   const setFieldValue = useCallback(
     (
@@ -528,7 +460,6 @@ export const useForm = <
     errors,
     fieldNames,
     onSetValues,
-    handleChange,
     handleBlur,
     setMeta,
     setFieldValue,
@@ -583,7 +514,6 @@ export interface IFieldsHelper<T> {
     name: K,
     value: TObjectPartial<TCheckArray<T[K]>>,
   ) => void;
-  handleChange: ({ target }: React.ChangeEvent<any>) => void;
   setFieldValue: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
     name: K,
     key: keyof TCheckArray<A>,
@@ -607,7 +537,6 @@ export interface IForm<
   errors: Partial<Record<keyof T | string, string>>;
   fieldNames: Record<keyof T, string>;
   onSetValues: (values: T) => void;
-  handleChange: (event: React.ChangeEvent<any>) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
   setMeta: (
     name: keyof M,

@@ -3,7 +3,7 @@ import { IForm } from "Common/hooks/useForm";
 import { Button } from "Components/controls/button/button";
 import { Input } from "Components/controls/Input";
 import { ISelectItem, Select } from "Components/controls/select/select";
-import React, { FC, Fragment } from "react";
+import React, { ChangeEvent, FC, Fragment, useCallback } from "react";
 
 import { IRegistrationForm, IRegistrationFormMeta } from "../registration";
 
@@ -21,55 +21,66 @@ export const JobForm: FC<IProps> = ({
   errors,
 }) => {
   const addJob = () =>
-    fieldsHelper.append("job", [
-      { place: "", experience: "", position: { label: "", key: "" } },
-    ]);
+    fieldsHelper.append("job", {
+      place: "",
+      experience: "",
+      position: { label: "", key: "" },
+    });
 
   const onSetPosition = (index: number) => (value: ISelectItem) =>
     fieldsHelper.setFieldValue("job", "position", value, index);
 
+  const handleChange = useCallback(
+    (index: number) => (event: ChangeEvent<HTMLInputElement>) => {
+      fieldsHelper.setFieldValue(
+        "job",
+        event.target.name as any,
+        event.target.value,
+        index,
+      );
+    },
+    [fieldsHelper],
+  );
+
   return (
     <>
       <Error>{errors.job}</Error>
-      {fieldsIterate(
-        "job",
-        ({ fieldNames, fieldsHelper, value, index, error, touched }) => (
-          <Fragment key={index}>
-            <Input
-              label={"Место работы"}
-              placeholder={"Место работы"}
-              defaultValue={value.place}
-              onChange={fieldsHelper.handleChange}
-              name={fieldNames.place}
-              onBlur={handleBlur}
-              touch={touched.place}
-              error={error.place}
-            />
+      {fieldsIterate("job", ({ fieldNames, value, index, error, touched }) => (
+        <Fragment key={index}>
+          <Input
+            label={"Место работы"}
+            placeholder={"Место работы"}
+            defaultValue={value.place}
+            onChange={handleChange(index)}
+            name={fieldNames.place}
+            onBlur={handleBlur}
+            touch={touched.place}
+            error={error.place}
+          />
 
-            <Input
-              label={"Стаж"}
-              placeholder={"Стаж"}
-              defaultValue={value.experience}
-              onChange={fieldsHelper.handleChange}
-              name={fieldNames.experience}
-              onBlur={handleBlur}
-              touch={touched.experience}
-              error={error.experience}
-            />
+          <Input
+            label={"Стаж"}
+            placeholder={"Стаж"}
+            defaultValue={value.experience}
+            onChange={handleChange(index)}
+            name={fieldNames.experience}
+            onBlur={handleBlur}
+            touch={touched.experience}
+            error={error.experience}
+          />
 
-            <Select
-              name={fieldNames.position}
-              items={positionItems}
-              value={value.position}
-              label={"Направление"}
-              placeholder={"Выберете Направление"}
-              onChange={onSetPosition(index)}
-              touch={touched.position}
-              error={error.position}
-            />
-          </Fragment>
-        ),
-      )}
+          <Select
+            name={fieldNames.position}
+            items={positionItems}
+            value={value.position}
+            label={"Направление"}
+            placeholder={"Выберете Направление"}
+            onChange={onSetPosition(index)}
+            touch={touched.position}
+            error={error.position}
+          />
+        </Fragment>
+      ))}
 
       <Actions>
         <StyledButton onClick={addJob}>Добавить</StyledButton>

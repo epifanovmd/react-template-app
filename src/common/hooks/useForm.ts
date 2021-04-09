@@ -207,11 +207,14 @@ export const useForm = <
           return state;
         });
       },
-      append: <K extends keyof T>(name: K, value: T[K]) => {
+      append: <K extends keyof T>(
+        name: K,
+        value: TObjectPartial<TCheckArray<T[K]>>,
+      ) => {
         setValues(state => {
           const newState = {
             ...state,
-            [name]: [...(state[name] as any), ...(value as any)],
+            [name]: [...(state[name] as any), value],
           };
 
           validateOnChange && _validate(newState);

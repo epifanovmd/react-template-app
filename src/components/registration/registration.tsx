@@ -92,11 +92,15 @@ export const Registration: FC = () => {
   };
 
   const onNextStep = async () => {
-    const { hasErrors } = await validateForm();
+    const { hasErrors, errors } = await validateForm();
+
+    console.log("errors", errors);
 
     !hasErrors && onChangeStep(meta.step + 1);
   };
   const onPrevStep = () => onChangeStep(meta.step - 1);
+
+  console.log("form", form.values);
 
   return (
     <Container>

@@ -33,16 +33,11 @@ export const useForm = <
     setDirty(JSON.stringify(a) !== JSON.stringify(b));
   }, []);
 
-  const isInit = React.useRef(false);
-  const localValidateSchema = React.useRef(validateSchema);
-  const localValidate = React.useRef(validate);
-  const localInitialValues = React.useRef(initialValues);
+  const [isInit, setInit] = React.useState(false);
 
   useEffect(() => {
     if (enableReinitialize) {
       const newInitialValues = { ...initialValues };
-
-      localInitialValues.current = newInitialValues;
 
       setValues(newInitialValues);
       validateOnChange && validateOnInit && validateValues(newInitialValues);
@@ -66,14 +61,15 @@ export const useForm = <
 
   useEffect(() => {
     validateOnInit && validateValues(values);
-    isInit.current = true;
+    setInit(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    localValidateSchema.current = validateSchema;
-    localValidate.current = validate;
-    validateOnChange && isInit.current && validateValues(values);
+    if (validateOnChange && isInit) {
+      console.log("erewret");
+      validateValues(values).then().catch();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [validateSchema, validate]);
 
@@ -87,9 +83,9 @@ export const useForm = <
     ) => {
       let newErrors = {};
 
-      getDirty(validationValues, localInitialValues.current);
-      if (localValidateSchema.current) {
-        await localValidateSchema.current
+      getDirty(validationValues, initialValues);
+      if (validateSchema) {
+        await validateSchema
           .validate(validationValues, {
             strict: true,
             abortEarly: false,
@@ -158,10 +154,8 @@ export const useForm = <
             });
           });
       } else {
-        const e: Partial<
-          Record<keyof T | string, string>
-        > | null = localValidate.current
-          ? localValidate.current(validationValues, meta)
+        const e: Partial<Record<keyof T | string, string>> | null = validate
+          ? validate(validationValues, meta)
           : null;
 
         if (e) {
@@ -179,7 +173,7 @@ export const useForm = <
         errors: newErrors,
       });
     },
-    [getDirty, meta],
+    [getDirty, initialValues, meta, validate, validateSchema],
   );
 
   const onSetValues = useCallback(
@@ -193,12 +187,12 @@ export const useForm = <
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
 
-    Object.keys(localInitialValues).forEach(key => {
+    Object.keys(initialValues).forEach(key => {
       obj[key as keyof T] = key;
     });
 
     return obj;
-  }, []);
+  }, [initialValues]);
 
   const fieldNames = useMemo(() => getFields(), [getFields]);
 
@@ -381,14 +375,14 @@ export const useForm = <
   );
 
   const handleClearForm = useCallback(() => {
-    const newValues = { ...localInitialValues.current };
+    const newValues = { ...initialValues };
 
     setValues(newValues);
     setErrors({});
     const newTouchedValues = {};
 
     setTouchedValues(newTouchedValues);
-  }, []);
+  }, [initialValues]);
 
   const setFieldValue = useCallback(
     (
@@ -453,46 +447,49 @@ export const useForm = <
   );
 
   const handleSubmit = useCallback(
-    (event?: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault();
-      validateValues(values, ({}, e) => {
-        setTouchedValues(() =>
-          (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
-            const field = values[el] as any;
+    (params?: any) => {
+      if (!params?.withoutValidate) {
+        validateValues(values, ({}, e) => {
+          setTouchedValues(() =>
+            (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
+              const field = values[el] as any;
 
-            if (
-              Array.isArray(field) &&
-              field[0] &&
-              typeof field[0] === "object" &&
-              !Array.isArray(field[0])
-            ) {
-              const obj: any = {};
+              if (
+                Array.isArray(field) &&
+                field[0] &&
+                typeof field[0] === "object" &&
+                !Array.isArray(field[0])
+              ) {
+                const obj: any = {};
 
-              field.forEach((val, ind) => {
-                Object.keys(val).forEach(key => {
-                  obj[`${el}[${ind}].${key}`] = true;
+                field.forEach((val, ind) => {
+                  Object.keys(val).forEach(key => {
+                    obj[`${el}[${ind}].${key}`] = true;
+                  });
                 });
-              });
+
+                return {
+                  ...acc,
+                  ...obj,
+                };
+              }
 
               return {
                 ...acc,
-                ...obj,
+                [el]: true,
               };
-            }
+            }, {}),
+          );
 
-            return {
-              ...acc,
-              [el]: true,
-            };
-          }, {}),
-        );
-
-        Object.keys({ ...e }).length === 0 &&
-          onSubmit &&
-          onSubmit(values, meta, e);
-      })
-        .then()
-        .catch();
+          Object.keys({ ...e }).length === 0 &&
+            onSubmit &&
+            onSubmit(values, meta, e);
+        })
+          .then()
+          .catch();
+      } else {
+        onSubmit && onSubmit(values, meta, {});
+      }
     },
     [validateValues, values, onSubmit, meta],
   );
@@ -631,9 +628,7 @@ export interface IForm<
     touch?: boolean,
   ) => void;
   setFieldBlur: (name: keyof T | string) => void;
-  handleSubmit: () =>
-    | void
-    | ((event?: React.FormEvent<HTMLFormElement>) => void);
+  handleSubmit: (params: { withoutValidate: boolean } | void) => void;
   fieldsIterate: <
     A extends TCheckArray<T[B]>,
     B extends keyof SubType<T, Array<any>>

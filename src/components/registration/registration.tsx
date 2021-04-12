@@ -100,8 +100,6 @@ export const Registration: FC = () => {
   };
   const onPrevStep = () => onChangeStep(meta.step - 1);
 
-  console.log("form", form.values);
-
   return (
     <Container>
       <RegistrationForm>
@@ -115,10 +113,17 @@ export const Registration: FC = () => {
         {meta.step === 1 && <InfoForm {...form} />}
 
         {meta.step === 2 && <JobForm {...form} />}
-        <form onSubmit={handleSubmit} />
 
         <Actions>
-          <ActionForm onClick={meta.step === 2 ? handleSubmit : onNextStep}>
+          <ActionForm
+            onClick={
+              meta.step === 2
+                ? () => {
+                    handleSubmit();
+                  }
+                : onNextStep
+            }
+          >
             {meta.step === 2 ? "Регистрация" : "Далее"}
           </ActionForm>
         </Actions>

@@ -19,7 +19,6 @@ export const useForm = <
   watch?: (keyof T)[],
 ): IForm<T, M> => {
   const [values, setValues] = React.useState<T>({ ...initialValues });
-  const [isInited, setInited] = React.useState(false);
   const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
     initialMeta || ({} as M),
   );
@@ -34,12 +33,24 @@ export const useForm = <
     setDirty(JSON.stringify(a) !== JSON.stringify(b));
   }, []);
 
+  const isInit = React.useRef(false);
+  const localValidateSchema = React.useRef(validateSchema);
+  const localValidate = React.useRef(validate);
+  const localInitialValues = React.useRef(initialValues);
+
+  const localMeta = React.useRef(meta);
+  const localValues = React.useRef(values);
+  const localTouched = React.useRef(touchedValues);
+
   useEffect(() => {
     if (enableReinitialize) {
       const newInitialValues = { ...initialValues };
 
+      localInitialValues.current = newInitialValues;
+      localValues.current = newInitialValues;
+
       setValues(newInitialValues);
-      validateOnInit && _validate(newInitialValues);
+      validateOnChange && validateOnInit && validateValues(newInitialValues);
     }
     // eslint-disable-next-line
   }, [initialValues]);
@@ -48,25 +59,45 @@ export const useForm = <
     if (enableReinitialize && initialMeta) {
       const newInitialMeta = { ...initialMeta };
 
+      localMeta.current = newInitialMeta;
+
       changeMeta(newInitialMeta);
     }
     // eslint-disable-next-line
   }, [initialMeta]);
 
-  const _validate = useCallback(
+  useEffect(() => {
+    onChange && onChange(values, meta, errors);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, errors, meta]);
+
+  useEffect(() => {
+    validateOnInit && validateValues(values);
+    isInit.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    localValidateSchema.current = validateSchema;
+    localValidate.current = validate;
+    validateOnChange && isInit.current && validateValues(values);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validateSchema, validate]);
+
+  const validateValues = useCallback(
     async (
-      _values: T,
-      _finally?: (
+      validationValues: T,
+      afterValidate?: (
         _values: Partial<T>,
         errors: Partial<Record<keyof T | string, string>>,
       ) => void,
     ) => {
       let newErrors = {};
 
-      getDirty(_values, initialValues);
-      if (validateSchema) {
-        await validateSchema
-          .validate(_values, {
+      getDirty(validationValues, localInitialValues.current);
+      if (localValidateSchema.current) {
+        await localValidateSchema.current
+          .validate(validationValues, {
             strict: true,
             abortEarly: false,
           })
@@ -79,11 +110,16 @@ export const useForm = <
                 delete e[key];
               });
 
-              return e;
+              return { ...e };
             });
-            _finally && _finally(_values, {});
+            afterValidate && afterValidate(validationValues, {});
           })
           .catch(err => {
+            if (err.sourceURL) {
+              throw new Error(
+                `ERROR in - column:${err.column}, line:${err.line}, sourceURL:${err.sourceURL}`,
+              );
+            }
             setErrors(e => {
               const inner = (err.inner || []) as {
                 path: keyof T;
@@ -123,21 +159,23 @@ export const useForm = <
               }
 
               newErrors = e;
-              _finally && _finally(_values, e);
+              afterValidate && afterValidate(validationValues, e);
 
               return e;
             });
           });
       } else {
-        const e: Partial<Record<keyof T | string, string>> | null = validate
-          ? validate(_values, meta)
+        const e: Partial<
+          Record<keyof T | string, string>
+        > | null = localValidate.current
+          ? localValidate.current(validationValues, localMeta.current)
           : null;
 
         if (e) {
           newErrors = e;
         }
         setErrors(err => (e ? e : err));
-        _finally && _finally(_values, { ...(e as any) });
+        afterValidate && afterValidate(validationValues, { ...(e as any) });
       }
 
       const keys = Object.keys(newErrors);
@@ -148,42 +186,27 @@ export const useForm = <
         errors: newErrors,
       });
     },
-    [getDirty, initialValues, validateSchema, validate, meta],
+    [getDirty],
   );
 
-  useEffect(() => {
-    onChange && onChange(values, meta, errors);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, errors]);
-
-  useEffect(() => {
-    validateOnInit && _validate(values);
-    setInited(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    isInited && _validate(values);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [validateSchema, validate]);
-
   const onSetValues = useCallback(
-    (_values: T) => {
-      setValues(_values);
-      _validate(_values);
+    (newValues: T) => {
+      setValues(newValues);
+      localValues.current = newValues;
+      validateValues(newValues).then().catch();
     },
-    [_validate],
+    [validateValues],
   );
 
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
 
-    Object.keys(initialValues).forEach(key => {
+    Object.keys(localInitialValues).forEach(key => {
       obj[key as keyof T] = key;
     });
 
     return obj;
-  }, [initialValues]);
+  }, []);
 
   const fieldNames = useMemo(() => getFields(), [getFields]);
 
@@ -199,7 +222,8 @@ export const useForm = <
               ),
             };
 
-            validateOnChange && _validate(newState);
+            validateOnChange && validateValues(newState);
+            localValues.current = newState;
 
             return newState;
           }
@@ -225,6 +249,7 @@ export const useForm = <
               delete newTouchedValues[key];
             }
           });
+          localTouched.current = newTouchedValues;
 
           return newTouchedValues;
         });
@@ -239,7 +264,27 @@ export const useForm = <
             [name]: [...(state[name] as any), value],
           };
 
-          validateOnChange && _validate(newState);
+          validateOnChange && validateValues(newState);
+          localValues.current = newState;
+
+          return newState;
+        });
+      },
+      replace: <K extends keyof T>(
+        name: K,
+        index: number,
+        value: TObjectPartial<TCheckArray<T[K]>>,
+      ) => {
+        setValues(state => {
+          const newState = {
+            ...state,
+            [name]: (state[name] as any).map((item: any, ind: number) =>
+              ind === index ? value : item,
+            ),
+          };
+
+          validateOnChange && validateValues(newState);
+          localValues.current = newState;
 
           return newState;
         });
@@ -279,30 +324,43 @@ export const useForm = <
             };
           }
 
-          validateOnChange && _validate(newValues);
+          validateOnChange && validateValues(newValues);
+          localValues.current = newValues;
 
           return newValues;
         });
-        !touchedValues[name] &&
+        !localTouched.current[name] &&
           touch &&
-          setTouchedValues(state => ({
-            ...state,
-            [`${name}[${index}].${key}`]: true,
-          }));
+          setTouchedValues(state => {
+            const newTouchedValues = {
+              ...state,
+              [`${name}[${index}].${key}`]: true,
+            };
+
+            localTouched.current = newTouchedValues;
+
+            return newTouchedValues;
+          });
       },
       setFieldBlur: <K extends keyof T, A extends T[K]>(
         name: K,
         key: keyof TCheckArray<A>,
         index: number,
       ) => {
-        !touchedValues[name] &&
-          setTouchedValues(state => ({
-            ...state,
-            [`${name}[${index}].${key}`]: true,
-          }));
+        !localTouched.current[name] &&
+          setTouchedValues(state => {
+            const newTouchedValues = {
+              ...state,
+              [`${name}[${index}].${key}`]: true,
+            };
+
+            localTouched.current = newTouchedValues;
+
+            return newTouchedValues;
+          });
       },
     }),
-    [validateOnChange, _validate, watch, touchedValues],
+    [validateOnChange, validateValues, watch],
   );
 
   const fieldsIterate = useCallback(
@@ -329,7 +387,7 @@ export const useForm = <
           Object.keys(value).forEach(item => {
             fieldNames[item as keyof A] = item;
             touched[item as keyof A] =
-              touchedValues[`${name}[${index}].${item}`];
+              localTouched.current[`${name}[${index}].${item}`];
             error[item as keyof A] = errors[`${name}[${index}].${item}`];
           });
 
@@ -344,14 +402,20 @@ export const useForm = <
           });
         },
       ),
-    [fieldsHelper, values, touchedValues, errors],
+    [fieldsHelper, values, errors],
   );
 
   const handleClearForm = useCallback(() => {
-    setValues({ ...initialValues });
+    const newValues = { ...localInitialValues.current };
+
+    setValues(newValues);
+    localValues.current = newValues;
     setErrors({});
-    setTouchedValues({});
-  }, [initialValues]);
+    const newTouchedValues = {};
+
+    setTouchedValues(newTouchedValues);
+    localTouched.current = newTouchedValues;
+  }, []);
 
   const setFieldValue = useCallback(
     (
@@ -372,18 +436,25 @@ export const useForm = <
           };
         }
 
-        validateOnChange && _validate(newValues);
+        validateOnChange && validateValues(newValues);
+        localValues.current = newValues;
 
         return newValues;
       });
-      !touchedValues[name] &&
+      !localTouched.current[name] &&
         touch &&
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
+        setTouchedValues(state => {
+          const newTouchedValues = {
+            ...state,
+            [name]: true,
+          };
+
+          localTouched.current = newTouchedValues;
+
+          return newTouchedValues;
+        });
     },
-    [touchedValues, watch, validateOnChange, _validate],
+    [watch, validateOnChange, validateValues],
   );
 
   const handleBlur = useCallback(
@@ -391,37 +462,51 @@ export const useForm = <
       const { target } = event;
       const { name } = target;
 
-      if (name && !touchedValues[name]) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
-        validateOnChange && _validate(values);
+      if (name && !localTouched.current[name]) {
+        setTouchedValues(state => {
+          const newTouchedValues = {
+            ...state,
+            [name]: true,
+          };
+
+          localTouched.current = newTouchedValues;
+
+          return newTouchedValues;
+        });
+        validateOnChange && validateValues(localValues.current);
       }
     },
-    [touchedValues, validateOnChange, _validate, values],
+    [validateOnChange, validateValues],
   );
 
   const setFieldBlur = useCallback(
     (name: keyof T | string) => {
-      if (name && !touchedValues[name]) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
-        validateOnChange && _validate(values);
+      if (name && !localTouched.current[name]) {
+        setTouchedValues(state => {
+          const newTouchedValues = {
+            ...state,
+            [name]: true,
+          };
+
+          localTouched.current = newTouchedValues;
+
+          return newTouchedValues;
+        });
+        validateOnChange && validateValues(localValues.current);
       }
     },
-    [touchedValues, validateOnChange, _validate, values],
+    [validateOnChange, validateValues],
   );
 
   const handleSubmit = useCallback(
     (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
-      _validate(values, ({}, e) => {
-        setTouchedValues(
-          (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
-            const field = values[el] as any;
+      validateValues(localValues.current, ({}, e) => {
+        setTouchedValues(() => {
+          const newTouchedValues = (Object.keys(
+            localValues.current,
+          ) as (keyof T)[]).reduce((acc, el) => {
+            const field = localValues.current[el] as any;
 
             if (
               Array.isArray(field) &&
@@ -447,39 +532,60 @@ export const useForm = <
               ...acc,
               [el]: true,
             };
-          }, {}),
-        );
+          }, {});
+
+          localTouched.current = newTouchedValues;
+
+          return newTouchedValues;
+        });
+
         Object.keys({ ...e }).length === 0 &&
           onSubmit &&
-          onSubmit(values, meta, e);
-      });
+          onSubmit(localValues.current, localMeta.current, e);
+      })
+        .then()
+        .catch();
     },
-    [_validate, values, onSubmit, meta],
+    [validateValues, onSubmit],
   );
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
   const validateForm = useCallback(async () => {
-    const { count, errors, hasErrors } = await _validate(values);
+    const { count, errors, hasErrors } = await validateValues(
+      localValues.current,
+    );
 
     const keys = Object.keys(errors);
 
     keys.forEach(key => {
-      setTouchedValues(state => ({
-        ...state,
-        [key]: true,
-      }));
+      setTouchedValues(state => {
+        const newTouchedValues = {
+          ...state,
+          [key]: true,
+        };
+
+        localTouched.current = newTouchedValues;
+
+        return newTouchedValues;
+      });
     });
 
     return Promise.resolve({ count, errors, hasErrors });
-  }, [_validate, values]);
+  }, [validateValues]);
 
   const setMeta = useCallback(
     (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
-      changeMeta(state => ({
-        ...state,
-        [name]: typeof value === "function" ? (value as any)(state) : value,
-      }));
+      changeMeta(state => {
+        const newMeta = {
+          ...state,
+          [name]: typeof value === "function" ? (value as any)(state) : value,
+        };
+
+        localMeta.current = newMeta;
+
+        return newMeta;
+      });
     },
     [],
   );
@@ -545,6 +651,11 @@ export interface IFieldsHelper<T> {
   remove: (name: keyof SubType<T, Array<any>>, index: number) => void;
   append: <K extends keyof SubType<T, Array<any>>>(
     name: K,
+    value: TObjectPartial<TCheckArray<T[K]>>,
+  ) => void;
+  replace: <K extends keyof SubType<T, Array<any>>>(
+    name: K,
+    index: number,
     value: TObjectPartial<TCheckArray<T[K]>>,
   ) => void;
   setFieldValue: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(

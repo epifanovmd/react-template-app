@@ -67,7 +67,6 @@ export const useForm = <
 
   useEffect(() => {
     if (validateOnChange && isInit) {
-      console.log("erewret");
       validateValues(values).then().catch();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -374,15 +373,18 @@ export const useForm = <
     [values, fieldsHelper, touchedValues, errors],
   );
 
-  const handleClearForm = useCallback(() => {
-    const newValues = { ...initialValues };
+  const handleClearForm = useCallback(
+    (data: T | void) => {
+      const newValues = data ? { ...data } : { ...initialValues };
 
-    setValues(newValues);
-    setErrors({});
-    const newTouchedValues = {};
+      setValues(newValues);
+      setErrors({});
+      const newTouchedValues = {};
 
-    setTouchedValues(newTouchedValues);
-  }, [initialValues]);
+      setTouchedValues(newTouchedValues);
+    },
+    [initialValues],
+  );
 
   const setFieldValue = useCallback(
     (
@@ -446,6 +448,33 @@ export const useForm = <
     [touchedValues, validateOnChange, validateValues, values],
   );
 
+  const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
+
+  const validateForm = useCallback(async () => {
+    const { count, errors, hasErrors } = await validateValues(values);
+
+    const keys = Object.keys(errors);
+
+    keys.forEach(key => {
+      setTouchedValues(state => ({
+        ...state,
+        [key]: true,
+      }));
+    });
+
+    return Promise.resolve({ count, errors, hasErrors });
+  }, [validateValues, values]);
+
+  const setMeta = useCallback(
+    (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
+      changeMeta(state => ({
+        ...state,
+        [name]: typeof value === "function" ? (value as any)(state) : value,
+      }));
+    },
+    [],
+  );
+
   const handleSubmit = useCallback(
     (params?: any) => {
       if (!params?.withoutValidate) {
@@ -483,42 +512,71 @@ export const useForm = <
 
           Object.keys({ ...e }).length === 0 &&
             onSubmit &&
-            onSubmit(values, meta, e);
+            onSubmit(values, meta, {
+              dirty,
+              valid,
+              values,
+              meta,
+              touchedValues,
+              errors,
+              fieldNames,
+              onSetValues,
+              handleBlur,
+              setMeta,
+              setFieldValue,
+              setFieldBlur,
+              handleSubmit,
+              fieldsIterate,
+              fieldsHelper,
+              handleClearForm,
+              validateForm,
+            });
         })
           .then()
           .catch();
       } else {
-        onSubmit && onSubmit(values, meta, {});
+        onSubmit &&
+          onSubmit(values, meta, {
+            dirty,
+            valid,
+            values,
+            meta,
+            touchedValues,
+            errors,
+            fieldNames,
+            onSetValues,
+            handleBlur,
+            setMeta,
+            setFieldValue,
+            setFieldBlur,
+            handleSubmit,
+            fieldsIterate,
+            fieldsHelper,
+            handleClearForm,
+            validateForm,
+          });
       }
     },
-    [validateValues, values, onSubmit, meta],
-  );
-
-  const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
-
-  const validateForm = useCallback(async () => {
-    const { count, errors, hasErrors } = await validateValues(values);
-
-    const keys = Object.keys(errors);
-
-    keys.forEach(key => {
-      setTouchedValues(state => ({
-        ...state,
-        [key]: true,
-      }));
-    });
-
-    return Promise.resolve({ count, errors, hasErrors });
-  }, [validateValues, values]);
-
-  const setMeta = useCallback(
-    (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
-      changeMeta(state => ({
-        ...state,
-        [name]: typeof value === "function" ? (value as any)(state) : value,
-      }));
-    },
-    [],
+    [
+      validateValues,
+      values,
+      onSubmit,
+      meta,
+      dirty,
+      valid,
+      touchedValues,
+      errors,
+      fieldNames,
+      onSetValues,
+      handleBlur,
+      setMeta,
+      setFieldValue,
+      setFieldBlur,
+      fieldsIterate,
+      fieldsHelper,
+      handleClearForm,
+      validateForm,
+    ],
   );
 
   return {
@@ -563,11 +621,7 @@ interface IUseForm<
     meta: M,
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
-  onSubmit?: (
-    values: T,
-    meta: M,
-    errors: Partial<Record<keyof T | string, string>>,
-  ) => void;
+  onSubmit?: (values: T, meta: M, data: IForm<T, M>) => void;
   validate?: (values: T, meta: M) => Partial<Record<keyof T | string, string>>;
   validateSchema?: ObjectSchema<
     Shape<object | undefined, Partial<Record<keyof T, any>>>,
@@ -645,7 +699,7 @@ export interface IForm<
     }) => JSX.Element,
   ) => JSX.Element[];
   fieldsHelper: IFieldsHelper<T>;
-  handleClearForm: () => void;
+  handleClearForm: (values: T | void) => void;
   validateForm: () => Promise<{
     hasErrors: boolean;
     count: number;

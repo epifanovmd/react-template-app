@@ -1,7 +1,7 @@
 import { IForm } from "Common/hooks/useForm";
 import { Input } from "Components/controls/Input";
 import { ISelectItem, Select } from "Components/controls/select/select";
-import React, { FC } from "react";
+import React, { ChangeEvent, FC, useCallback } from "react";
 
 import EmailIcon from "@/icons/email.svg";
 
@@ -17,7 +17,6 @@ const genderItems = [
 export const InfoForm: FC<IProps> = ({
   values,
   errors,
-  handleChange,
   touchedValues,
   handleBlur,
   fieldNames,
@@ -26,6 +25,13 @@ export const InfoForm: FC<IProps> = ({
   const onChangeGender = (value: ISelectItem) => {
     setFieldValue("gender", value);
   };
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(event.target.name as any, event.target.value);
+    },
+    [setFieldValue],
+  );
 
   return (
     <>

@@ -12,7 +12,6 @@
   "plugins": [
     "@typescript-eslint",
     "react-hooks",
-    "simple-import-sort",
     "react"
   ],
   "parserOptions": {
@@ -23,7 +22,6 @@
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "simple-import-sort/sort": "error",
 
     //React
     "react/display-name": [0],
@@ -37,7 +35,7 @@
     "react/jsx-indent": [
       2,
       2,
-      { "checkAttributes": true, "indentLogicalExpressions": true }
+      { "checkAttributes": true, "indentLogicalExpressions": false }
     ],
     "react/jsx-indent-props": [2, 2],
     "react/jsx-key": [2],
@@ -92,7 +90,6 @@
     "jsx-quotes": "error",
     "key-spacing": "error",
     "keyword-spacing": ["error", { "after": true, "before": true }],
-    "new-cap": "error",
     "new-parens": "error",
     "no-array-constructor": "error",
     "no-bitwise": "error",

@@ -65,7 +65,7 @@ const validateSchemes = [
 ];
 
 export const Registration: FC = () => {
-  const [validateSchema, setValidateSchema] = useState<any>(validateSchemes[0]);
+  const [validateSchema, setValidateSchema] = useState(validateSchemes[0]);
   const [result, changeResult] = useState({});
 
   const onSubmit = useCallback((values, meta) => {
@@ -92,7 +92,9 @@ export const Registration: FC = () => {
   };
 
   const onNextStep = async () => {
-    const { hasErrors } = await validateForm();
+    const { hasErrors, errors } = await validateForm();
+
+    console.log("errors", errors);
 
     !hasErrors && onChangeStep(meta.step + 1);
   };
@@ -111,10 +113,17 @@ export const Registration: FC = () => {
         {meta.step === 1 && <InfoForm {...form} />}
 
         {meta.step === 2 && <JobForm {...form} />}
-        <form onSubmit={handleSubmit} />
 
         <Actions>
-          <ActionForm onClick={meta.step === 2 ? handleSubmit : onNextStep}>
+          <ActionForm
+            onClick={
+              meta.step === 2
+                ? () => {
+                    handleSubmit();
+                  }
+                : onNextStep
+            }
+          >
             {meta.step === 2 ? "Регистрация" : "Далее"}
           </ActionForm>
         </Actions>

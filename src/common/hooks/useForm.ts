@@ -7,7 +7,7 @@ export const useForm = <
 >(
   {
     initialValues,
-    initialMeta = {} as M,
+    initialMeta,
     onSubmit,
     onChange,
     validate,
@@ -18,9 +18,9 @@ export const useForm = <
   }: IUseForm<T, M>,
   watch?: (keyof T)[],
 ): IForm<T, M> => {
-  const [values, setValues] = React.useState<T>(initialValues);
+  const [values, setValues] = React.useState<T>({ ...initialValues });
   const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
-    initialMeta,
+    initialMeta || ({} as M),
   );
   const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
@@ -33,18 +33,20 @@ export const useForm = <
     setDirty(JSON.stringify(a) !== JSON.stringify(b));
   }, []);
 
+  const [isInit, setInit] = React.useState(false);
+
   useEffect(() => {
     if (enableReinitialize) {
       const newInitialValues = { ...initialValues };
 
       setValues(newInitialValues);
-      validateOnInit && _validate(newInitialValues);
+      validateOnChange && validateOnInit && validateValues(newInitialValues);
     }
     // eslint-disable-next-line
   }, [initialValues]);
 
   useEffect(() => {
-    if (enableReinitialize) {
+    if (enableReinitialize && initialMeta) {
       const newInitialMeta = { ...initialMeta };
 
       changeMeta(newInitialMeta);
@@ -52,20 +54,38 @@ export const useForm = <
     // eslint-disable-next-line
   }, [initialMeta]);
 
-  const _validate = useCallback(
+  useEffect(() => {
+    onChange && onChange(values, meta, errors);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values, errors, meta]);
+
+  useEffect(() => {
+    validateOnInit && validateValues(values);
+    setInit(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (validateOnChange && isInit) {
+      validateValues(values).then().catch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [validateSchema, validate]);
+
+  const validateValues = useCallback(
     async (
-      _values: T,
-      _finally?: (
+      validationValues: T,
+      afterValidate?: (
         _values: Partial<T>,
         errors: Partial<Record<keyof T | string, string>>,
       ) => void,
     ) => {
       let newErrors = {};
 
-      getDirty(_values, initialValues);
+      getDirty(validationValues, initialValues);
       if (validateSchema) {
         await validateSchema
-          .validate(_values, {
+          .validate(validationValues, {
             strict: true,
             abortEarly: false,
           })
@@ -78,11 +98,16 @@ export const useForm = <
                 delete e[key];
               });
 
-              return e;
+              return { ...e };
             });
-            _finally && _finally(_values, {});
+            afterValidate && afterValidate(validationValues, {});
           })
           .catch(err => {
+            if (err.sourceURL) {
+              throw new Error(
+                `ERROR in - column:${err.column}, line:${err.line}, sourceURL:${err.sourceURL}`,
+              );
+            }
             setErrors(e => {
               const inner = (err.inner || []) as {
                 path: keyof T;
@@ -122,21 +147,21 @@ export const useForm = <
               }
 
               newErrors = e;
-              _finally && _finally(_values, e);
+              afterValidate && afterValidate(validationValues, e);
 
               return e;
             });
           });
       } else {
         const e: Partial<Record<keyof T | string, string>> | null = validate
-          ? validate(_values, meta)
+          ? validate(validationValues, meta)
           : null;
 
         if (e) {
           newErrors = e;
         }
         setErrors(err => (e ? e : err));
-        _finally && _finally(_values, { ...(e as any) });
+        afterValidate && afterValidate(validationValues, { ...(e as any) });
       }
 
       const keys = Object.keys(newErrors);
@@ -147,25 +172,15 @@ export const useForm = <
         errors: newErrors,
       });
     },
-    [getDirty, initialValues, validateSchema, validate, meta],
+    [getDirty, initialValues, meta, validate, validateSchema],
   );
 
-  useEffect(() => {
-    onChange && onChange(values, meta, errors);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, errors]);
-
-  useEffect(() => {
-    validateOnInit && _validate(values);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onSetValues = useCallback(
-    (_values: T) => {
-      setValues(_values);
-      _validate(_values);
+    (newValues: T) => {
+      setValues(newValues);
+      validateValues(newValues).then().catch();
     },
-    [_validate],
+    [validateValues],
   );
 
   const getFields = useCallback(() => {
@@ -192,55 +207,67 @@ export const useForm = <
               ),
             };
 
-            validateOnChange && _validate(newState);
+            validateOnChange && validateValues(newState);
 
             return newState;
           }
 
           return state;
         });
+        setErrors(state => {
+          const newErrors = { ...state };
+
+          Object.keys(newErrors).forEach(key => {
+            if (key.includes(`[${index}]`)) {
+              delete newErrors[key];
+            }
+          });
+
+          return newErrors;
+        });
+        setTouchedValues(state => {
+          const newTouchedValues = { ...state };
+
+          Object.keys(newTouchedValues).forEach(key => {
+            if (key.includes(`[${index}]`)) {
+              delete newTouchedValues[key];
+            }
+          });
+
+          return newTouchedValues;
+        });
       },
-      append: <K extends keyof T>(name: K, value: T[K]) => {
+      append: <K extends keyof T>(
+        name: K,
+        value: TObjectPartial<TCheckArray<T[K]>>,
+      ) => {
         setValues(state => {
           const newState = {
             ...state,
-            [name]: [...(state[name] as any), ...(value as any)],
+            [name]: [...(state[name] as any), value],
           };
 
-          validateOnChange && _validate(newState);
+          validateOnChange && validateValues(newState);
 
           return newState;
         });
       },
-      handleChange: ({ target }: React.ChangeEvent<any>) => {
-        const name: keyof T = (target?.name || "").split("[")[0];
-        const index = ((target?.name.match("\\[[0-9]{1,2}\\]") || [])[0] || -1)
-          .split("]")[0]
-          .split("[")[1];
-        const key = (target?.name || "").split(".")[1];
-        const value = target?.value;
-
+      replace: <K extends keyof T>(
+        name: K,
+        index: number,
+        value: TObjectPartial<TCheckArray<T[K]>>,
+      ) => {
         setValues(state => {
-          state[name] = ((state[name] as any) || []).map(
-            (item: any, ind: number) =>
-              index && ind === +index
-                ? {
-                    ...item,
-                    [key]: value,
-                  }
-                : item,
-          );
-          let newValues = state;
+          const newState = {
+            ...state,
+            [name]: (state[name] as any).map((item: any, ind: number) =>
+              ind === index ? value : item,
+            ),
+          };
 
-          if ((watch && watch.some(item => item === name)) || !watch) {
-            newValues = {
-              ...state,
-            };
-          }
+          validateOnChange && validateValues(newState);
 
-          validateOnChange && _validate(newValues);
-
-          return newValues;
+          return newState;
         });
       },
       setFieldValue: <K extends keyof T, A extends T[K]>(
@@ -278,7 +305,7 @@ export const useForm = <
             };
           }
 
-          validateOnChange && _validate(newValues);
+          validateOnChange && validateValues(newValues);
 
           return newValues;
         });
@@ -286,11 +313,22 @@ export const useForm = <
           touch &&
           setTouchedValues(state => ({
             ...state,
-            [name]: true,
+            [`${name}[${index}].${key}`]: true,
+          }));
+      },
+      setFieldBlur: <K extends keyof T, A extends T[K]>(
+        name: K,
+        key: keyof TCheckArray<A>,
+        index: number,
+      ) => {
+        !touchedValues[name] &&
+          setTouchedValues(state => ({
+            ...state,
+            [`${name}[${index}].${key}`]: true,
           }));
       },
     }),
-    [validateOnChange, _validate, watch, touchedValues],
+    [touchedValues, validateOnChange, validateValues, watch],
   );
 
   const fieldsIterate = useCallback(
@@ -304,7 +342,7 @@ export const useForm = <
         fieldsHelper: typeof fieldsHelper;
         index: number;
         array: A[];
-      }) => void,
+      }) => JSX.Element,
     ) =>
       ((values[name] as any) || []).map(
         (value: A, index: number, array: A[]) => {
@@ -315,7 +353,7 @@ export const useForm = <
           };
 
           Object.keys(value).forEach(item => {
-            fieldNames[item as keyof A] = `${name}[${index}].${item}`;
+            fieldNames[item as keyof A] = item;
             touched[item as keyof A] =
               touchedValues[`${name}[${index}].${item}`];
             error[item as keyof A] = errors[`${name}[${index}].${item}`];
@@ -332,50 +370,20 @@ export const useForm = <
           });
         },
       ),
-    [fieldsHelper, values, touchedValues, errors],
+    [values, fieldsHelper, touchedValues, errors],
   );
 
-  const handleClearForm = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouchedValues({});
-  }, [initialValues]);
+  const handleClearForm = useCallback(
+    (data: T | void) => {
+      const newValues = data ? { ...data } : { ...initialValues };
 
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<any>) => {
-      const target = event?.target;
-      const value =
-        target?.type === "checkbox" || target?.type === "radio"
-          ? target?.checked
-          : target?.value;
-      const name = target?.name;
+      setValues(newValues);
+      setErrors({});
+      const newTouchedValues = {};
 
-      if (
-        (target?.type === "checkbox" || target?.type === "radio") &&
-        !touchedValues[name as keyof T]
-      ) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
-      }
-
-      setValues(state => {
-        state[name as keyof T] = value;
-        let newValues = state;
-
-        if ((watch && watch.some(item => item === name)) || !watch) {
-          newValues = {
-            ...state,
-          };
-        }
-
-        validateOnChange && _validate(newValues);
-
-        return newValues;
-      });
+      setTouchedValues(newTouchedValues);
     },
-    [touchedValues, watch, validateOnChange, _validate],
+    [initialValues],
   );
 
   const setFieldValue = useCallback(
@@ -397,7 +405,7 @@ export const useForm = <
           };
         }
 
-        validateOnChange && _validate(newValues);
+        validateOnChange && validateValues(newValues);
 
         return newValues;
       });
@@ -408,7 +416,7 @@ export const useForm = <
           [name]: true,
         }));
     },
-    [touchedValues, watch, validateOnChange, _validate],
+    [touchedValues, watch, validateOnChange, validateValues],
   );
 
   const handleBlur = useCallback(
@@ -421,10 +429,10 @@ export const useForm = <
           ...state,
           [name]: true,
         }));
-        validateOnChange && _validate(values);
+        validateOnChange && validateValues(values);
       }
     },
-    [touchedValues, validateOnChange, _validate, values],
+    [touchedValues, validateOnChange, validateValues, values],
   );
 
   const setFieldBlur = useCallback(
@@ -434,58 +442,16 @@ export const useForm = <
           ...state,
           [name]: true,
         }));
-        validateOnChange && _validate(values);
+        validateOnChange && validateValues(values);
       }
     },
-    [touchedValues, validateOnChange, _validate, values],
-  );
-
-  const handleSubmit = useCallback(
-    (event?: React.FormEvent<HTMLFormElement>) => {
-      event?.preventDefault();
-      _validate(values, ({}, e) => {
-        setTouchedValues(
-          (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
-            const field = values[el] as any;
-
-            if (
-              Array.isArray(field) &&
-              field[0] &&
-              typeof field[0] === "object" &&
-              !Array.isArray(field[0])
-            ) {
-              const obj: any = {};
-
-              field.forEach((val, ind) => {
-                Object.keys(val).forEach(key => {
-                  obj[`${el}[${ind}].${key}`] = true;
-                });
-              });
-
-              return {
-                ...acc,
-                ...obj,
-              };
-            }
-
-            return {
-              ...acc,
-              [el]: true,
-            };
-          }, {}),
-        );
-        Object.keys({ ...e }).length === 0 &&
-          onSubmit &&
-          onSubmit(values, meta, e);
-      });
-    },
-    [_validate, values, onSubmit, meta],
+    [touchedValues, validateOnChange, validateValues, values],
   );
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
   const validateForm = useCallback(async () => {
-    const { count, errors, hasErrors } = await _validate(values);
+    const { count, errors, hasErrors } = await validateValues(values);
 
     const keys = Object.keys(errors);
 
@@ -497,7 +463,7 @@ export const useForm = <
     });
 
     return Promise.resolve({ count, errors, hasErrors });
-  }, [_validate, values]);
+  }, [validateValues, values]);
 
   const setMeta = useCallback(
     (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
@@ -509,6 +475,110 @@ export const useForm = <
     [],
   );
 
+  const handleSubmit = useCallback(
+    (params?: any) => {
+      if (!params?.withoutValidate) {
+        validateValues(values, ({}, e) => {
+          setTouchedValues(() =>
+            (Object.keys(values) as (keyof T)[]).reduce((acc, el) => {
+              const field = values[el] as any;
+
+              if (
+                Array.isArray(field) &&
+                field[0] &&
+                typeof field[0] === "object" &&
+                !Array.isArray(field[0])
+              ) {
+                const obj: any = {};
+
+                field.forEach((val, ind) => {
+                  Object.keys(val).forEach(key => {
+                    obj[`${el}[${ind}].${key}`] = true;
+                  });
+                });
+
+                return {
+                  ...acc,
+                  ...obj,
+                };
+              }
+
+              return {
+                ...acc,
+                [el]: true,
+              };
+            }, {}),
+          );
+
+          Object.keys({ ...e }).length === 0 &&
+            onSubmit &&
+            onSubmit(values, meta, {
+              dirty,
+              valid,
+              values,
+              meta,
+              touchedValues,
+              errors,
+              fieldNames,
+              onSetValues,
+              handleBlur,
+              setMeta,
+              setFieldValue,
+              setFieldBlur,
+              handleSubmit,
+              fieldsIterate,
+              fieldsHelper,
+              handleClearForm,
+              validateForm,
+            });
+        })
+          .then()
+          .catch();
+      } else {
+        onSubmit &&
+          onSubmit(values, meta, {
+            dirty,
+            valid,
+            values,
+            meta,
+            touchedValues,
+            errors,
+            fieldNames,
+            onSetValues,
+            handleBlur,
+            setMeta,
+            setFieldValue,
+            setFieldBlur,
+            handleSubmit,
+            fieldsIterate,
+            fieldsHelper,
+            handleClearForm,
+            validateForm,
+          });
+      }
+    },
+    [
+      validateValues,
+      values,
+      onSubmit,
+      meta,
+      dirty,
+      valid,
+      touchedValues,
+      errors,
+      fieldNames,
+      onSetValues,
+      handleBlur,
+      setMeta,
+      setFieldValue,
+      setFieldBlur,
+      fieldsIterate,
+      fieldsHelper,
+      handleClearForm,
+      validateForm,
+    ],
+  );
+
   return {
     dirty,
     valid,
@@ -518,7 +588,6 @@ export const useForm = <
     errors,
     fieldNames,
     onSetValues,
-    handleChange,
     handleBlur,
     setMeta,
     setFieldValue,
@@ -532,6 +601,7 @@ export const useForm = <
 };
 
 type TCheckArray<T> = T extends any[] ? T[number] : T;
+type TObjectPartial<T> = T extends object ? Partial<T> : T;
 
 type SubType<Base, Condition> = Pick<
   Base,
@@ -551,13 +621,12 @@ interface IUseForm<
     meta: M,
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
-  onSubmit?: (
-    values: T,
-    meta: M,
-    errors: Partial<Record<keyof T | string, string>>,
-  ) => void;
+  onSubmit?: (values: T, meta: M, data: IForm<T, M>) => void;
   validate?: (values: T, meta: M) => Partial<Record<keyof T | string, string>>;
-  validateSchema?: ObjectSchema<Shape<object, Partial<Record<keyof T, any>>>>;
+  validateSchema?: ObjectSchema<
+    Shape<object | undefined, Partial<Record<keyof T, any>>>,
+    object
+  >;
   validateOnInit?: boolean;
   validateOnChange?: boolean;
   enableReinitialize?: boolean;
@@ -567,9 +636,13 @@ export interface IFieldsHelper<T> {
   remove: (name: keyof SubType<T, Array<any>>, index: number) => void;
   append: <K extends keyof SubType<T, Array<any>>>(
     name: K,
-    value: T[K],
+    value: TObjectPartial<TCheckArray<T[K]>>,
   ) => void;
-  handleChange: ({ target }: React.ChangeEvent<any>) => void;
+  replace: <K extends keyof SubType<T, Array<any>>>(
+    name: K,
+    index: number,
+    value: TObjectPartial<TCheckArray<T[K]>>,
+  ) => void;
   setFieldValue: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
     name: K,
     key: keyof TCheckArray<A>,
@@ -578,6 +651,11 @@ export interface IFieldsHelper<T> {
       | TCheckArray<A>[keyof TCheckArray<A>],
     index: number,
     touch?: boolean,
+  ) => void;
+  setFieldBlur: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
+    name: K,
+    key: keyof TCheckArray<A>,
+    index: number,
   ) => void;
 }
 
@@ -593,7 +671,6 @@ export interface IForm<
   errors: Partial<Record<keyof T | string, string>>;
   fieldNames: Record<keyof T, string>;
   onSetValues: (values: T) => void;
-  handleChange: (event: React.ChangeEvent<any>) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
   setMeta: (
     name: keyof M,
@@ -605,9 +682,7 @@ export interface IForm<
     touch?: boolean,
   ) => void;
   setFieldBlur: (name: keyof T | string) => void;
-  handleSubmit: () =>
-    | void
-    | ((event?: React.FormEvent<HTMLFormElement>) => void);
+  handleSubmit: (params: { withoutValidate: boolean } | void) => void;
   fieldsIterate: <
     A extends TCheckArray<T[B]>,
     B extends keyof SubType<T, Array<any>>
@@ -621,10 +696,10 @@ export interface IForm<
       fieldsHelper: IFieldsHelper<T>;
       index: number;
       array: A[];
-    }) => void,
-  ) => void;
+    }) => JSX.Element,
+  ) => JSX.Element[];
   fieldsHelper: IFieldsHelper<T>;
-  handleClearForm: () => void;
+  handleClearForm: (values: T | void) => void;
   validateForm: () => Promise<{
     hasErrors: boolean;
     count: number;

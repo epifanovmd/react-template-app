@@ -64,7 +64,7 @@
     "styled-components": "^5.2.1",
     "uuid": "^8.3.2",
     "webpack-bundle-analyzer": "^4.3.0",
-    "yup": "^0.28.3"
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
@@ -101,7 +101,7 @@
     "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-manifest-plugin": "^3.0.3",
     "@types/serialize-javascript": "^1.5.0",
-    "@types/yup": "^0.26.34",
+    "@types/yup": "^0.29.9",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "autoprefixer": "^10.2.1",

@@ -1,4 +1,4 @@
-import { LoadState } from "Common/loadState";
+import { LoadState } from "Common/helpers/loadState";
 import { IUsersState } from "Pages/users/IUsersState";
 
 export interface IReduxData<T> {

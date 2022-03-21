@@ -18,9 +18,6 @@ const Users: FC<IProps> = memo(() => {
         onSuccess: ({ result }) => {
           console.log("-------", result.data);
         },
-        onFailure: err => {
-          console.log("Error", err.error?.message);
-        },
       }),
     );
   }, [dispatch]);

@@ -10,7 +10,7 @@ import { Router } from "react-router-dom";
 import { createSimpleStore } from "Store/store";
 
 import App from "./App";
-import { initLocalization } from "./localization/localization";
+import { initLocalization } from "@/localization";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();

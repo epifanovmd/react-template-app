@@ -1,6 +1,6 @@
-import { Spinner } from "Components/controls/spinner/spinner";
 import React, { FC } from "react";
 import styled from "styled-components";
+import { Spinner } from "../spinner/spinner";
 
 interface IProps extends React.HTMLAttributes<HTMLDivElement> {
   loading?: boolean;

@@ -1,7 +1,7 @@
 import { combineReducers, Reducer } from "redux";
-import { usersSlice } from "Pages/users/reduxToolKit";
 
 import { IAppState } from "../IAppState";
+import { usersSlice } from "../../pages/users/reduxToolKit";
 
 export type Reducers<T> = {
   [P in keyof T]: Reducer<T[P]>;

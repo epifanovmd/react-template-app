@@ -1,13 +1,13 @@
 import loadable from "@loadable/component";
 import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
-import { IResponse } from "Api/baseFetch";
-import { Auth } from "Pages/auth/auth";
-import { fetchUsers } from "Pages/users/reduxToolKit";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Action } from "redux";
-import { IAppState } from "Store/IAppState";
-import { IExtraArguments } from "Store/store";
+import { IAppState } from "./store/IAppState";
+import { IExtraArguments } from "./store/store";
+import { fetchUsers } from "./pages/users/reduxToolKit";
+import { Auth } from "./pages/auth/auth";
+import { IResponse } from "./api";
 
 const Users = loadable(() => import("./pages/users/Users"));
 

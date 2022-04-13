@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { IUser } from "Api/dto/Users.g";
-import { LoadState } from "Common/helpers/loadState";
-import { RequestType } from "Common/helpers/requestType";
-import { usersInitialState } from "Pages/users/IUsersState";
-import { callApiToolkit } from "Store/common/apiActionsAsync";
-import { arrayToObjectFromKey } from "@/common";
+import { callApiToolkit } from "../../store/common/apiActionsAsync";
+import { IUser } from "../../api/dto/Users.g";
+import { arrayToObjectFromKey, LoadState, RequestType } from "../../common";
+import { usersInitialState } from "./IUsersState";
 
 export const fetchUsers = callApiToolkit<IUser[]>({
   url: "users",

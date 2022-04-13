@@ -4,10 +4,9 @@ import i18next from "i18next";
 import { Store } from "redux";
 import thunkMiddleware from "redux-thunk";
 
-import { initSocket } from "@/socket/initSocket";
-
 import { IAppState } from "./IAppState";
 import { createMainReduce } from "./reducers";
+import { initSocket } from "../socket/initSocket";
 
 export const socket: SocketIOClient.Socket = initSocket();
 export interface IExtraArguments {

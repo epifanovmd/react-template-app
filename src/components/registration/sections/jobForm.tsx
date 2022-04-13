@@ -1,11 +1,11 @@
-import { IForm } from "Common/hooks/useForm";
-import { Button } from "Components/controls/button/button";
-import { Input } from "Components/controls/Input";
-import { ISelectItem, Select } from "Components/controls/select/select";
 import React, { ChangeEvent, FC, Fragment, useCallback } from "react";
 import styled from "styled-components";
 
 import { IRegistrationForm, IRegistrationFormMeta } from "../registration";
+import { IForm } from "../../../common";
+import { ISelectItem, Select } from "../../controls/select/select";
+import { Input } from "../../controls/Input";
+import { Button } from "../../controls/button/button";
 
 interface IProps extends IForm<IRegistrationForm, IRegistrationFormMeta> {}
 

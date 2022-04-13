@@ -1,10 +1,9 @@
-import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
 import React, { ChangeEvent, FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-
-import { routes } from "@/routes";
+import { routes } from "../../../routes";
+import { TextEllipsisWithTooltip } from "../../common/textEllipsisWithTooltip";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();

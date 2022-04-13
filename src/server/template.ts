@@ -1,7 +1,7 @@
 import { ChunkExtractor } from "@loadable/server";
 import { HelmetData } from "react-helmet";
 import serialize from "serialize-javascript";
-import { IAppState } from "Store/IAppState";
+import { IAppState } from "../store/IAppState";
 
 export const template = (
   reactDom: string,

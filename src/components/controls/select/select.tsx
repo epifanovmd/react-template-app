@@ -1,5 +1,3 @@
-import { useOutsideClick } from "Common/hooks/useOutsideClick";
-import { DropdownItem } from "Components/controls/select/selectItem";
 import React, {
   CSSProperties,
   PropsWithChildren,
@@ -10,6 +8,8 @@ import React, {
 } from "react";
 import { CSSTransition } from "react-transition-group";
 import styled from "styled-components";
+import { useOutsideClick } from "../../../common";
+import { DropdownItem } from "./selectItem";
 
 export interface ISelectItem {
   key: string | number;

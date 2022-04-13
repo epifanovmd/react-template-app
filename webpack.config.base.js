@@ -14,12 +14,6 @@ const IS_SSR = process.env.SSR;
 
 const alias = {
   "react-dom": "@hot-loader/react-dom",
-  "@": path.resolve(__dirname, "src/"),
-  Store: path.resolve(__dirname, "src/store"),
-  Api: path.resolve(__dirname, "src/api"),
-  Pages: path.resolve(__dirname, "src/pages"),
-  Common: path.resolve(__dirname, "src/common"),
-  Components: path.resolve(__dirname, "src/components"),
 };
 
 const baseConfigClient = {

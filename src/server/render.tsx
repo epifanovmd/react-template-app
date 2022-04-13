@@ -1,7 +1,5 @@
 import { ChunkExtractor } from "@loadable/server";
 import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
-import { IResponse } from "Api/baseFetch";
-import { checkAuthorization } from "Common/checkAuthorization";
 import { Request, Response } from "express-serve-static-core";
 import i18next from "i18next";
 import path from "path";
@@ -13,15 +11,15 @@ import { Provider as ReduxProvider } from "react-redux";
 import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom";
 import { Action } from "redux";
-import { IAppState } from "Store/IAppState";
-import { createSimpleStore, IExtraArguments } from "Store/store";
 import { ServerStyleSheet } from "styled-components";
-
-import { initLocalization } from "@/localization/localization";
-import { routes } from "@/routes";
 
 import App from "../App";
 import { template } from "./template";
+import { createSimpleStore, IExtraArguments } from "../store/store";
+import { IAppState } from "../store/IAppState";
+import { routes } from "../routes";
+import { initLocalization } from "../localization";
+import { IResponse } from "../api";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];

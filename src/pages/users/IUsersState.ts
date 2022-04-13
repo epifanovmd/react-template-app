@@ -1,6 +1,6 @@
-import { LoadState } from "Common/helpers/loadState";
-import { IUser } from "src/api/dto/Users.g";
-import { IReduxData } from "Store/IAppState";
+import { IReduxData } from "../../store/IAppState";
+import { IUser } from "../../api/dto/Users.g";
+import { LoadState } from "../../common";
 
 export interface IUsersState {
   users: IReduxData<{ [key: string]: IUser | undefined }>;

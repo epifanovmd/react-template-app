@@ -1,7 +1,6 @@
-import { IEmpty } from "Common/IEmpty";
-import { RequestType } from "Common/requestType";
 import fetch from "isomorphic-unfetch";
 import querystring from "query-string";
+import { IEmpty, RequestType } from "../common";
 
 export interface IResponse<R> {
   data: R;

@@ -1,8 +1,8 @@
-import { TextEllipsisWithTooltip } from "Components/common/textEllipsisWithTooltip";
 import React, { FC } from "react";
 import styled from "styled-components";
 
 import { ITableProps } from "./table";
+import { TextEllipsisWithTooltip } from "../common/textEllipsisWithTooltip";
 
 export const TableRowCell: FC<ITableProps & { label?: string }> = props => {
   const { children, label, ...rest } = props;

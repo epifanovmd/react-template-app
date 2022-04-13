@@ -1,15 +1,15 @@
-import { useBooleanState } from "Common/hooks/useBooleanState";
-import { Button } from "Components/controls/button/button";
-import { Modal } from "Components/modal/modal";
 import React, { FC, memo, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { IUser } from "src/api/dto/Users.g";
 
 import { Table } from "../table/table";
 import { TableHeader } from "../table/tableHeader";
 import { TableRow } from "../table/tableRow";
 import { TableRowCell } from "../table/tableRowCell";
+import { IUser } from "../../api/dto/Users.g";
+import { useBooleanState } from "../../common";
+import { Modal } from "../modal/modal";
+import { Button } from "../controls/button/button";
 
 interface IProps {
   users: { [key: string]: IUser | undefined };

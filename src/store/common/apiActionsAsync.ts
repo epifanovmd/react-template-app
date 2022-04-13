@@ -5,7 +5,7 @@ import { ThunkDispatch } from "redux-thunk";
 import { IAppState } from "../IAppState";
 import { IExtraArguments } from "../store";
 import { baseFetch, IResponse } from "../../api";
-import { RequestType } from "@/common";
+import { RequestType } from "../../common";
 
 export interface IFetchParams<R, QP, P> {
   url:

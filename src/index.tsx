@@ -7,10 +7,10 @@ import { Cookies } from "react-cookie";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
-import { createSimpleStore } from "Store/store";
 
 import App from "./App";
-import { initLocalization } from "@/localization";
+import { createSimpleStore } from "./store/store";
+import { initLocalization } from "./localization";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();

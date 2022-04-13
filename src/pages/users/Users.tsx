@@ -1,11 +1,10 @@
-import { fetchUsers } from "Pages/users/reduxToolKit";
 import React, { FC, memo, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { IAppState } from "Store/IAppState";
-
-import { UserList } from "@/components/userList/userList";
+import { IAppState } from "../../store/IAppState";
+import { fetchUsers } from "./reduxToolKit";
+import { UserList } from "../../components/userList/userList";
 
 interface IProps {}
 

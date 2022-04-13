@@ -1,5 +1,5 @@
 import { IResponse } from "./baseFetch";
-import { RequestType } from "Common/helpers/requestType";
+import { RequestType } from "../common";
 
 interface IParams<P> {
   url: string;

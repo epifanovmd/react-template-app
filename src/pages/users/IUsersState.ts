@@ -1,18 +1,14 @@
-import { LoadState } from "Common/loadState";
-import { INormalizeData } from "Common/normalizer";
+import { LoadState } from "Common/helpers/loadState";
 import { IUser } from "src/api/dto/Users.g";
 import { IReduxData } from "Store/IAppState";
 
 export interface IUsersState {
-  users: IReduxData<INormalizeData<IUser, "id">>;
+  users: IReduxData<{ [key: string]: IUser | undefined }>;
 }
 
 export const usersInitialState: IUsersState = {
   users: {
-    data: {
-      keys: [],
-      values: {},
-    },
+    data: {},
     loadState: LoadState.needLoad,
   },
 };

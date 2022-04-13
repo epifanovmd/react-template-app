@@ -12,17 +12,14 @@ interface IProps {}
 const Users: FC<IProps> = memo(() => {
   const dispatch = useDispatch();
 
+  const onRefresh = React.useCallback(async () => {
+    const res = await dispatch(fetchUsers());
+
+    console.log("res", res);
+  }, [dispatch]);
+
   useEffect(() => {
-    dispatch(
-      fetchUsers({
-        onSuccess: ({ result }) => {
-          console.log("-------", result.data);
-        },
-        onFailure: err => {
-          console.log("Error", err.error?.message);
-        },
-      }),
-    );
+    onRefresh();
   }, [dispatch]);
 
   const { t } = useTranslation();

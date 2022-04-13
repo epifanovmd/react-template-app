@@ -1,5 +1,5 @@
-import { usersSlice } from "Pages/users/reduxToolKit";
 import { combineReducers, Reducer } from "redux";
+import { usersSlice } from "Pages/users/reduxToolKit";
 
 import { IAppState } from "../IAppState";
 

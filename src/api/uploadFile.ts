@@ -1,6 +1,5 @@
-import { RequestType } from "Common/requestType";
-
 import { IResponse } from "./baseFetch";
+import { RequestType } from "Common/helpers/requestType";
 
 interface IParams<P> {
   url: string;
@@ -9,7 +8,6 @@ interface IParams<P> {
   method?: RequestType;
   headers?: { [key: string]: string };
   filePropertyName?: string;
-  fileName?: string;
 }
 
 const PORT = process.env.PORT || 8080;
@@ -20,13 +18,12 @@ export const uploadFile = async <P, R>({
   method = RequestType.POST,
   headers = {},
   filePropertyName = "filePropertyName",
-  fileName,
 }: IParams<P>): Promise<IResponse<R>> => {
   const urlResult = `/api/${url}`;
 
   const formData = new FormData();
 
-  formData.append(filePropertyName, file, fileName);
+  formData.append(filePropertyName, file);
 
   try {
     const res = await fetch(`http://localhost:${PORT}${urlResult}`, {
@@ -51,7 +48,7 @@ export const uploadFile = async <P, R>({
       data: json as R,
       status,
     };
-  } catch (error) {
+  } catch (error: any) {
     return {
       data: {} as R,
       status: 900,

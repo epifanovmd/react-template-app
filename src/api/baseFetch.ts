@@ -12,11 +12,7 @@ export interface IResponse<R> {
 
 const PORT = process.env.PORT || 8080;
 
-const getUrl = (
-  url: string,
-  method: RequestType,
-  params: { [key in string]: any },
-) =>
+const getUrl = <P>(url: string, method: RequestType, params: P | IEmpty = {}) =>
   method !== RequestType.GET
     ? `/api/${url}`
     : `/api/${url}${
@@ -50,8 +46,11 @@ export const baseFetch = async <R, P>(
     const json = (await res?.json().catch(() => ({}))) || {};
     const status = res.status;
 
-    return { data: json as any, status };
-  } catch (error) {
+    return {
+      data: json as any,
+      status,
+    };
+  } catch (error: any) {
     return {
       data: {} as R,
       status: 500,

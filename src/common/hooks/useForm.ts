@@ -3,7 +3,7 @@ import { ObjectSchema, Shape } from "yup";
 
 export const useForm = <
   T extends object,
-  M extends { [key: string]: any } = { [key: string]: any }
+  M extends { [key: string]: any } = { [key: string]: any },
 >(
   {
     initialValues,
@@ -287,9 +287,11 @@ export const useForm = <
                     ...item,
                     [key]:
                       typeof value === "function"
-                        ? (value as (
-                            state: T,
-                          ) => TCheckArray<A>[keyof TCheckArray<A>])(state)
+                        ? (
+                            value as (
+                              state: T,
+                            ) => TCheckArray<A>[keyof TCheckArray<A>]
+                          )(state)
                         : value,
                   }
                 : item,
@@ -612,7 +614,7 @@ type SubType<Base, Condition> = Pick<
 
 interface IUseForm<
   T,
-  M extends { [key: string]: any } = { [key: string]: any }
+  M extends { [key: string]: any } = { [key: string]: any },
 > {
   initialValues: T;
   initialMeta?: M & { [key: string]: any };
@@ -661,7 +663,7 @@ export interface IFieldsHelper<T> {
 
 export interface IForm<
   T,
-  M extends { [key: string]: any } = { [key: string]: any }
+  M extends { [key: string]: any } = { [key: string]: any },
 > {
   dirty: boolean;
   valid: boolean;
@@ -685,7 +687,7 @@ export interface IForm<
   handleSubmit: (params: { withoutValidate: boolean } | void) => void;
   fieldsIterate: <
     A extends TCheckArray<T[B]>,
-    B extends keyof SubType<T, Array<any>>
+    B extends keyof SubType<T, Array<any>>,
   >(
     name: B,
     fields: (val: {

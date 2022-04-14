@@ -5,8 +5,6 @@ const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
-  .BundleAnalyzerPlugin;
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
@@ -239,15 +237,7 @@ const basePlugins = [
     emitWarning: true,
   }),
   new ForkTsCheckerWebpackPlugin({ async: true }),
-  ...(IS_PRODUCTION || IS_SSR
-    ? [
-        new MiniCssExtractPlugin({
-          filename: "styles/[contenthash].css",
-          chunkFilename: "styles/[contenthash].chunk.css",
-          ignoreOrder: false,
-        }),
-      ]
-    : []),
+  ...(IS_PRODUCTION || IS_SSR ? [new MiniCssExtractPlugin()] : []),
   ...(!IS_SSR
     ? [
         new HtmlWebpackPlugin({

@@ -1,6 +1,6 @@
 export const arrayToObjectFromKey = <
   A extends any[],
-  Key extends keyof A[number] = keyof A[number]
+  Key extends keyof A[number] = keyof A[number],
 >(
   array: A,
   key: Key,

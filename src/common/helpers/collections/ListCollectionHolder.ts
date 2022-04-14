@@ -1,5 +1,5 @@
 import debounce from "lodash/debounce";
-import { action, computed, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 export enum ListCollectionLoadState {
   initializing = "initializing",
@@ -25,9 +25,13 @@ type KeyExtractor<T> = (item: T) => string;
 
 interface IListEvents {
   performPullToRefresh(): void;
+
   performLoadMore(): void;
+
   performRefresh(): void;
+
   performReload(): void;
+
   performChangeVisibleRange(index: number, count: number): void;
 }
 
@@ -65,13 +69,84 @@ const optsDefault = {
 
 export class ListCollectionHolder<T> implements IListEvents {
   public error?: IDataHolderError;
-  @observable.ref public d: Collection<T> = [];
-  @observable private _state: ListCollectionLoadState =
+  public d: Collection<T> = [];
+  _isEndReached: boolean = false;
+  private _state: ListCollectionLoadState =
     ListCollectionLoadState.initializing;
-  @observable private _isEndReached: boolean = false;
-  @observable.ref private _visibleRange: Range = { index: 0, count: 0 };
-  @observable.ref private _opts!: IOptions<T>;
-  @observable.ref private _lastRefreshArgs?: RefreshArgs;
+  private _visibleRange: Range = { index: 0, count: 0 };
+  private _opts!: IOptions<T>;
+  private _lastRefreshArgs?: RefreshArgs;
+
+  constructor() {
+    makeAutoObservable(this, {}, { autoBind: true });
+  }
+
+  public get isLoadingAllowed(): boolean {
+    return (
+      this._state === ListCollectionLoadState.ready ||
+      this._state === ListCollectionLoadState.error
+    );
+  }
+
+  public get isLoading() {
+    return this._state === ListCollectionLoadState.loading;
+  }
+
+  public get isPullToRefreshAllowed(): boolean {
+    return (
+      this._state === ListCollectionLoadState.ready ||
+      this._state === ListCollectionLoadState.error
+    );
+  }
+
+  public get isPullToRefreshing() {
+    return this._state === ListCollectionLoadState.pullToRefreshing;
+  }
+
+  public get isLoadingMoreAllowed(): boolean {
+    return (
+      (this._state === ListCollectionLoadState.ready ||
+        this._state === ListCollectionLoadState.error) &&
+      !this._isEndReached
+    );
+  }
+
+  public get isLoadingMore() {
+    return this._state === ListCollectionLoadState.loadingMore;
+  }
+
+  public get isReady() {
+    return this._state === ListCollectionLoadState.ready;
+  }
+
+  public get isError() {
+    return this._state === ListCollectionLoadState.error;
+  }
+
+  public get isEmpty() {
+    return !this.d.length;
+  }
+
+  private get _refreshArgs(): RefreshArgs {
+    const visibleRange = this._visibleRange;
+    const page = this._opts.pageSize
+      ? {
+          offset: visibleRange.index,
+          pageSize: this._opts.pageSize! + visibleRange.count,
+        }
+      : undefined;
+
+    return { visibleRange: { ...visibleRange }, page };
+  }
+
+  private get _lastPageSize(): number {
+    return (this._opts.pageSize || 0) > 0 &&
+      this._lastRefreshArgs &&
+      this._lastRefreshArgs.page &&
+      this._lastRefreshArgs.page.pageSize > 0
+      ? this._lastRefreshArgs.page.pageSize
+      : 0;
+  }
 
   public initialize(opts: IOptions<T>): void {
     this._opts = {
@@ -86,14 +161,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     this._setState(ListCollectionLoadState.ready);
   }
 
-  /**
-   * Поместить данные в холдер. В зависимости от текущего состояния выполняется
-   * или замена или слияние существующих данных. Слияние данных выполняется по ключу,
-   * который возвращает keyExtractor.
-   * @param data
-   * @param opts
-   */
-  @action
   public updateData(data: Collection<T>, opts?: IUpdateOptions) {
     let merge = false;
 
@@ -123,7 +190,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     return this;
   }
 
-  @action
   public clear() {
     this.d = [];
     this.error = undefined;
@@ -133,7 +199,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     this._setState(ListCollectionLoadState.ready);
   }
 
-  @action
   public setError(error: IDataHolderError) {
     this.d = [];
     this.error = error;
@@ -142,9 +207,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     return this;
   }
 
-  /* loading */
-
-  @action
   public setLoading() {
     this.d = [];
     this._setState(ListCollectionLoadState.loading);
@@ -152,30 +214,12 @@ export class ListCollectionHolder<T> implements IListEvents {
     return this;
   }
 
-  @computed
-  public get isLoadingAllowed(): boolean {
-    return (
-      this._state === ListCollectionLoadState.ready ||
-      this._state === ListCollectionLoadState.error
-    );
-  }
-
-  @computed
-  public get isLoading() {
-    return this._state === ListCollectionLoadState.loading;
-  }
-
-  /* refreshing */
-
   public setRefreshing() {
     this._setState(ListCollectionLoadState.refreshing);
 
     return this;
   }
 
-  /* PullToRefresh */
-
-  @action
   public setPullToRefreshing() {
     this._isEndReached = false;
     this._setState(ListCollectionLoadState.pullToRefreshing);
@@ -183,56 +227,10 @@ export class ListCollectionHolder<T> implements IListEvents {
     return this;
   }
 
-  @computed
-  public get isPullToRefreshAllowed(): boolean {
-    return (
-      this._state === ListCollectionLoadState.ready ||
-      this._state === ListCollectionLoadState.error
-    );
-  }
-
-  @computed
-  public get isPullToRefreshing() {
-    return this._state === ListCollectionLoadState.pullToRefreshing;
-  }
-
-  /* loadingMore */
-
   public setLoadingMore() {
     this._setState(ListCollectionLoadState.loadingMore);
 
     return this;
-  }
-
-  @computed
-  public get isLoadingMoreAllowed(): boolean {
-    return (
-      (this._state === ListCollectionLoadState.ready ||
-        this._state === ListCollectionLoadState.error) &&
-      !this._isEndReached
-    );
-  }
-
-  @computed
-  public get isLoadingMore() {
-    return this._state === ListCollectionLoadState.loadingMore;
-  }
-
-  /* Ready */
-
-  @computed
-  public get isReady() {
-    return this._state === ListCollectionLoadState.ready;
-  }
-
-  @computed
-  public get isError() {
-    return this._state === ListCollectionLoadState.error;
-  }
-
-  @computed
-  public get isEmpty() {
-    return !this.d.length;
   }
 
   public keyExtractor = (item: T) => {
@@ -246,10 +244,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     return cachedKey;
   };
 
-  /**
-   * Выполнить догрузку данных в конец списка.
-   * Выставить флаг isLoadingMore для отображения индикатора загрузки в нижней части списка.
-   */
   public performLoadMore = (): void => {
     if (this.isLoadingMoreAllowed) {
       this.setLoadingMore();
@@ -257,10 +251,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     }
   };
 
-  /**
-   * Выполнить обновление данных списка жестом Pull-to-Refresh.
-   * Выставить флаг isPullToRefresh для отображения индикатора загрузки в верхней части списка.
-   */
   public performPullToRefresh = (): void => {
     if (this.isPullToRefreshAllowed) {
       this.setPullToRefreshing();
@@ -268,17 +258,11 @@ export class ListCollectionHolder<T> implements IListEvents {
     }
   };
 
-  // tslint:disable-next-line
-  @action
   public performChangeVisibleRange = (index: number, count: number): void => {
     this._visibleRange = { index, count };
     this._raiseOnFetchData().then();
   };
 
-  /**
-   * Обновить имеющиеся данные, если они есть, иначе это Reload.
-   * Флаг isLoading выставляется только, если данных в коллекции нет.
-   */
   public performRefresh() {
     if (this.isLoadingAllowed) {
       if (this.isEmpty) {
@@ -290,10 +274,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     }
   }
 
-  /**
-   * Выполнить полную перезагрузку данных.
-   * Выставить флаг isLoading для отображения центрального индикатора загрузки.
-   */
   public performReload() {
     if (this.isLoadingAllowed) {
       this.clear();
@@ -302,7 +282,6 @@ export class ListCollectionHolder<T> implements IListEvents {
     }
   }
 
-  @action
   private _setState(state: ListCollectionLoadState) {
     this._state = state;
   }
@@ -332,37 +311,10 @@ export class ListCollectionHolder<T> implements IListEvents {
     return result;
   }
 
-  @action
   private _raiseOnFetchData = async () => {
     this._lastRefreshArgs = this._refreshArgs;
     const args: RefreshArgs = { ...this._lastRefreshArgs };
 
     await this._opts.onFetchData(args);
   };
-
-  @computed
-  private get _refreshArgs(): RefreshArgs {
-    // Тут можно реализовать более оптимальную логику рассчета pageSize,
-    // например, добавлять pageSize только при выставленном isLoadingMore.
-
-    const visibleRange = this._visibleRange;
-    const page = this._opts.pageSize
-      ? {
-          offset: visibleRange.index,
-          pageSize: this._opts.pageSize! + visibleRange.count,
-        }
-      : undefined;
-
-    return { visibleRange: { ...visibleRange }, page };
-  }
-
-  @computed
-  private get _lastPageSize(): number {
-    return (this._opts.pageSize || 0) > 0 &&
-      this._lastRefreshArgs &&
-      this._lastRefreshArgs.page &&
-      this._lastRefreshArgs.page.pageSize > 0
-      ? this._lastRefreshArgs.page.pageSize
-      : 0;
-  }
 }

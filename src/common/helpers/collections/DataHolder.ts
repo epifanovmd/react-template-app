@@ -1,5 +1,5 @@
-import { action, observable } from "mobx";
 import isEmpty from "lodash/isEmpty";
+import { makeAutoObservable } from "mobx";
 
 enum DataHolderState {
   READY = 0,
@@ -17,18 +17,14 @@ export interface IDataHolderState {
   isLoading(): boolean;
   isError(): boolean;
   isReady(): boolean;
-  // isReady и поле d не пустое (исп. lodash/isEmpty)
   isFilled(): boolean;
-  // isReady, но поле d пустое (исп. lodash/isEmpty)
   isEmpty(): boolean;
 }
 
-// чтобы обновлялось во вью нужно обязательно как то задействовать указатель на state (например is<State>())
 export class DataHolder<T> implements IDataHolderState {
-  @observable.ref public d!: T;
-  @observable.ref public error?: IDataHolderError;
-
-  @observable private _state!: DataHolderState;
+  public d!: T;
+  public error?: IDataHolderError;
+  private _state!: DataHolderState;
 
   constructor(data?: T) {
     if (data) {
@@ -36,9 +32,9 @@ export class DataHolder<T> implements IDataHolderState {
     } else {
       this.setLoading();
     }
+    makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  @action
   public setLoading() {
     this.d = undefined as any;
     this._state = DataHolderState.LOADING;
@@ -46,7 +42,6 @@ export class DataHolder<T> implements IDataHolderState {
     return this;
   }
 
-  @action
   public setData(data: T) {
     this.d = data;
     this._state = DataHolderState.READY;
@@ -54,7 +49,6 @@ export class DataHolder<T> implements IDataHolderState {
     return this;
   }
 
-  @action
   public setError(error: IDataHolderError) {
     this.d = undefined as any;
     this.error = error;

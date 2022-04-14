@@ -2,6 +2,13 @@
   "name": "react-app",
   "version": "1.0.0",
   "description": "React Template App",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "npm": ">=8.5.0",
+    "yarn": ">=1.22.18",
+    "node": ">=16.14.2"
+  },
   "homepage": "https://epifanovmd.github.io/react-template-app",
   "author": {
     "name": "Epifanov Andrei",
@@ -144,7 +151,6 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-node-externals": "^1.7.2"
   },
-  "license": "ISC",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

@@ -1,4 +1,4 @@
-import React, { FC, memo, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Table, TableHeader, TableRow, TableRowCell } from "../table";
@@ -6,12 +6,13 @@ import { useBooleanState } from "../../common";
 import { IUser } from "../../pages/users/Users.types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
+import { observer } from "mobx-react-lite";
 
 interface IProps {
   users: IUser[];
 }
 
-export const UserList: FC<IProps> = memo(({ users }) => {
+export const UserList: FC<IProps> = observer(({ users }) => {
   const { t } = useTranslation();
 
   const [open, onOpen, onClose] = useBooleanState();

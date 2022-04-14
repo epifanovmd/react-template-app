@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, makeAutoObservable, observable } from "mobx";
 import { debounce } from "lodash";
 
 export enum CollectionLoadState {
@@ -44,6 +44,7 @@ export class CollectionHolder<T> {
       this.performChangeVisibleRange,
       200,
     );
+    makeAutoObservable(this, {}, { autoBind: true });
   }
 
   @action

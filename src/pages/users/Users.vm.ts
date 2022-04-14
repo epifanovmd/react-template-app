@@ -14,7 +14,7 @@ class UsersVM {
   }
 
   get list() {
-    return (this.holder.data || []).filter(
+    return (this.holder.d || []).filter(
       item =>
         item.name.includes(this.search || "") ||
         item.email.includes(this.search || "") ||

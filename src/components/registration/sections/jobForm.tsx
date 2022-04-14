@@ -3,9 +3,7 @@ import styled from "styled-components";
 
 import { IRegistrationForm, IRegistrationFormMeta } from "../registration";
 import { IForm } from "../../../common";
-import { ISelectItem, Select } from "../../controls/select/select";
-import { Input } from "../../controls/Input";
-import { Button } from "../../controls/button/button";
+import { ISelectItem, Select, Input, Button } from "../../ui";
 
 interface IProps extends IForm<IRegistrationForm, IRegistrationFormMeta> {}
 

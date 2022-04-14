@@ -1,6 +1,6 @@
 // tslint:disable
 declare interface Window {
-  REDUX_DATA: any;
+  __INITIAL_STATE__: { [key in string]: any };
 }
 
 declare let window: Window;

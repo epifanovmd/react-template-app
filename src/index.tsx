@@ -5,28 +5,23 @@ import { createBrowserHistory } from "history";
 import React, { Suspense } from "react";
 import { Cookies } from "react-cookie";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 
 import App from "./App";
-import { createSimpleStore } from "./store/store";
 import { initLocalization } from "./localization";
 
 const cookie = new Cookies();
 const history = createBrowserHistory();
 
 initLocalization({ initLang: cookie.get("i18next") }).finally();
-export const store = createSimpleStore(history, { ...window.REDUX_DATA });
 
 const renderApp = (Comp?: any) => {
   ReactDOM.hydrate(
-    <Provider store={store}>
-      <Suspense fallback={"Loading..."}>
-        <Router history={history}>
-          <Comp />
-        </Router>
-      </Suspense>
-    </Provider>,
+    <Suspense fallback={"Loading..."}>
+      <Router history={history}>
+        <Comp />
+      </Router>
+    </Suspense>,
     document.getElementById("root"),
   );
 };

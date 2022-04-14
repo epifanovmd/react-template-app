@@ -1,3 +1,2 @@
-export * from "./baseFetch";
-export * from "./uploadFile";
+export * from "./apiService";
 export * from "./types";

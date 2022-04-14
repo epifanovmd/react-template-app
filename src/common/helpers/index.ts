@@ -7,4 +7,6 @@ export * from "./loadState";
 export * from "./debounce";
 export * from "./componentProps";
 export * from "./assertNotNull";
+export * from "./getPageInitialData";
 export * from "./arrayToObjectFromKey";
+export * from "./dataHolder";

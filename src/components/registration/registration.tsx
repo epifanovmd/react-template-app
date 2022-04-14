@@ -1,11 +1,9 @@
 import React, { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 import { array, object, string } from "yup";
-import { ISelectItem } from "../controls/select/select";
+import { ISelectItem, Button } from "../ui";
 import { useForm } from "../../common";
-import { InfoForm } from "./sections/infoForm";
-import { JobForm } from "./sections/jobForm";
-import { Button } from "../controls/button/button";
+import { InfoForm, JobForm } from "./sections";
 
 export interface IRegistrationForm {
   firstName: string;

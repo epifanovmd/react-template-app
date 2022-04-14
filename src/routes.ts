@@ -1,38 +1,22 @@
 import loadable from "@loadable/component";
-import { AsyncThunkAction, ThunkDispatch } from "@reduxjs/toolkit";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
-import { Action } from "redux";
-import { IAppState } from "./store/IAppState";
-import { IExtraArguments } from "./store/store";
-import { fetchUsers } from "./pages/users/reduxToolKit";
-import { Auth } from "./pages/auth/auth";
-import { IResponse } from "./api";
+import { usersVM } from "./pages/users/Users.vm";
 
-const Users = loadable(() => import("./pages/users/Users"));
+const Users = loadable(() => import("./pages/users/Users.component"));
+const Auth = loadable(() => import("./pages/auth/Auth.component"));
 
 export enum Roles {
   User = "User",
   Admin = "Admin",
 }
 
-export interface IRoute {
+export interface IRoute<T extends string = string> {
   path: string;
-  pathName: string;
-  component:
-    | React.ComponentType<RouteComponentProps<any>>
-    | React.ComponentType<any>;
+  pathName: T;
+  component: any;
   exact: boolean;
-  getInitialData?: AsyncThunkAction<
-    IResponse<any>,
-    any,
-    {
-      dispatch: ThunkDispatch<IAppState, IExtraArguments, Action>;
-      state: IAppState;
-      extra: IExtraArguments;
-    }
-  >;
   roles?: (keyof typeof Roles)[];
+  getInitialData?: () => Promise<any>;
   Icon?: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
 }
 
@@ -51,11 +35,11 @@ export const getRoutsFromRole = (
       ),
   );
 
-export const routepaths = {
-  ROOT: "/",
-  USERS: "/users",
-  AUTH: "/auth",
-};
+export enum routepaths {
+  ROOT = "/",
+  USERS = "/users",
+  AUTH = "/auth",
+}
 
 export const routes: IRoute[] = [
   {
@@ -63,7 +47,7 @@ export const routes: IRoute[] = [
     pathName: "users",
     component: Users,
     exact: true,
-    getInitialData: fetchUsers(),
+    getInitialData: usersVM.onRefresh,
   },
   {
     path: routepaths.AUTH,

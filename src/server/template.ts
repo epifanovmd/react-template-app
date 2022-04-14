@@ -1,11 +1,10 @@
 import { ChunkExtractor } from "@loadable/server";
 import { HelmetData } from "react-helmet";
 import serialize from "serialize-javascript";
-import { IAppState } from "../store/IAppState";
 
 export const template = (
   reactDom: string,
-  reduxState: IAppState,
+  state: any,
   helmetData: HelmetData,
   extractor: ChunkExtractor,
   styles: string,
@@ -28,7 +27,7 @@ export const template = (
 <body>
 <div id="root">${reactDom}</div>
 <script>
-  window.REDUX_DATA = ${serialize(reduxState, { isJSON: true })}
+  window.__INITIAL_STATE__ = ${serialize(state, { isJSON: true })}
 </script>
 ${extractor.getScriptTags()}
 </body>

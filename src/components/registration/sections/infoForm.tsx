@@ -4,8 +4,7 @@ import EmailIcon from "../../../icons/email.svg";
 
 import { IRegistrationForm, IRegistrationFormMeta } from "../registration";
 import { IForm } from "../../../common";
-import { ISelectItem, Select } from "../../controls/select/select";
-import { Input } from "../../controls/Input";
+import { ISelectItem, Select, Input } from "../../ui";
 
 interface IProps extends IForm<IRegistrationForm, IRegistrationFormMeta> {}
 

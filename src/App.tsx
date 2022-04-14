@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";
 
 import { routes } from "./routes";
-import { Header } from "./components/layouts/header/header";
+import { Header } from "./components";
 
 const App = () => {
   const { i18n } = useTranslation();

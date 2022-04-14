@@ -25,8 +25,7 @@
     "lint": "eslint \"src/**/*{.ts,.tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*{.ts,.tsx}\"",
     "prettier:fix": "prettier --parser typescript --write src/**/*.{json,ts,tsx}",
-    "check-packages-updates": "yarn outdated",
-    "analizer": "webpack --profile --json > stats.json && webpack-bundle-analyzer stats.json"
+    "check-packages-updates": "yarn outdated"
   },
   "dependencies": {
     "@loadable/component": "^5.15.2",
@@ -79,9 +78,8 @@
     "@types/loadable__component": "^5.13.4",
     "@types/loadable__server": "^5.12.6",
     "@types/lodash": "^4.14.181",
-    "@types/luxon": "^1.25.0",
+    "@types/luxon": "^2.3.1",
     "@types/mini-css-extract-plugin": "^2.5.1",
-    "@types/react": "^17.0.0",
     "@types/react-cookies": "^0.1.0",
     "@types/react-dom": "^18.0.0",
     "@types/react-helmet": "^6.1.5",

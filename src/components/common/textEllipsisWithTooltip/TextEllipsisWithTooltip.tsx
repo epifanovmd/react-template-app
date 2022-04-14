@@ -1,6 +1,13 @@
 import Tooltip from "rc-tooltip";
 import { TooltipProps } from "rc-tooltip/lib/Tooltip";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 import { useWindowSize } from "../../../common";
 
@@ -23,7 +30,7 @@ export interface IProps
   dangerouslySetInnerHTML?: { __html: string };
 }
 
-export const TextEllipsisWithTooltip: FC<IProps> = ({
+export const TextEllipsisWithTooltip: FC<PropsWithChildren<IProps>> = ({
   className,
   placement = "top",
   text,

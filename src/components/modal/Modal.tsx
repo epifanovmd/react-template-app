@@ -33,6 +33,7 @@ interface IModalProps extends ICssTransitionProps {
   disablePortal?: boolean;
   open?: boolean;
   onClose?: () => void;
+  children?: any;
 }
 
 export const Modal: FC<IModalProps> = memo(

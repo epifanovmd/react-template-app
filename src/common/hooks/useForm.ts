@@ -29,7 +29,7 @@ export const useForm = <
   const [errors, setErrors] = React.useState<
     Partial<Record<keyof T | string, string>>
   >({});
-  const getDirty = useCallback((a, b) => {
+  const getDirty = useCallback((a: T, b: T) => {
     setDirty(JSON.stringify(a) !== JSON.stringify(b));
   }, []);
 

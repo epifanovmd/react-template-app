@@ -66,11 +66,14 @@ export const Registration: FC = () => {
   const [validateSchema, setValidateSchema] = useState(validateSchemes[0]);
   const [result, changeResult] = useState({});
 
-  const onSubmit = useCallback((values, meta) => {
-    console.log("values", values);
-    console.log("meta", meta);
-    changeResult({ values, meta });
-  }, []);
+  const onSubmit = useCallback(
+    (values: IRegistrationForm, meta: IRegistrationFormMeta) => {
+      console.log("values", values);
+      console.log("meta", meta);
+      changeResult({ values, meta });
+    },
+    [],
+  );
 
   const form = useForm(
     {

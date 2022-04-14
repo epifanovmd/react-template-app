@@ -91,15 +91,17 @@ export const Select = <T extends ISelectItem>({
   );
 
   const getActive = useCallback(
-    item =>
-      item &&
-      value &&
-      item.key !== undefined &&
-      item.key === (value as any).key,
+    (item: ISelectItem) =>
+      !!(
+        item &&
+        value &&
+        item.key !== undefined &&
+        item.key === (value as any).key
+      ),
     [value],
   );
 
-  const getValue = useCallback(item => item.label, []);
+  const getValue = useCallback((item: ISelectItem) => item.label, []);
 
   return (
     <Wrap ref={ref} style={wrapStyle}>

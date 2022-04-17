@@ -7,13 +7,12 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-const IS_SSR = process.env.SSR || false;
 
 const alias = {
   "react-dom": "@hot-loader/react-dom",
 };
 
-const loaders = {
+const loaders = IS_SSR => ({
   ts: {
     test: /\.tsx?$/,
     exclude: /node_modules/,
@@ -58,10 +57,7 @@ const loaders = {
   file: {
     test: /\.(pdf|jpg|png|gif|ico|json)$/,
     loader: "file-loader",
-    exclude: [
-      path.resolve(__dirname, "src/localization"),
-      path.resolve(__dirname, "node_modules"),
-    ],
+    exclude: [path.resolve(__dirname, "src/localization"), /node_modules/],
     options: {
       name() {
         return "files/[name].[hash:8].[ext]";
@@ -177,9 +173,9 @@ const loaders = {
       },
     ],
   },
-};
+});
 
-const plugins = [
+const plugins = IS_SSR => [
   new ESLintPlugin({
     cache: true,
     emitWarning: true,
@@ -196,7 +192,6 @@ const plugins = [
   new webpack.DefinePlugin({
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
-    IS_SSR: JSON.stringify(IS_SSR),
     "process.env.PORT": JSON.stringify(process.env.PORT),
   }),
 ];
@@ -205,8 +200,6 @@ module.exports = {
   loaders,
   plugins,
   alias,
-
   IS_DEVELOPMENT,
   IS_PRODUCTION,
-  IS_SSR,
 };

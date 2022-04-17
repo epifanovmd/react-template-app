@@ -8,21 +8,25 @@ import { routes } from "./routes";
 import { Header } from "./components";
 import { Container } from "./components/layouts/container";
 
-const App = () => (
-  <Container>
-    <Header />
-    <br />
-    <Switch>
-      {routes.map(route => (
-        <Route
-          {...route}
-          key={route.path}
-          // component={AuthorizationMiddleware(route.component)}
-          component={route.component}
-        />
-      ))}
-    </Switch>
-  </Container>
-);
+const App = () => {
+  const { i18n } = useTranslation();
+
+  return (
+    <Container key={i18n.language}>
+      <Header />
+      <br />
+      <Switch>
+        {routes.map(route => (
+          <Route
+            {...route}
+            key={route.path}
+            // component={AuthorizationMiddleware(route.component)}
+            component={route.component}
+          />
+        ))}
+      </Switch>
+    </Container>
+  );
+};
 
 export default App;

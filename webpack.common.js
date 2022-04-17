@@ -1,68 +1,19 @@
 const webpack = require("webpack");
 const path = require("path");
 const ESLintPlugin = require("eslint-webpack-plugin");
-const nodeExternals = require("webpack-node-externals");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
-const IS_SSR = process.env.SSR;
+const IS_SSR = process.env.SSR || false;
 
 const alias = {
   "react-dom": "@hot-loader/react-dom",
 };
 
-const baseConfigClient = {
-  name: "client",
-  target: "web",
-  entry: {
-    client: path.resolve(__dirname, "src/index.tsx"),
-  },
-  output: {
-    path: path.resolve(__dirname, "build"),
-    filename: IS_PRODUCTION ? "[contenthash].js" : "[name].js",
-    chunkFilename: IS_PRODUCTION ? "[contenthash].chunk.js" : "[name].chunk.js",
-    publicPath: "/",
-  },
-  node: {
-    fs: "empty",
-    net: "empty",
-  },
-  resolve: {
-    extensions: [".ts", ".tsx", ".js", ".scss"],
-    alias,
-  },
-  externals: "node_modules",
-};
-
-const baseConfigServer = {
-  name: "server",
-  target: "node",
-  entry: {
-    server: path.resolve(__dirname, "src/server/index.ts"),
-  },
-  output: {
-    filename: "server/[name].js",
-    path: path.resolve(__dirname, "build"),
-  },
-  node: {
-    fs: "empty",
-    net: "empty",
-  },
-  resolve: {
-    extensions: [".ts", ".tsx", ".js", ".scss"],
-    alias,
-  },
-  externals: [
-    nodeExternals({
-      whitelist: [/\.(?!(?:jsx?|json)$).{1,5}$/i],
-    }),
-  ],
-};
-
-const baseLoaders = {
+const loaders = {
   ts: {
     test: /\.tsx?$/,
     exclude: /node_modules/,
@@ -77,10 +28,7 @@ const baseLoaders = {
       },
       {
         loader: "ts-loader",
-        options: {
-          // IMPORTANT! use happyPackMode mode to speed-up compilation and reduce errors reported to webpack
-          happyPackMode: true,
-        },
+        options: { happyPackMode: true },
       },
     ],
   },
@@ -231,7 +179,7 @@ const baseLoaders = {
   },
 };
 
-const basePlugins = [
+const plugins = [
   new ESLintPlugin({
     cache: true,
     emitWarning: true,
@@ -246,7 +194,6 @@ const basePlugins = [
       ]
     : []),
   new webpack.DefinePlugin({
-    "process.env.SSR": JSON.stringify(process.env.SSR),
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
     IS_SSR: JSON.stringify(IS_SSR),
@@ -255,10 +202,10 @@ const basePlugins = [
 ];
 
 module.exports = {
-  baseConfigClient,
-  baseConfigServer,
-  baseLoaders,
-  basePlugins,
+  loaders,
+  plugins,
+  alias,
+
   IS_DEVELOPMENT,
   IS_PRODUCTION,
   IS_SSR,

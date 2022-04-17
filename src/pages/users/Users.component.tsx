@@ -21,7 +21,6 @@ const Users: FC<IProps> = observer(() => {
       <Helmet>
         <title>{t("users")}</title>
       </Helmet>
-      {console.log("list", list)}
       <UserList users={list} />
     </>
   );

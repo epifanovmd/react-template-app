@@ -36,9 +36,7 @@ export const UserList: FC<IProps> = observer(({ users }) => {
           <TableRowCell>{t("email")}</TableRowCell>
         </TableRow>
       </TableHeader>
-
       {list}
-
       <Modal open={open} onClose={onClose}>
         <Table>
           <TableHeader>
@@ -51,7 +49,6 @@ export const UserList: FC<IProps> = observer(({ users }) => {
           {list}
         </Table>
       </Modal>
-
       <Button onClick={onOpen}>Открыть модальное окно</Button>
     </Table>
   );

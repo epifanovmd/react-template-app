@@ -21,7 +21,11 @@
   },
   "rules": {
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/exhaustive-deps": [
+      "warn", {
+        "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+      }
+    ],
 
     //React
     "react/display-name": [0],
@@ -35,7 +39,7 @@
     "react/jsx-indent": [
       2,
       2,
-      { "checkAttributes": true, "indentLogicalExpressions": false }
+      { "checkAttributes": true, "indentLogicalExpressions": true }
     ],
     "react/jsx-indent-props": [2, 2],
     "react/jsx-key": [2],

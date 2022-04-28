@@ -18,7 +18,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
   const lang =
     req.cookies.i18next ||
-    (acceptLng && acceptLng.split(",")[1].split(";")[0]) ||
+    (acceptLng && acceptLng.split(",")[1]?.split(";")[0]) ||
     "en";
   const context = {};
 

@@ -29,7 +29,6 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".scss"],
-    alias,
   },
   externals: "node_modules",
 

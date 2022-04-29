@@ -1,9 +1,9 @@
 import "./assets/global.scss";
 
 import { loadableReady } from "@loadable/component";
-import React, { Suspense } from "react";
+import React from "react";
 import { Cookies } from "react-cookie";
-import ReactDOM from "react-dom";
+import { createRoot, hydrateRoot, Root } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
@@ -13,25 +13,36 @@ const cookie = new Cookies();
 
 initLocalization({ initLang: cookie.get("i18next") }).finally();
 
-const renderApp = (Comp?: any) => {
-  ReactDOM.hydrate(
-    <Suspense fallback={"Loading..."}>
-      <BrowserRouter>
-        <Comp />
-      </BrowserRouter>
-    </Suspense>,
-    document.getElementById("root"),
-  );
+const getApp = (Comp?: any) => (
+  <BrowserRouter>
+    <Comp />
+  </BrowserRouter>
+);
+
+const start = () => {
+  const container = document.getElementById("root")!;
+
+  if (IS_SSR && typeof window === "object") {
+    return hydrateRoot(container, getApp(App));
+  } else {
+    const root = createRoot(container);
+
+    root.render(getApp(App));
+
+    return root;
+  }
 };
 
+let updateApp: Root | null = null;
+
 loadableReady(() => {
-  renderApp(App);
+  updateApp = start();
 }).finally();
 
-if ((module as any).hot) {
+if ((module as any).hot && updateApp) {
   (module as any).hot.accept("./App", () => {
     const NewApp = require("./App").default;
 
-    renderApp(NewApp);
+    updateApp?.render(getApp(NewApp));
   });
 }

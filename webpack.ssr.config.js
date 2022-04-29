@@ -2,7 +2,6 @@ const webpack = require("webpack");
 const path = require("path");
 const nodeExternals = require("webpack-node-externals");
 const {
-  alias,
   loaders,
   plugins,
   IS_PRODUCTION,
@@ -34,7 +33,6 @@ module.exports = [
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".scss"],
-      alias,
     },
     externals: "node_modules",
 
@@ -95,7 +93,6 @@ module.exports = [
     },
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".scss"],
-      alias,
     },
     externals: [
       nodeExternals({

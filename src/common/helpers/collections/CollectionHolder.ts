@@ -35,10 +35,14 @@ export class CollectionHolder<T> {
   @observable private _lastDataLength: number = 0;
   private readonly _pageSize: number;
 
-  constructor(opts?: Options) {
+  constructor(data?: Collection<T>, opts?: Options) {
     const op = opts || {};
 
     this._pageSize = op.pageSize || 10000;
+
+    if (data) {
+      this.setData(data);
+    }
 
     this.performChangeVisibleRange = debounce(
       this.performChangeVisibleRange,

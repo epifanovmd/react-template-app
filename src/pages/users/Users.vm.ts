@@ -1,10 +1,10 @@
 import { makeAutoObservable } from "mobx";
-import { DataHolder, getPageInitialData } from "../../common";
+import { CollectionHolder, DataHolder, getPageInitialData } from "../../common";
 import { IUser } from "./Users.types";
 import { usersService } from "./Users.service";
 
 class UsersVM {
-  private holder: DataHolder<IUser[]> = new DataHolder(
+  private holder: CollectionHolder<IUser> = new CollectionHolder(
     getPageInitialData("users") || [],
   );
   private search: string = "";
@@ -25,11 +25,11 @@ class UsersVM {
   }
 
   get loading() {
-    return this.holder.isLoading();
+    return this.holder.isLoading;
   }
 
   get loaded() {
-    return this.holder.isReady();
+    return this.holder.isReady;
   }
 
   onSearch(search: string) {
@@ -37,7 +37,7 @@ class UsersVM {
   }
 
   async onRefresh() {
-    this.holder.setLoading();
+    this.holder.setPullToRefreshing();
     const res = await usersService.getUsers();
 
     if (res.error) {

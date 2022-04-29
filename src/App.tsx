@@ -1,6 +1,6 @@
 import "rc-tooltip/assets/bootstrap.css";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch } from "react-router-dom";
 

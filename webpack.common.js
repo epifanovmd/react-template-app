@@ -8,10 +8,6 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-const alias = {
-  "react-dom": "@hot-loader/react-dom",
-};
-
 const loaders = IS_SSR => ({
   ts: {
     test: /\.tsx?$/,
@@ -192,6 +188,7 @@ const plugins = IS_SSR => [
   new webpack.DefinePlugin({
     IS_DEVELOPMENT: JSON.stringify(IS_DEVELOPMENT),
     IS_PRODUCTION: JSON.stringify(IS_PRODUCTION),
+    IS_SSR: JSON.stringify(IS_SSR),
     "process.env.PORT": JSON.stringify(process.env.PORT),
   }),
 ];
@@ -199,7 +196,6 @@ const plugins = IS_SSR => [
 module.exports = {
   loaders,
   plugins,
-  alias,
   IS_DEVELOPMENT,
   IS_PRODUCTION,
 };

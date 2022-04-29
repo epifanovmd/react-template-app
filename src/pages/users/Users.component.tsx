@@ -11,7 +11,7 @@ const Users: FC<IProps> = observer(() => {
   const { loading, list, onRefresh, onSearch } = usersVM;
 
   useEffect(() => {
-    onRefresh();
+    typeof window === "undefined" && onRefresh().then();
   }, []);
 
   const { t } = useTranslation();

@@ -2,7 +2,7 @@ import "rc-tooltip/assets/bootstrap.css";
 
 import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import { routes } from "./routes";
 import { Header } from "./components";
@@ -15,16 +15,13 @@ const App = () => {
     <Container key={i18n.language}>
       <Header />
       <br />
-      <Switch>
-        {routes.map(route => (
-          <Route
-            {...route}
-            key={route.path}
-            // component={AuthorizationMiddleware(route.component)}
-            component={route.component}
-          />
-        ))}
-      </Switch>
+      <Routes>
+        {routes.map(route => {
+          const Component = route.component;
+
+          return <Route {...route} key={route.path} element={<Component />} />;
+        })}
+      </Routes>
     </Container>
   );
 };

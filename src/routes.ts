@@ -17,7 +17,6 @@ export interface IRoute<T extends string = string> {
   exact: boolean;
   roles?: (keyof typeof Roles)[];
   getInitialData?: () => Promise<any>;
-  Icon?: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
 }
 
 export const getRoutsFromRole = (

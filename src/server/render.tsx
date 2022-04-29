@@ -6,7 +6,8 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
 import { I18nextProvider } from "react-i18next";
-import { matchPath, StaticRouter } from "react-router";
+import { matchPath } from "react-router";
+import { StaticRouter } from "react-router-dom/server";
 import { ServerStyleSheet } from "styled-components";
 
 import App from "../App";
@@ -20,7 +21,6 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     req.cookies.i18next ||
     (acceptLng && acceptLng.split(",")[1]?.split(";")[0]) ||
     "en";
-  const context = {};
 
   const webStats = path.resolve("./build/loadable-stats.json");
   const webExtractor = new ChunkExtractor({
@@ -52,7 +52,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
   ]).then(() => {
     const jsx = webExtractor.collectChunks(
       <I18nextProvider i18n={i18next}>
-        <StaticRouter context={context} location={location}>
+        <StaticRouter location={location}>
           <App />
         </StaticRouter>
       </I18nextProvider>,

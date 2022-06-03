@@ -14,6 +14,7 @@ import App from "../App";
 import { template } from "./template";
 import { routes } from "../routes";
 import { initLocalization } from "../localization";
+import { enableStaticRendering } from "mobx-react-lite";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
@@ -27,6 +28,8 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     statsFile: webStats,
     entrypoints: ["client"],
   });
+
+  enableStaticRendering(true);
 
   const sheet = new ServerStyleSheet();
   const location = req.url;

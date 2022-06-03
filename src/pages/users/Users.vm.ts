@@ -1,16 +1,40 @@
 import { makeAutoObservable } from "mobx";
-import { CollectionHolder, DataHolder, getPageInitialData } from "../../common";
-import { IUser } from "./Users.types";
+import { CollectionHolder, getPageInitialData } from "../../common";
+import { IUser, IUserResponse } from "./Users.types";
 import { usersService } from "./Users.service";
+import { IProvider } from "./NameProvider";
+import { iocDecorator } from "../../ioc";
 
-class UsersVM {
+export const IUsersVM = iocDecorator<IUsersVM>();
+
+export interface IUsersVM {
+  readonly loading: boolean;
+  readonly list: IUser[];
+  readonly error: any;
+  readonly name: any;
+
+  onRefresh(): Promise<IUserResponse>;
+
+  onSearch(search: string): void;
+}
+
+@IUsersVM()
+class UsersVM implements IUsersVM {
   private holder: CollectionHolder<IUser> = new CollectionHolder(
     getPageInitialData("users") || [],
   );
   private search: string = "";
 
-  constructor() {
+  constructor(@IProvider() public nameProvider?: IProvider) {
     makeAutoObservable(this, {}, { autoBind: true });
+  }
+
+  get error() {
+    return this.holder.error;
+  }
+
+  get name() {
+    return this.nameProvider?.provide();
   }
 
   get list() {
@@ -51,5 +75,3 @@ class UsersVM {
     return [];
   }
 }
-
-export const usersVM = new UsersVM();

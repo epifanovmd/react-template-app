@@ -215,7 +215,7 @@
     "no-octal-escape": "error",
     "no-param-reassign": "error",
     "no-proto": "error",
-    "no-redeclare": "error",
+//    "no-redeclare": "error",
     "no-return-assign": "error",
     "no-return-await": "error",
     "no-self-assign": ["error", { "props": true }],

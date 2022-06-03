@@ -2,13 +2,13 @@ import React, { FC, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { UserList } from "../../components";
-import { usersVM } from "./Users.vm";
 import { observer } from "mobx-react-lite";
+import { IUsersVM } from "./Users.vm";
 
 interface IProps {}
 
 const Users: FC<IProps> = observer(() => {
-  const { loading, list, onRefresh, onSearch } = usersVM;
+  const { loading, list, onRefresh, name } = IUsersVM.useInject();
 
   useEffect(() => {
     onRefresh().then();
@@ -21,6 +21,7 @@ const Users: FC<IProps> = observer(() => {
       <Helmet>
         <title>{t("users")}</title>
       </Helmet>
+      <div>{name}</div>
       <UserList users={list} />
     </>
   );

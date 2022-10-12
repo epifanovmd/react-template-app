@@ -1,0 +1,14 @@
+ARG NODE_VERSION=16.14.2
+
+FROM node:${NODE_VERSION}
+
+WORKDIR .
+COPY . ./react-app
+
+WORKDIR ./react-app
+
+RUN yarn
+RUN yarn build:prod:ssr
+
+EXPOSE 8180
+CMD ["npm", "run", "start"]

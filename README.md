@@ -1,4 +1,4 @@
-# React Boilerplate [![Build Status](https://travis-ci.org/epifanovmd/react-template-app.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+# React Boilerplate
 
 React Redux Server Side Rendering Application
 
@@ -29,6 +29,30 @@ $ yarn
 ```sh
 $ yarn prod:ssr
 ```
+```sh
+Application listening on: http://localhost:8080
+```
+
+### Start app in docker container (without Server Side Rendering)
+```sh
+$ docker build -t lending:latest .
+$ [[ $(docker ps -f name=lending_container -q -a) != '' ]] && docker rm --force $(docker ps -f name=lending_container -q -a)
+$ docker run -u root -d --restart=always -p 8080:80 --name lending_container lending:latest
+$ docker image prune -a --force
+```
+```sh
+Application listening on: http://localhost:8080
+```
+
+### Start app in docker container (with Server Side Rendering)
+```sh
+$ docker build -f DockerfileSSR -t lending_ssr:latest .
+$ [[ $(docker ps -f name=lending_ssr_container -q -a) != '' ]] && docker rm --force $(docker ps -f name=lending_ssr_container -q -a)
+$ docker run -u root -d --restart=always --network server-net -p 8083:8180 --name lending_ssr_container lending_ssr:latest
+$ docker image prune -a --force
+```
+
+
 ```sh
 Application listening on: http://localhost:8080
 ```

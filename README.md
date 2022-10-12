@@ -20,7 +20,6 @@ React Redux Server Side Rendering Application
 ### Installation
 ```sh
 $ git clone https://github.com/epifanovmd/react-template-app.git
-$ git checkout ssr
 $ cd react-template-app
 $ yarn
 ```

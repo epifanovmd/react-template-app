@@ -37,7 +37,7 @@ Application listening on: http://localhost:8080
 ```sh
 $ docker build -t lending:latest .
 $ [[ $(docker ps -f name=lending_container -q -a) != '' ]] && docker rm --force $(docker ps -f name=lending_container -q -a)
-$ docker run -u root -d --restart=always -p 8080:80 --name lending_container lending:latest
+$ docker run -u root -d --restart=always --network server-net -p 8080:80 --name lending_container lending:latest
 $ docker image prune -a --force
 ```
 ```sh

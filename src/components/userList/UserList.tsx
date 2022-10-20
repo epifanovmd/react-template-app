@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 
 import { Table, TableHeader, TableRow, TableRowCell } from "../table";
 import { useBooleanState } from "../../common";
-import { IUser } from "../../pages/users/Users.types";
 import { Modal } from "../modal";
 import { Button } from "../ui";
 import { observer } from "mobx-react-lite";
+import { IUser } from "../../service/users";
 
 interface IProps {
   users: IUser[];

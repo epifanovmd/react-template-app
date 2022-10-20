@@ -3,7 +3,7 @@ import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { UserList } from "../../components";
 import { observer } from "mobx-react-lite";
-import { IUsersVM } from "./Users.vm";
+import { IUsersVM } from "./Users.types";
 
 interface IProps {}
 

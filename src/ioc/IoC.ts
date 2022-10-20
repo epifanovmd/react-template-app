@@ -21,8 +21,10 @@ const { lazyInject } = getDecorators(iocContainer);
 
 const instance: { [key: string]: any } = {};
 
-function iocDecorator<TInterface>(): IIoCInterface<TInterface> {
-  const _name = shortid();
+function iocDecorator<TInterface>(name?: string): IIoCInterface<TInterface> {
+  const _name = name || shortid();
+
+  console.log("_name", _name);
   const tid = Symbol.for(_name) as any;
 
   function iocDecoratorFactory() {

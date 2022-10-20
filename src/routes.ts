@@ -1,5 +1,5 @@
 import loadable from "@loadable/component";
-import { IUsersVM } from "./pages/users/Users.vm";
+import { IUsersVM } from "./pages/users/Users.types";
 
 const Users = loadable(() => import("./pages/users/Users.component"));
 const Auth = loadable(() => import("./pages/auth/Auth.component"));
@@ -45,7 +45,7 @@ export const routes: IRoute[] = [
     pathName: "users",
     component: Users,
     exact: true,
-    getInitialData: IUsersVM.getInstance().onRefresh,
+    // getInitialData: IUsersVM.getInstance().onRefresh,
   },
   {
     path: routepaths.AUTH,

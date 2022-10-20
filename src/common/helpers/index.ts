@@ -5,7 +5,6 @@ export * from "./customMemo";
 export * from "./checkAuthorization";
 export * from "./loadState";
 export * from "./debounce";
-export * from "./collections";
 export * from "./componentProps";
 export * from "./assertNotNull";
 export * from "./getPageInitialData";

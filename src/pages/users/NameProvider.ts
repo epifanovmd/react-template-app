@@ -1,6 +1,6 @@
 import { iocDecorator } from "../../ioc";
 
-export const IProvider = iocDecorator<IProvider>();
+export const IProvider = iocDecorator<IProvider>("IProvider");
 
 export interface IProvider {
   provide(): string;

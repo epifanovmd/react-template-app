@@ -94,14 +94,19 @@ module.exports = [
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".scss"],
     },
-    externals: [
-      nodeExternals({
-        whitelist: [/\.(?!(?:jsx?|json)$).{1,5}$/i],
-      }),
-    ],
+    externals: "node_modules",
+    // externals: [
+    //   nodeExternals({
+    //     whitelist: [/\.(?!(?:jsx?|json)$).{1,5}$/i],
+    //   }),
+    // ],
 
     module: {
       rules: [
+        {
+          test: /.node$/,
+          loader: "node-loader",
+        },
         loaders(true).ts,
         loaders(true).scss,
         loaders(true).less,

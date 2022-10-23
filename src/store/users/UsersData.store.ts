@@ -1,16 +1,19 @@
 import { makeAutoObservable } from "mobx";
 import { getPageInitialData } from "../../common";
-import { IUsersDataStore } from "./UsersData.types";
-import { IUser, IUsersService } from "../../service";
+
+import { IUser, IUsersService, UsersService } from "../../service";
 import { CollectionHolder } from "../common";
+import { iocDecorator } from "../../ioc";
+
+export const IUsersDataStore = iocDecorator<UsersDataStore>();
 
 @IUsersDataStore()
-export class UsersDataStore implements IUsersDataStore {
+export class UsersDataStore {
   public holder: CollectionHolder<IUser> = new CollectionHolder(
     getPageInitialData("users") || [],
   );
 
-  constructor(@IUsersService() private _usersService: IUsersService) {
+  constructor(@IUsersService() private _usersService: UsersService) {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 

@@ -1,16 +1,14 @@
 import { makeAutoObservable } from "mobx";
-import { IProvider } from "./NameProvider";
-import { IUsersVM } from "./Users.types";
-import { IUsersDataStore } from "../../store";
+import { IUsersDataStore, UsersDataStore } from "../../store";
+import { iocDecorator } from "../../ioc";
+
+export const IUsersVM = iocDecorator<UsersVM>();
 
 @IUsersVM()
-class UsersVM implements IUsersVM {
+class UsersVM {
   private search: string = "";
 
-  constructor(
-    @IProvider() public nameProvider: IProvider,
-    @IUsersDataStore() private _usersDataStore: IUsersDataStore,
-  ) {
+  constructor(@IUsersDataStore() private _usersDataStore: UsersDataStore) {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
@@ -19,7 +17,7 @@ class UsersVM implements IUsersVM {
   }
 
   get name() {
-    return this.nameProvider?.provide();
+    return "123";
   }
 
   get list() {
@@ -46,6 +44,6 @@ class UsersVM implements IUsersVM {
   }
 
   onRefresh() {
-    return this._usersDataStore.onRefresh({});
+    return this._usersDataStore.onRefresh();
   }
 }

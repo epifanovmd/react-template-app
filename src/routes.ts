@@ -1,5 +1,4 @@
 import loadable from "@loadable/component";
-import { IUsersVM } from "./pages/users/Users.types";
 
 const Users = loadable(() => import("./pages/users/Users.component"));
 const Auth = loadable(() => import("./pages/auth/Auth.component"));

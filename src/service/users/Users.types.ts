@@ -1,6 +1,3 @@
-import { iocDecorator } from "../../ioc";
-import { ApiResponse } from "../../api";
-
 export interface IUser {
   id: number;
   name: string;
@@ -11,9 +8,3 @@ export interface IUser {
 }
 
 export type IUserResponse = IUser[];
-
-export interface IUsersService {
-  getUsers(): Promise<ApiResponse<IUserResponse>>;
-}
-
-export const IUsersService = iocDecorator<IUsersService>("IUsersService");

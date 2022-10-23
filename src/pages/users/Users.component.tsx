@@ -3,11 +3,10 @@ import Helmet from "react-helmet";
 import { useTranslation } from "react-i18next";
 import { UserList } from "../../components";
 import { observer } from "mobx-react-lite";
-import { IUsersVM } from "./Users.types";
+import { IUsersVM } from "./Users.vm";
+import { IUsersProps } from "./Users.types";
 
-interface IProps {}
-
-const Users: FC<IProps> = observer(() => {
+const Users: FC<IUsersProps> = observer(() => {
   const { loading, list, onRefresh, name } = IUsersVM.useInject();
 
   useEffect(() => {

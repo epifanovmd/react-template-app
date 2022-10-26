@@ -10,7 +10,11 @@ import React from "react";
 
 interface IIoCInterface<T> {
   readonly Tid: unique symbol;
-  (): (target: any, targetKey?: string, index?: number | undefined) => void;
+  (options?: { inSingleton?: boolean }): (
+    target: any,
+    targetKey?: string,
+    index?: number | undefined,
+  ) => void;
   useInject(): T;
   getInstance(): T;
 }
@@ -21,12 +25,11 @@ const { lazyInject } = getDecorators(iocContainer);
 
 const instance: { [key: string]: any } = {};
 
-function iocDecorator<TInterface>(name?: string): IIoCInterface<TInterface> {
-  const _name = name || shortid();
+function iocDecorator<TInterface>(): IIoCInterface<TInterface> {
+  const _name = shortid();
+  const tid = Symbol(_name) as any;
 
-  const tid = Symbol.for(_name) as any;
-
-  function iocDecoratorFactory() {
+  function iocDecoratorFactory(options?: { inSingleton?: boolean }) {
     return function iocDecorator(
       target: any,
       targetKey?: string,
@@ -41,7 +44,11 @@ function iocDecorator<TInterface>(name?: string): IIoCInterface<TInterface> {
       } else {
         // При использовании на классе
         Injectable()(target);
-        iocContainer.bind<TInterface>(tid).to(target);
+        if (options?.inSingleton) {
+          iocContainer.bind<TInterface>(tid).to(target).inSingletonScope();
+        } else {
+          iocContainer.bind<TInterface>(tid).to(target);
+        }
         instance[tid] = iocContainer.get<TInterface>(tid);
       }
     };

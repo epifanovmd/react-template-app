@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { stringify } from "query-string";
 
 export interface ApiResponse<R> {
   data?: R;
@@ -54,11 +55,14 @@ export class ApiService {
     params?: P,
     config?: ApiRequestConfig,
   ) {
-    const response = await this.instance!.get<ApiResponse<R>>(endpoint, {
-      ...config,
-      ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
-      params,
-    });
+    const query = params && stringify(params);
+    const response = await this.instance!.get<ApiResponse<R>>(
+      endpoint + query ? `?${query}` : "",
+      {
+        ...config,
+        ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
+      },
+    );
 
     return response.data;
   }
@@ -70,9 +74,7 @@ export class ApiService {
   ) {
     const response = await this.instance!.post<ApiResponse<R>>(
       endpoint,
-      {
-        ...params,
-      },
+      params,
       {
         ...config,
         ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
@@ -89,9 +91,7 @@ export class ApiService {
   ) {
     const response = await this.instance!.patch<ApiResponse<R>>(
       endpoint,
-      {
-        ...params,
-      },
+      params,
       {
         ...config,
         ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
@@ -108,9 +108,7 @@ export class ApiService {
   ) {
     const response = await this.instance!.put<ApiResponse<R>>(
       endpoint,
-      {
-        ...params,
-      },
+      params,
       {
         ...config,
         ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),

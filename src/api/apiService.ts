@@ -125,7 +125,8 @@ export class ApiService {
 }
 
 export const apiService = new ApiService({
-  baseURL: IS_DEVELOPMENT
-    ? "http://jsonplaceholder.typicode.com/"
-    : "http://jsonplaceholder.typicode.com/",
+  baseURL:
+    IS_DEVELOPMENT && typeof window === "object"
+      ? "http://jsonplaceholder.typicode.com/"
+      : "http://jsonplaceholder.typicode.com/",
 });

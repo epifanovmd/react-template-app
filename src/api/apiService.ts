@@ -1,18 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { stringify } from "query-string";
-
-export interface ApiResponse<R> {
-  data?: R;
-  error?: {
-    message: string;
-    status: number;
-    code?: string;
-  };
-}
-
-interface ApiRequestConfig extends AxiosRequestConfig {
-  useRaceCondition?: boolean;
-}
+import { ApiError, ApiRequestConfig, ApiResponse } from "./types";
 
 export class ApiService {
   private instance: AxiosInstance | null = null;
@@ -32,20 +20,16 @@ export class ApiService {
     this.instance.interceptors.response.use(
       response => ({ data: response }),
       error => {
-        const status = error?.response?.status || 500;
-
         if (error && error?.message !== "canceled") {
           return Promise.resolve({
             data: {
-              error: {
-                message: error.message,
-                status,
-              },
+              error: (error?.response.data.error ||
+                error?.response.data) as ApiError,
             },
           });
         }
 
-        return Promise.resolve({});
+        return Promise.resolve({ data: {} });
       },
     );
   }
@@ -64,7 +48,7 @@ export class ApiService {
       },
     );
 
-    return response.data;
+    return response.data as ApiResponse<R>;
   }
 
   public async post<R = any, P = any>(
@@ -81,7 +65,7 @@ export class ApiService {
       },
     );
 
-    return response.data;
+    return response.data as ApiResponse<R>;
   }
 
   public async patch<R = any, P = any>(
@@ -98,7 +82,7 @@ export class ApiService {
       },
     );
 
-    return response.data;
+    return response.data as ApiResponse<R>;
   }
 
   public async put<R = any, P = any>(
@@ -115,7 +99,7 @@ export class ApiService {
       },
     );
 
-    return response.data;
+    return response.data as ApiResponse<R>;
   }
 
   public async delete<R = any>(endpoint: string, config?: ApiRequestConfig) {
@@ -124,7 +108,7 @@ export class ApiService {
       ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
     });
 
-    return response.data;
+    return response.data as ApiResponse<R>;
   }
 
   private raceCondition(endpoint: string) {

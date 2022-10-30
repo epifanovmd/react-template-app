@@ -1,22 +1,43 @@
-export type BaseRequest<T extends object> = T & {
+import { AxiosRequestConfig } from "axios";
+
+export interface ApiResponse<R> {
+  data?: R;
+  error?: ApiError;
+}
+
+export type ApiRequest<T extends object = {}> = T & {
   search?: string;
   page?: number;
-  size?: number;
+  limit?: number;
   sortField?: string;
-  sort: "asc" | "dsc";
+  sort?: "asc" | "dsc";
 };
 
-export interface BaseResponse<T extends object> {
-  data: T;
-  page?: {
-    number: number;
-    count: number;
-    totalElements: number;
-  };
-  error?: {
-    error: Error;
-    message: string;
-    code: string;
-  };
-  status?: number;
+export interface ApiRequestConfig extends AxiosRequestConfig {
+  useRaceCondition?: boolean;
+}
+
+export class ApiError extends Error {
+  public status: number;
+  public type: ErrorType | undefined;
+
+  constructor(
+    status: number,
+    type?: ErrorType,
+    message: string = "Ошибка на стороне сервера",
+  ) {
+    super(message);
+    this.status = status;
+    this.type = type;
+  }
+}
+
+export enum ErrorType {
+  RouteNotFoundException = "RouteNotFoundException",
+  DataBaseErrorException = "DataBaseErrorException",
+  ProfileNotFoundException = "ProfileNotFoundException",
+  UnauthorizedException = "UnauthorizedException",
+  ValidateException = "ValidateException",
+  AccessRestrictedException = "AccessRestrictedException",
+  ServerErrorException = "ServerErrorException",
 }

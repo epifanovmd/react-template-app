@@ -5,7 +5,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
+const IS_DEVELOPMENT =
+  process.env.NODE_ENV === "development" ||
+  process.env.NODE_ENV !== "production";
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
 const loaders = IS_SSR => ({

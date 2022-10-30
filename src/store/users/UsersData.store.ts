@@ -1,16 +1,15 @@
 import { makeAutoObservable } from "mobx";
-import { getPageInitialData } from "../../common";
 
 import { IUser, IUsersService, UsersService } from "../../service";
 import { CollectionHolder } from "../common";
 import { iocDecorator } from "../../ioc";
 
-export const IUsersDataStore = iocDecorator<UsersDataStore>();
+export const IUsersDataStore = iocDecorator<UsersDataStore>("IUsersDataStore");
 
 @IUsersDataStore()
 export class UsersDataStore {
   public holder: CollectionHolder<IUser> = new CollectionHolder(
-    getPageInitialData("users") || [],
+    IUsersDataStore.getInitialData() || [],
   );
 
   constructor(@IUsersService() private _usersService: UsersService) {

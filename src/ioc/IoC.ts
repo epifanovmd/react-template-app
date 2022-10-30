@@ -7,16 +7,21 @@ import getDecorators from "inversify-inject-decorators";
 import "reflect-metadata";
 import shortid from "shortid";
 import React from "react";
+import { getInitialData } from "../common";
 
 interface IIoCInterface<T> {
-  readonly Tid: unique symbol;
+  readonly Tid: string;
+
   (options?: { inSingleton?: boolean }): (
     target: any,
     targetKey?: string,
     index?: number | undefined,
   ) => void;
+
   useInject(): T;
+
   getInstance(): T;
+  getInitialData: <P>() => P;
 }
 
 const iocContainer = new InversifyContainer();
@@ -25,9 +30,8 @@ const { lazyInject } = getDecorators(iocContainer);
 
 const instance: { [key: string]: any } = {};
 
-function iocDecorator<TInterface>(): IIoCInterface<TInterface> {
-  const _name = shortid();
-  const tid = Symbol(_name) as any;
+function iocDecorator<TInterface>(name?: string): IIoCInterface<TInterface> {
+  const tid = name || shortid();
 
   function iocDecoratorFactory(options?: { inSingleton?: boolean }) {
     return function iocDecorator(
@@ -55,6 +59,7 @@ function iocDecorator<TInterface>(): IIoCInterface<TInterface> {
   }
 
   iocDecoratorFactory.Tid = tid;
+  iocDecoratorFactory.getInitialData = () => getInitialData(tid);
 
   iocDecoratorFactory.useInject = () => {
     if (typeof window === "undefined") {

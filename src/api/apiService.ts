@@ -13,8 +13,6 @@ interface ApiRequestConfig extends AxiosRequestConfig {
   useRaceCondition?: boolean;
 }
 
-const PORT = process.env.PORT || 8080;
-
 export class ApiService {
   private instance: AxiosInstance | null = null;
   private raceConditionMap: Map<string, AbortController> = new Map();
@@ -70,11 +68,16 @@ export class ApiService {
     params?: P,
     config?: ApiRequestConfig,
   ) {
-    const response = await this.instance!.post<ApiResponse<R>>(endpoint, {
-      ...config,
-      ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
-      params,
-    });
+    const response = await this.instance!.post<ApiResponse<R>>(
+      endpoint,
+      {
+        ...params,
+      },
+      {
+        ...config,
+        ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
+      },
+    );
 
     return response.data;
   }
@@ -84,11 +87,16 @@ export class ApiService {
     params?: P,
     config?: ApiRequestConfig,
   ) {
-    const response = await this.instance!.patch<ApiResponse<R>>(endpoint, {
-      ...config,
-      ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
-      params,
-    });
+    const response = await this.instance!.patch<ApiResponse<R>>(
+      endpoint,
+      {
+        ...params,
+      },
+      {
+        ...config,
+        ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
+      },
+    );
 
     return response.data;
   }
@@ -98,24 +106,24 @@ export class ApiService {
     params?: P,
     config?: ApiRequestConfig,
   ) {
-    const response = await this.instance!.put<ApiResponse<R>>(endpoint, {
-      ...config,
-      ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
-      params,
-    });
+    const response = await this.instance!.put<ApiResponse<R>>(
+      endpoint,
+      {
+        ...params,
+      },
+      {
+        ...config,
+        ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
+      },
+    );
 
     return response.data;
   }
 
-  public async delete<R = any, P = any>(
-    endpoint: string,
-    params?: P,
-    config?: ApiRequestConfig,
-  ) {
+  public async delete<R = any>(endpoint: string, config?: ApiRequestConfig) {
     const response = await this.instance!.delete<ApiResponse<R>>(endpoint, {
       ...config,
       ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
-      params,
     });
 
     return response.data;

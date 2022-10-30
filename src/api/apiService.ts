@@ -41,7 +41,7 @@ export class ApiService {
   ) {
     const query = params && stringify(params);
     const response = await this.instance!.get<ApiResponse<R>>(
-      endpoint + query ? `?${query}` : "",
+      endpoint + (query ? `?${query}` : ""),
       {
         ...config,
         ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),

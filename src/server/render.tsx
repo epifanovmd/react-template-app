@@ -15,6 +15,7 @@ import { template } from "./template";
 import { routes } from "../routes";
 import { initLocalization } from "../localization";
 import { enableStaticRendering } from "mobx-react-lite";
+import { flatten } from "lodash";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
@@ -39,18 +40,21 @@ export const serverRenderer = () => (req: Request, res: Response) => {
   const dataRequirements = routes
     .filter(route => matchPath(location, route.path) && route.getInitialData)
     .map(route =>
-      route.getInitialData?.()?.then(res => {
-        initialData[route.pathName] = res;
+      route.getInitialData?.map(item =>
+        item[1]()?.then(res => {
+          initialData[item[0]] = res;
 
-        return res;
-      }),
+          return res;
+        }),
+      ),
     );
+
   //   checkAuthorization(req.cookies?.token)
   //     ? req.url
   //     : `/authorization?redirect=${req.url}`
 
   Promise.all([
-    ...dataRequirements,
+    ...flatten(dataRequirements),
     initLocalization({ initLang: lang, isServer: true }),
   ]).then(() => {
     const jsx = webExtractor.collectChunks(

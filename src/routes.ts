@@ -8,13 +8,15 @@ export enum Roles {
   Admin = "Admin",
 }
 
+type GetInitialData = [string, () => Promise<any>];
+
 export interface IRoute<T extends string = string> {
   path: string;
   pathName: T;
   component: any;
   exact: boolean;
   roles?: (keyof typeof Roles)[];
-  getInitialData?: () => Promise<any>;
+  getInitialData?: GetInitialData[];
 }
 
 export const getRoutsFromRole = (

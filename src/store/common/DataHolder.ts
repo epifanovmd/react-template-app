@@ -14,11 +14,11 @@ interface IDataHolderError {
 }
 
 export interface IDataHolderState {
-  isLoading(): boolean;
-  isError(): boolean;
-  isReady(): boolean;
-  isFilled(): boolean;
-  isEmpty(): boolean;
+  isLoading: boolean;
+  isError: boolean;
+  isReady: boolean;
+  isFilled: boolean;
+  isEmpty: boolean;
 }
 
 export class DataHolder<T> implements IDataHolderState {
@@ -35,8 +35,10 @@ export class DataHolder<T> implements IDataHolderState {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  public setLoading() {
-    this.d = undefined as any;
+  public setLoading(needClear: boolean = true) {
+    if (needClear) {
+      this.d = undefined as any;
+    }
     this._state = DataHolderState.LOADING;
 
     return this;
@@ -57,23 +59,23 @@ export class DataHolder<T> implements IDataHolderState {
     return this;
   }
 
-  public isReady() {
+  public get isReady() {
     return this._state === DataHolderState.READY;
   }
 
-  public isLoading() {
+  public get isLoading() {
     return this._state === DataHolderState.LOADING;
   }
 
-  public isError() {
+  public get isError() {
     return this._state === DataHolderState.ERROR;
   }
 
-  public isEmpty() {
-    return this.isReady() && isEmpty(this.d);
+  public get isEmpty() {
+    return this.isReady && isEmpty(this.d);
   }
 
-  public isFilled() {
-    return this.isReady() && !isEmpty(this.d);
+  public get isFilled() {
+    return this.isReady && !isEmpty(this.d);
   }
 }

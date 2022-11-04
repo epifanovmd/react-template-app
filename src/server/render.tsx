@@ -16,6 +16,7 @@ import { routes } from "../routes";
 import { initLocalization } from "../localization";
 import { enableStaticRendering } from "mobx-react-lite";
 import { flatten } from "lodash";
+import { initialData as _initialData } from "../common";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
@@ -57,6 +58,9 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     ...flatten(dataRequirements),
     initLocalization({ initLang: lang, isServer: true }),
   ]).then(() => {
+    Object.keys(initialData).forEach(key => {
+      _initialData[key] = initialData[key];
+    });
     const jsx = webExtractor.collectChunks(
       <I18nextProvider i18n={i18next}>
         <StaticRouter location={location}>

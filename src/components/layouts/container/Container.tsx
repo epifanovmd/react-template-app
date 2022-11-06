@@ -11,8 +11,8 @@ const HeaderWrap = styled.div`
   padding-left: 15px;
   padding-right: 15px;
 
-  @media (min-width: 544px) {
-    max-width: 576px;
+  @media (min-width: 576px) {
+    max-width: 540px;
   }
 
   @media (min-width: 768px) {

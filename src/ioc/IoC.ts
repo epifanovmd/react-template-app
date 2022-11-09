@@ -61,22 +61,11 @@ function iocDecorator<TInterface>(name?: string): IIoCInterface<TInterface> {
   iocDecoratorFactory.Tid = tid;
   iocDecoratorFactory.getInitialData = () => getInitialData(tid);
 
-  iocDecoratorFactory.useInject = () => {
-    if (typeof window === "undefined") {
-      return instance[tid];
-    }
-
+  iocDecoratorFactory.useInject = () =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    return React.useMemo(() => iocContainer.get<TInterface>(tid), []);
-  };
+    React.useMemo(() => iocContainer.get<TInterface>(tid), []);
 
-  iocDecoratorFactory.getInstance = () => {
-    if (typeof window === "undefined") {
-      return instance[tid];
-    }
-
-    return iocContainer.get<TInterface>(tid);
-  };
+  iocDecoratorFactory.getInstance = () => instance[tid];
 
   return iocDecoratorFactory;
 }

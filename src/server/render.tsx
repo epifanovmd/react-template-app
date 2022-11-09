@@ -37,6 +37,8 @@ export const serverRenderer = () => (req: Request, res: Response) => {
   const location = req.url;
   const initialData: any = {};
 
+  _initialData.clearData();
+
   // Fetch initial data and set to store
   const dataRequirements = routes
     .filter(route => matchPath(location, route.path) && route.getInitialData)
@@ -44,6 +46,7 @@ export const serverRenderer = () => (req: Request, res: Response) => {
       route.getInitialData?.map(item =>
         item[1]()?.then(res => {
           initialData[item[0]] = res;
+          _initialData.setData(item[0], res);
 
           return res;
         }),
@@ -58,9 +61,6 @@ export const serverRenderer = () => (req: Request, res: Response) => {
     ...flatten(dataRequirements),
     initLocalization({ initLang: lang, isServer: true }),
   ]).then(() => {
-    Object.keys(initialData).forEach(key => {
-      _initialData[key] = initialData[key];
-    });
     const jsx = webExtractor.collectChunks(
       <I18nextProvider i18n={i18next}>
         <StaticRouter location={location}>

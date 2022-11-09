@@ -1,4 +1,23 @@
-export const initialData: any = {};
+class InitialData {
+  public data: any = {};
+
+  public setData = (key: string, value: any) => {
+    this.data[key] = value;
+  };
+
+  public clearData = () => {
+    this.data = {};
+  };
+
+  public removeData = (key: string) => {
+    this.data[key] = undefined;
+  };
+
+  public getData = (key: string) => this.data[key];
+}
+
+export const initialData = new InitialData();
+
 export const getInitialData = (tid: string) => {
   if (typeof window !== "undefined") {
     const d = window.__INITIAL_STATE__?.[tid];
@@ -11,14 +30,6 @@ export const getInitialData = (tid: string) => {
 
     return d;
   } else {
-    const d = initialData?.[tid];
-
-    if (initialData) {
-      setTimeout(() => {
-        initialData[tid] = undefined;
-      }, 1000);
-    }
-
-    return d;
+    return initialData.getData(tid);
   }
 };

@@ -195,6 +195,42 @@ export const useForm = <
 
   const fieldNames = useMemo(() => getFields(), [getFields]);
 
+  const isWatch = useCallback(
+    (name: (keyof T | string)[]) =>
+      (watch && watch.some(item => name.some(key => key === item))) || !watch,
+    [watch],
+  );
+
+  const _setTouch = useCallback(
+    (name: keyof T | string, touch: boolean, onSuccess?: () => void) => {
+      if (!touchedValues[name] && touch) {
+        setTouchedValues(state => {
+          state[name] = true;
+
+          return isWatch([name]) ? Object.assign(state) : state;
+        });
+
+        onSuccess?.();
+      }
+    },
+    [isWatch, touchedValues],
+  );
+
+  const _setValue = useCallback(
+    (name: keyof T, value: ((state: T) => T[keyof T]) | T[keyof T]) =>
+      setValues(state => {
+        state[name] =
+          typeof value === "function"
+            ? (value as (state: T) => T[keyof T])(state)
+            : value;
+
+        validateOnChange && validateValues(state);
+
+        return isWatch([name]) ? Object.assign(state) : state;
+      }),
+    [isWatch, validateOnChange, validateValues],
+  );
+
   const fieldsHelper = useMemo(
     () => ({
       remove: (name: keyof T, index: number) => {
@@ -296,41 +332,22 @@ export const useForm = <
                   }
                 : item,
           );
-          let newValues = state;
 
-          if (
-            (watch && watch.some(item => item === name || item === key)) ||
-            !watch
-          ) {
-            newValues = {
-              ...state,
-            };
-          }
+          validateOnChange && validateValues(state);
 
-          validateOnChange && validateValues(newValues);
-
-          return newValues;
+          return isWatch([name, key as string]) ? Object.assign(state) : state;
         });
-        !touchedValues[name] &&
-          touch &&
-          setTouchedValues(state => ({
-            ...state,
-            [`${name}[${index}].${key}`]: true,
-          }));
+        _setTouch(`${name}[${index}].${key}`, !!touch);
       },
       setFieldBlur: <K extends keyof T, A extends T[K]>(
         name: K,
         key: keyof TCheckArray<A>,
         index: number,
       ) => {
-        !touchedValues[name] &&
-          setTouchedValues(state => ({
-            ...state,
-            [`${name}[${index}].${key}`]: true,
-          }));
+        _setTouch(`${name}[${index}].${key}`, true);
       },
     }),
-    [touchedValues, validateOnChange, validateValues, watch],
+    [_setTouch, isWatch, validateOnChange, validateValues],
   );
 
   const fieldsIterate = useCallback(
@@ -394,60 +411,28 @@ export const useForm = <
       value: ((state: T) => T[keyof T]) | T[keyof T],
       touch?: boolean,
     ) => {
-      setValues(state => {
-        state[name] =
-          typeof value === "function"
-            ? (value as (state: T) => T[keyof T])(state)
-            : value;
-        let newValues = state;
-
-        if ((watch && watch.some(item => item === name)) || !watch) {
-          newValues = {
-            ...state,
-          };
-        }
-
-        validateOnChange && validateValues(newValues);
-
-        return newValues;
-      });
-      !touchedValues[name] &&
-        touch &&
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
+      _setValue(name, value);
+      _setTouch(name, !!touch);
     },
-    [touchedValues, watch, validateOnChange, validateValues],
+    [_setValue, _setTouch],
   );
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<any>) => {
-      const { target } = event;
-      const { name } = target;
-
-      if (name && !touchedValues[name]) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
+      _setTouch(event.target.name, true, () => {
         validateOnChange && validateValues(values);
-      }
+      });
     },
-    [touchedValues, validateOnChange, validateValues, values],
+    [_setTouch, validateOnChange, validateValues, values],
   );
 
   const setFieldBlur = useCallback(
     (name: keyof T | string) => {
-      if (name && !touchedValues[name]) {
-        setTouchedValues(state => ({
-          ...state,
-          [name]: true,
-        }));
+      _setTouch(name, true, () => {
         validateOnChange && validateValues(values);
-      }
+      });
     },
-    [touchedValues, validateOnChange, validateValues, values],
+    [_setTouch, validateOnChange, validateValues, values],
   );
 
   const valid = useMemo(() => Object.keys(errors).length === 0, [errors]);
@@ -455,17 +440,12 @@ export const useForm = <
   const validateForm = useCallback(async () => {
     const { count, errors, hasErrors } = await validateValues(values);
 
-    const keys = Object.keys(errors);
-
-    keys.forEach(key => {
-      setTouchedValues(state => ({
-        ...state,
-        [key]: true,
-      }));
+    Object.keys(errors).forEach(key => {
+      _setTouch(key, true);
     });
 
     return Promise.resolve({ count, errors, hasErrors });
-  }, [validateValues, values]);
+  }, [_setTouch, validateValues, values]);
 
   const setMeta = useCallback(
     (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
@@ -684,7 +664,7 @@ export interface IForm<
     touch?: boolean,
   ) => void;
   setFieldBlur: (name: keyof T | string) => void;
-  handleSubmit: (params: { withoutValidate: boolean } | void) => void;
+  handleSubmit: (params: { withoutValidate?: boolean } | unknown) => void;
   fieldsIterate: <
     A extends TCheckArray<T[B]>,
     B extends keyof SubType<T, Array<any>>,

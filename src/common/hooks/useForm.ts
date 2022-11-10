@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { ObjectSchema, Shape } from "yup";
 
-export const useForm = <
-  T extends object,
-  M extends { [key: string]: any } = { [key: string]: any },
->(
+export const useForm = <T extends object>(
   {
     initialValues,
     onSubmit,

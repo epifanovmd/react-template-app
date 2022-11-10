@@ -191,7 +191,7 @@ export const useForm = <T extends object>(
         setTouchedValues(state => {
           state[name] = true;
 
-          return isWatch([name]) ? Object.assign(state) : state;
+          return isWatch([name]) ? { ...state } : state;
         });
 
         onSuccess?.();
@@ -210,7 +210,7 @@ export const useForm = <T extends object>(
 
         validateOnChange && validateValues(state);
 
-        return isWatch([name]) ? Object.assign(state) : state;
+        return isWatch([name]) ? { ...state } : state;
       }),
     [isWatch, validateOnChange, validateValues],
   );
@@ -319,7 +319,7 @@ export const useForm = <T extends object>(
 
           validateOnChange && validateValues(state);
 
-          return isWatch([name, key as string]) ? Object.assign(state) : state;
+          return isWatch([name, key as string]) ? { ...state } : state;
         });
         _setTouch(`${name}[${index}].${key}`, !!touch);
       },

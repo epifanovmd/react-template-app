@@ -7,7 +7,6 @@ export const useForm = <
 >(
   {
     initialValues,
-    initialMeta,
     onSubmit,
     onChange,
     validate,
@@ -15,13 +14,10 @@ export const useForm = <
     validateOnInit,
     validateOnChange,
     enableReinitialize,
-  }: IUseForm<T, M>,
+  }: IUseForm<T>,
   watch?: (keyof T)[],
-): IForm<T, M> => {
+): IForm<T> => {
   const [values, setValues] = React.useState<T>({ ...initialValues });
-  const [meta, changeMeta] = React.useState<M & { [key: string]: any }>(
-    initialMeta || ({} as M),
-  );
   const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T | string, boolean>>
@@ -46,18 +42,9 @@ export const useForm = <
   }, [initialValues]);
 
   useEffect(() => {
-    if (enableReinitialize && initialMeta) {
-      const newInitialMeta = { ...initialMeta };
-
-      changeMeta(newInitialMeta);
-    }
-    // eslint-disable-next-line
-  }, [initialMeta]);
-
-  useEffect(() => {
-    onChange && onChange(values, meta, errors);
+    onChange && onChange(values, errors);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values, errors, meta]);
+  }, [values, errors]);
 
   useEffect(() => {
     validateOnInit && validateValues(values);
@@ -154,7 +141,7 @@ export const useForm = <
           });
       } else {
         const e: Partial<Record<keyof T | string, string>> | null = validate
-          ? validate(validationValues, meta)
+          ? validate(validationValues)
           : null;
 
         if (e) {
@@ -172,7 +159,7 @@ export const useForm = <
         errors: newErrors,
       });
     },
-    [getDirty, initialValues, meta, validate, validateSchema],
+    [getDirty, initialValues, validate, validateSchema],
   );
 
   const onSetValues = useCallback(
@@ -447,16 +434,6 @@ export const useForm = <
     return Promise.resolve({ count, errors, hasErrors });
   }, [_setTouch, validateValues, values]);
 
-  const setMeta = useCallback(
-    (name: keyof M, value: ((state: M) => M[keyof M]) | M[keyof M]) => {
-      changeMeta(state => ({
-        ...state,
-        [name]: typeof value === "function" ? (value as any)(state) : value,
-      }));
-    },
-    [],
-  );
-
   const handleSubmit = useCallback(
     (params?: any) => {
       if (!params?.withoutValidate) {
@@ -494,17 +471,15 @@ export const useForm = <
 
           Object.keys({ ...e }).length === 0 &&
             onSubmit &&
-            onSubmit(values, meta, {
+            onSubmit(values, {
               dirty,
               valid,
               values,
-              meta,
               touchedValues,
               errors,
               fieldNames,
               onSetValues,
               handleBlur,
-              setMeta,
               setFieldValue,
               setFieldBlur,
               handleSubmit,
@@ -518,17 +493,15 @@ export const useForm = <
           .catch();
       } else {
         onSubmit &&
-          onSubmit(values, meta, {
+          onSubmit(values, {
             dirty,
             valid,
             values,
-            meta,
             touchedValues,
             errors,
             fieldNames,
             onSetValues,
             handleBlur,
-            setMeta,
             setFieldValue,
             setFieldBlur,
             handleSubmit,
@@ -543,7 +516,6 @@ export const useForm = <
       validateValues,
       values,
       onSubmit,
-      meta,
       dirty,
       valid,
       touchedValues,
@@ -551,7 +523,6 @@ export const useForm = <
       fieldNames,
       onSetValues,
       handleBlur,
-      setMeta,
       setFieldValue,
       setFieldBlur,
       fieldsIterate,
@@ -565,13 +536,11 @@ export const useForm = <
     dirty,
     valid,
     values,
-    meta,
     touchedValues,
     errors,
     fieldNames,
     onSetValues,
     handleBlur,
-    setMeta,
     setFieldValue,
     setFieldBlur,
     handleSubmit,
@@ -592,19 +561,14 @@ type SubType<Base, Condition> = Pick<
   }[keyof Base]
 >;
 
-interface IUseForm<
-  T,
-  M extends { [key: string]: any } = { [key: string]: any },
-> {
+interface IUseForm<T> {
   initialValues: T;
-  initialMeta?: M & { [key: string]: any };
   onChange?: (
     values: T,
-    meta: M,
     errors: Partial<Record<keyof T | string, string>>,
   ) => void;
-  onSubmit?: (values: T, meta: M, data: IForm<T, M>) => void;
-  validate?: (values: T, meta: M) => Partial<Record<keyof T | string, string>>;
+  onSubmit?: (values: T, data: IForm<T>) => void;
+  validate?: (values: T) => Partial<Record<keyof T | string, string>>;
   validateSchema?: ObjectSchema<
     Shape<object | undefined, Partial<Record<keyof T, any>>>,
     object
@@ -641,23 +605,15 @@ export interface IFieldsHelper<T> {
   ) => void;
 }
 
-export interface IForm<
-  T,
-  M extends { [key: string]: any } = { [key: string]: any },
-> {
+export interface IForm<T> {
   dirty: boolean;
   valid: boolean;
   values: T;
-  meta: M & { [key: string]: any };
   touchedValues: Partial<Record<keyof T | string, boolean>>;
   errors: Partial<Record<keyof T | string, string>>;
   fieldNames: Record<keyof T, string>;
   onSetValues: (values: T) => void;
   handleBlur: (event: React.FocusEvent<any>) => void;
-  setMeta: (
-    name: keyof M,
-    value: ((state: M) => M[keyof M]) | M[keyof M],
-  ) => void;
   setFieldValue: (
     name: keyof T,
     value: ((state: T) => T[keyof T]) | T[keyof T],

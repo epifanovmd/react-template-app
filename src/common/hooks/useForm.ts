@@ -3,7 +3,7 @@ import { ObjectSchema, Shape } from "yup";
 
 export const useForm = <T extends object>(
   {
-    initialValues,
+    initialValues: _initialValues,
     onSubmit,
     onChange,
     validate,
@@ -14,7 +14,10 @@ export const useForm = <T extends object>(
   }: IUseForm<T>,
   watch?: (keyof T)[],
 ): IForm<T> => {
-  const [values, setValues] = React.useState<T>({ ...initialValues });
+  const [initialValues, setInitialValues] = React.useState<T>({
+    ..._initialValues,
+  });
+  const [values, setValues] = React.useState<T>({ ..._initialValues });
   const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
     Partial<Record<keyof T | string, boolean>>
@@ -33,6 +36,7 @@ export const useForm = <T extends object>(
       const newInitialValues = { ...initialValues };
 
       setValues(newInitialValues);
+      setInitialValues(newInitialValues);
       validateOnChange && validateOnInit && validateValues(newInitialValues);
     }
     // eslint-disable-next-line
@@ -378,13 +382,17 @@ export const useForm = <T extends object>(
 
   const handleClearForm = useCallback(
     (data: T | void) => {
-      const newValues = data ? { ...data } : { ...initialValues };
+      if (data) {
+        const newValues = data ? { ...data } : { ...initialValues };
 
-      setValues(newValues);
+        setInitialValues(newValues);
+        setValues(newValues);
+      }
+
+      setValues(initialValues);
       setErrors({});
-      const newTouchedValues = {};
-
-      setTouchedValues(newTouchedValues);
+      setTouchedValues({});
+      setDirty(false);
     },
     [initialValues],
   );

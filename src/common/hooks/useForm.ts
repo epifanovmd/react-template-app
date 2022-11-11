@@ -14,9 +14,7 @@ export const useForm = <T extends object>(
   }: IUseForm<T>,
   watch?: (keyof T)[],
 ): IForm<T> => {
-  const [initialValues, setInitialValues] = React.useState<T>({
-    ..._initialValues,
-  });
+  const initialValues = React.useRef<T>({ ..._initialValues });
   const [values, setValues] = React.useState<T>({ ..._initialValues });
   const [dirty, setDirty] = React.useState<boolean>(false);
   const [touchedValues, setTouchedValues] = React.useState<
@@ -25,22 +23,29 @@ export const useForm = <T extends object>(
   const [errors, setErrors] = React.useState<
     Partial<Record<keyof T | string, string>>
   >({});
-  const getDirty = useCallback((a: T, b: T) => {
-    setDirty(JSON.stringify(a) !== JSON.stringify(b));
-  }, []);
+
+  const getDirty = useCallback(
+    (a: T, b: T) => {
+      const isDirty = JSON.stringify(a) !== JSON.stringify(b);
+
+      if (dirty !== isDirty) {
+        setDirty(isDirty);
+      }
+    },
+    [dirty],
+  );
 
   const [isInit, setInit] = React.useState(false);
 
   useEffect(() => {
     if (enableReinitialize) {
-      const newInitialValues = { ...initialValues };
-
-      setValues(newInitialValues);
-      setInitialValues(newInitialValues);
-      validateOnChange && validateOnInit && validateValues(newInitialValues);
+      setValues({ ..._initialValues });
+      initialValues.current = { ..._initialValues };
+      getDirty(_initialValues, initialValues.current);
+      validateOnChange && validateOnInit && validateValues(_initialValues);
     }
     // eslint-disable-next-line
-  }, [initialValues]);
+  }, [_initialValues]);
 
   useEffect(() => {
     onChange && onChange(values, errors);
@@ -70,7 +75,6 @@ export const useForm = <T extends object>(
     ) => {
       let newErrors = {};
 
-      getDirty(validationValues, initialValues);
       if (validateSchema) {
         await validateSchema
           .validate(validationValues, {
@@ -160,26 +164,27 @@ export const useForm = <T extends object>(
         errors: newErrors,
       });
     },
-    [getDirty, initialValues, validate, validateSchema],
+    [validate, validateSchema],
   );
 
   const onSetValues = useCallback(
     (newValues: T) => {
       setValues(newValues);
+      getDirty(newValues, initialValues.current);
       validateValues(newValues).then().catch();
     },
-    [validateValues],
+    [getDirty, validateValues],
   );
 
   const getFields = useCallback(() => {
     const obj: Record<keyof T, string> = {} as Record<keyof T, string>;
 
-    Object.keys(initialValues).forEach(key => {
+    Object.keys(initialValues.current).forEach(key => {
       obj[key as keyof T] = key;
     });
 
     return obj;
-  }, [initialValues]);
+  }, []);
 
   const fieldNames = useMemo(() => getFields(), [getFields]);
 
@@ -212,11 +217,14 @@ export const useForm = <T extends object>(
             ? (value as (state: T) => T[keyof T])(state)
             : value;
 
-        validateOnChange && validateValues(state);
+        const newState = isWatch([name]) ? { ...state } : state;
 
-        return isWatch([name]) ? { ...state } : state;
+        validateOnChange && validateValues(newState);
+        getDirty(newState, initialValues.current);
+
+        return newState;
       }),
-    [isWatch, validateOnChange, validateValues],
+    [getDirty, isWatch, validateOnChange, validateValues],
   );
 
   const fieldsHelper = useMemo(
@@ -272,6 +280,7 @@ export const useForm = <T extends object>(
           };
 
           validateOnChange && validateValues(newState);
+          getDirty(newState, initialValues.current);
 
           return newState;
         });
@@ -290,6 +299,7 @@ export const useForm = <T extends object>(
           };
 
           validateOnChange && validateValues(newState);
+          getDirty(newState, initialValues.current);
 
           return newState;
         });
@@ -321,9 +331,14 @@ export const useForm = <T extends object>(
                 : item,
           );
 
-          validateOnChange && validateValues(state);
+          const newState = isWatch([name, key as string])
+            ? { ...state }
+            : state;
 
-          return isWatch([name, key as string]) ? { ...state } : state;
+          validateOnChange && validateValues(state);
+          getDirty(newState, initialValues.current);
+
+          return newState;
         });
         _setTouch(`${name}[${index}].${key}`, !!touch);
       },
@@ -335,7 +350,7 @@ export const useForm = <T extends object>(
         _setTouch(`${name}[${index}].${key}`, true);
       },
     }),
-    [_setTouch, isWatch, validateOnChange, validateValues],
+    [_setTouch, getDirty, isWatch, validateOnChange, validateValues],
   );
 
   const fieldsIterate = useCallback(
@@ -380,22 +395,18 @@ export const useForm = <T extends object>(
     [values, fieldsHelper, touchedValues, errors],
   );
 
-  const handleClearForm = useCallback(
-    (data: T | void) => {
-      if (data) {
-        const newValues = data ? { ...data } : { ...initialValues };
+  const handleClearForm = useCallback((data: T | void) => {
+    if (data) {
+      initialValues.current = { ...data };
+      setValues({ ...data });
+    } else {
+      setValues({ ...initialValues.current });
+    }
 
-        setInitialValues(newValues);
-        setValues(newValues);
-      }
-
-      setValues(initialValues);
-      setErrors({});
-      setTouchedValues({});
-      setDirty(false);
-    },
-    [initialValues],
-  );
+    setErrors({});
+    setTouchedValues({});
+    setDirty(false);
+  }, []);
 
   const setFieldValue = useCallback(
     (
@@ -518,22 +529,22 @@ export const useForm = <T extends object>(
       }
     },
     [
-      validateValues,
-      values,
-      onSubmit,
       dirty,
-      valid,
-      touchedValues,
       errors,
       fieldNames,
-      onSetValues,
-      handleBlur,
-      setFieldValue,
-      setFieldBlur,
-      fieldsIterate,
       fieldsHelper,
+      fieldsIterate,
+      handleBlur,
       handleClearForm,
+      onSetValues,
+      onSubmit,
+      setFieldBlur,
+      setFieldValue,
+      touchedValues,
+      valid,
       validateForm,
+      validateValues,
+      values,
     ],
   );
 
@@ -576,7 +587,7 @@ interface IUseForm<T> {
   validate?: (values: T) => Partial<Record<keyof T | string, string>>;
   validateSchema?: ObjectSchema<
     Shape<object | undefined, Partial<Record<keyof T, any>>>,
-    object
+    Object
   >;
   validateOnInit?: boolean;
   validateOnChange?: boolean;

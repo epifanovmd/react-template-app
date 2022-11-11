@@ -167,8 +167,8 @@ export const useForm = <T extends object>(
     [validate, validateSchema],
   );
 
-  const onSetValues = useCallback(
-    (newValues: T) => {
+  const onSetValues: IForm<T>["onSetValues"] = useCallback(
+    newValues => {
       setValues(newValues);
       getDirty(newValues, initialValues.current);
       validateValues(newValues).then().catch();
@@ -227,9 +227,9 @@ export const useForm = <T extends object>(
     [getDirty, isWatch, validateOnChange, validateValues],
   );
 
-  const fieldsHelper = useMemo(
+  const fieldsHelper: IForm<T>["fieldsHelper"] = useMemo(
     () => ({
-      remove: (name: keyof T, index: number) => {
+      remove: (name, index) => {
         setValues(state => {
           if (state[name]) {
             const newState = {
@@ -269,10 +269,7 @@ export const useForm = <T extends object>(
           return newTouchedValues;
         });
       },
-      append: <K extends keyof T>(
-        name: K,
-        value: TObjectPartial<TCheckArray<T[K]>>,
-      ) => {
+      append: (name, value) => {
         setValues(state => {
           const newState = {
             ...state,
@@ -285,11 +282,7 @@ export const useForm = <T extends object>(
           return newState;
         });
       },
-      replace: <K extends keyof T>(
-        name: K,
-        index: number,
-        value: TObjectPartial<TCheckArray<T[K]>>,
-      ) => {
+      replace: (name, index, value) => {
         setValues(state => {
           const newState = {
             ...state,
@@ -304,15 +297,7 @@ export const useForm = <T extends object>(
           return newState;
         });
       },
-      setFieldValue: <K extends keyof T, A extends T[K]>(
-        name: K,
-        key: keyof TCheckArray<A>,
-        value:
-          | ((state: T) => TCheckArray<A>[keyof TCheckArray<A>])
-          | TCheckArray<A>[keyof TCheckArray<A>],
-        index: number,
-        touch?: boolean,
-      ) => {
+      setFieldValue: (name, key, value, index, touch) => {
         setValues(state => {
           state[name] = ((state[name] as any) || []).map(
             (item: any, ind: number) =>
@@ -321,11 +306,7 @@ export const useForm = <T extends object>(
                     ...item,
                     [key]:
                       typeof value === "function"
-                        ? (
-                            value as (
-                              state: T,
-                            ) => TCheckArray<A>[keyof TCheckArray<A>]
-                          )(state)
+                        ? (value as any)(state)
                         : value,
                   }
                 : item,
@@ -342,43 +323,25 @@ export const useForm = <T extends object>(
         });
         _setTouch(`${name}[${index}].${key}`, !!touch);
       },
-      setFieldBlur: <K extends keyof T, A extends T[K]>(
-        name: K,
-        key: keyof TCheckArray<A>,
-        index: number,
-      ) => {
+      setFieldBlur: (name, key, index) => {
         _setTouch(`${name}[${index}].${key}`, true);
       },
     }),
     [_setTouch, getDirty, isWatch, validateOnChange, validateValues],
   );
 
-  const fieldsIterate = useCallback(
-    <A extends TCheckArray<T[B]>, B extends keyof T>(
-      name: B,
-      fields: (val: {
-        value: A;
-        touched: Partial<{ [key in keyof A]: boolean }>;
-        error: Partial<{ [key in keyof A]: string }>;
-        fieldNames: { [key in keyof A]: string };
-        fieldsHelper: typeof fieldsHelper;
-        index: number;
-        array: A[];
-      }) => JSX.Element,
-    ) =>
+  const fieldsIterate: IForm<T>["fieldsIterate"] = useCallback(
+    (name, fields) =>
       ((values[name] as any) || []).map(
-        (value: A, index: number, array: A[]) => {
-          const touched: Partial<{ [key in keyof A]: boolean }> = {};
-          const error: Partial<{ [key in keyof A]: string }> = {};
-          const fieldNames: { [key in keyof A]: string } = {} as {
-            [key in keyof A]: string;
-          };
+        (value: any, index: number, array: any[]) => {
+          const touched: any = {};
+          const error: any = {};
+          const fieldNames: any = {};
 
           Object.keys(value).forEach(item => {
-            fieldNames[item as keyof A] = item;
-            touched[item as keyof A] =
-              touchedValues[`${name}[${index}].${item}`];
-            error[item as keyof A] = errors[`${name}[${index}].${item}`];
+            fieldNames[item] = item;
+            touched[item] = touchedValues[`${name}[${index}].${item}`];
+            error[item] = errors[`${name}[${index}].${item}`];
           });
 
           return fields({
@@ -395,7 +358,7 @@ export const useForm = <T extends object>(
     [values, fieldsHelper, touchedValues, errors],
   );
 
-  const handleClearForm = useCallback((data: T | void) => {
+  const handleClearForm: IForm<T>["handleClearForm"] = useCallback(data => {
     if (data) {
       initialValues.current = { ...data };
       setValues({ ...data });
@@ -408,20 +371,16 @@ export const useForm = <T extends object>(
     setDirty(false);
   }, []);
 
-  const setFieldValue = useCallback(
-    (
-      name: keyof T,
-      value: ((state: T) => T[keyof T]) | T[keyof T],
-      touch?: boolean,
-    ) => {
+  const setFieldValue: IForm<T>["setFieldValue"] = useCallback(
+    (name, value, touch) => {
       _setValue(name, value);
       _setTouch(name, !!touch);
     },
     [_setValue, _setTouch],
   );
 
-  const handleBlur = useCallback(
-    (event: React.FocusEvent<any>) => {
+  const handleBlur: IForm<T>["handleBlur"] = useCallback(
+    event => {
       _setTouch(event.target.name, true, () => {
         validateOnChange && validateValues(values);
       });
@@ -429,8 +388,8 @@ export const useForm = <T extends object>(
     [_setTouch, validateOnChange, validateValues, values],
   );
 
-  const setFieldBlur = useCallback(
-    (name: keyof T | string) => {
+  const setFieldBlur: IForm<T>["setFieldBlur"] = useCallback(
+    name => {
       _setTouch(name, true, () => {
         validateOnChange && validateValues(values);
       });
@@ -450,7 +409,7 @@ export const useForm = <T extends object>(
     return Promise.resolve({ count, errors, hasErrors });
   }, [_setTouch, validateValues, values]);
 
-  const handleSubmit = useCallback(
+  const handleSubmit: IForm<T>["handleSubmit"] = useCallback(
     (params?: any) => {
       if (!params?.withoutValidate) {
         validateValues(values, ({}, e) => {

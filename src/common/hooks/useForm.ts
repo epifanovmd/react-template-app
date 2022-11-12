@@ -448,11 +448,11 @@ export const useForm = <T extends object>(
             );
 
             Object.keys({ ...e }).length === 0 &&
-              onSubmit?.(values, { ...form, handleSubmit });
+              onSubmit?.({ ...values }, { ...form, handleSubmit });
           })
           .catch();
       } else {
-        onSubmit?.(values, { ...form, handleSubmit });
+        onSubmit?.({ ...values }, { ...form, handleSubmit });
       }
     },
     [_validate, form, onSubmit, values],

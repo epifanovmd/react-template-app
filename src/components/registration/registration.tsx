@@ -1,132 +1,89 @@
 import React, { FC, useCallback, useState } from "react";
 import styled from "styled-components";
-import { array, object, string } from "yup";
-import { ISelectItem, Button } from "../ui";
+import { object, string } from "yup";
+import { Button, Input } from "../ui";
 import { useForm } from "../../common";
-import { InfoForm, JobForm } from "./sections";
 
 export interface IRegistrationForm {
   firstName: string;
   lastName: string;
-  email: string;
-  gender: ISelectItem;
-
-  job: { place: string; experience: string; position: ISelectItem }[];
-}
-
-export interface IRegistrationFormMeta {
-  steps: { name: string; num: number }[];
-  step: number;
 }
 
 const initialValues: IRegistrationForm = {
-  email: "",
   firstName: "",
   lastName: "",
-  gender: { key: "", label: "" },
-
-  job: [],
 };
-
-const initialMeta: IRegistrationFormMeta = {
-  steps: [
-    { name: "Основная информация", num: 1 },
-    { name: "Места работы", num: 2 },
-  ],
-  step: 1,
-};
-
-const validateSchemes = [
-  object().shape({
-    email: string()
-      .email("Неверный формат Email")
-      .required("Email явялется обязательным полем"),
-    firstName: string().required("Имя явялется обязательным полем"),
-    lastName: string().required("Фамилия явялется обязательным полем"),
-    gender: object().shape({
-      label: string().required("Пол явялется обязательным полем"),
-      key: string().required("Пол явялется обязательным полем"),
-    }),
-  }),
-  object().shape({
-    job: array(
-      object().shape({
-        place: string().required("Место работы явялется обязательным полем"),
-        experience: string().required("Стаж явялется обязательным полемм"),
-        position: object().shape({
-          label: string().required("Позиция явялется обязательным полем"),
-          key: string().required("Позиция явялется обязательным полем"),
-        }),
-      }),
-    ).min(1, "Необходимо заполнить хотя бы одно место работы"),
-  }),
-];
+const validateSchema = object().shape({
+  firstName: string().required("Имя явялется обязательным полем"),
+  lastName: string().required("Фамилия явялется обязательным полем"),
+});
 
 export const Registration: FC = () => {
-  const [validateSchema, setValidateSchema] = useState(validateSchemes[0]);
   const [result, changeResult] = useState({});
 
-  const onSubmit = useCallback(
-    (values: IRegistrationForm, meta: IRegistrationFormMeta) => {
-      console.log("values", values);
-      console.log("meta", meta);
-      changeResult({ values, meta });
-    },
-    [],
-  );
+  const onSubmit = useCallback((values: IRegistrationForm) => {
+    console.log("values", values);
+    changeResult({ values });
+  }, []);
 
   const form = useForm(
     {
       initialValues,
       validateSchema,
-      initialMeta,
       onSubmit,
     },
-    ["gender", "job"],
+    [],
   );
 
-  const { validateForm, handleSubmit, meta, setMeta } = form;
+  const {
+    values,
+    errors,
+    handleBlur,
+    touchedValues,
+    fieldNames,
+    setFieldValue,
+    handleSubmit,
+  } = form;
 
-  const onChangeStep = (value: number) => {
-    setMeta("step", value);
-    setValidateSchema(validateSchemes[value - 1]);
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const name = event.target.name as keyof IRegistrationForm;
+      const value = event.target.value;
 
-  const onNextStep = async () => {
-    const { hasErrors, errors } = await validateForm();
-
-    console.log("errors", errors);
-
-    !hasErrors && onChangeStep(meta.step + 1);
-  };
-  const onPrevStep = () => onChangeStep(meta.step - 1);
+      setFieldValue(name, value);
+    },
+    [setFieldValue],
+  );
 
   return (
     <Container>
       <RegistrationForm>
+        <TabName>{"Форма"}</TabName>
+
+        <Input
+          label={"Имя"}
+          placeholder={"Имя"}
+          defaultValue={values.firstName}
+          onChange={handleChange}
+          name={fieldNames.firstName}
+          onBlur={handleBlur}
+          touch={touchedValues.firstName}
+          error={errors.firstName}
+        />
+
+        <Input
+          label={"Фамилия"}
+          placeholder={"Фамилия"}
+          defaultValue={values.lastName}
+          onChange={handleChange}
+          name={fieldNames.lastName}
+          onBlur={handleBlur}
+          touch={touchedValues.lastName}
+          error={errors.lastName}
+        />
+
         <Actions>
-          <BackButton disabled={meta.step === 1} onClick={onPrevStep}>
-            Назад
-          </BackButton>
-        </Actions>
-        <TabName>{meta.steps[meta.step - 1].name}</TabName>
-
-        {meta.step === 1 && <InfoForm {...form} />}
-
-        {meta.step === 2 && <JobForm {...form} />}
-
-        <Actions>
-          <ActionForm
-            onClick={
-              meta.step === 2
-                ? () => {
-                    handleSubmit();
-                  }
-                : onNextStep
-            }
-          >
-            {meta.step === 2 ? "Регистрация" : "Далее"}
-          </ActionForm>
+          <ActionForm onClick={handleSubmit}>{"Submit"}</ActionForm>
         </Actions>
       </RegistrationForm>
 
@@ -176,7 +133,6 @@ const Actions = styled.div`
   display: flex;
   padding: 10px 0 20px 0;
 `;
-const BackButton = styled(Button)``;
 const TabName = styled.div`
   margin-bottom: 10px;
   text-align: center;

@@ -35,10 +35,7 @@ export class DataHolder<T> implements IDataHolderState {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  public setLoading(needClear: boolean = true) {
-    if (needClear) {
-      this.d = undefined as any;
-    }
+  public setLoading() {
     this._state = DataHolderState.LOADING;
 
     return this;

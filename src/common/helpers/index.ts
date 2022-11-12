@@ -12,3 +12,4 @@ export * from "./arrayToObjectFromKey";
 export * from "./stringHelper";
 export * from "./compound.helper";
 export * from "./typeGuards";
+export * from "./typeUtils";

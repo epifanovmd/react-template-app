@@ -285,105 +285,6 @@ export const useForm = <T extends object>(
     });
   }, [_setTouch, _validate, values]);
 
-  const fieldsHelper: IForm<T>["fieldsHelper"] = useMemo(
-    () => ({
-      remove: (name, index) => {
-        setValues(state => {
-          if (state[name]) {
-            const newState = {
-              ...state,
-              [name]: ([...(state[name] as any)] || []).filter(
-                ({}, ind: number) => ind !== index,
-              ),
-            };
-
-            validateOnChange && _validate(newState);
-            getDirty(newState, initialValues.current, dirty).then(setDirty);
-
-            return newState;
-          }
-
-          return state;
-        });
-        setErrors(state => {
-          const newErrors = { ...state };
-
-          Object.keys(newErrors).forEach(key => {
-            if (key.includes(`[${index}]`)) {
-              delete newErrors[key];
-            }
-          });
-
-          return newErrors;
-        });
-        setTouchedValues(state => {
-          const newTouchedValues = { ...state };
-
-          Object.keys(newTouchedValues).forEach(key => {
-            if (key.includes(`[${index}]`)) {
-              delete newTouchedValues[key];
-            }
-          });
-
-          return newTouchedValues;
-        });
-      },
-      append: (name, value) => {
-        setValues(state => {
-          const newState = {
-            ...state,
-            [name]: [...(state[name] as any), value],
-          };
-
-          validateOnChange && _validate(newState);
-          getDirty(newState, initialValues.current, dirty).then(setDirty);
-
-          return newState;
-        });
-      },
-      replace: (name, index, value) => {
-        setValues(state => {
-          const newState = {
-            ...state,
-            [name]: (state[name] as any).map((item: any, ind: number) =>
-              ind === index ? value : item,
-            ),
-          };
-
-          validateOnChange && _validate(newState);
-          getDirty(newState, initialValues.current, dirty).then(setDirty);
-
-          return newState;
-        });
-      },
-      setFieldValue: (name, key, value, index, touch) => {
-        setValues(state => {
-          state[name] = ((state[name] as any) || []).map(
-            (item: any, ind: number) =>
-              ind === index
-                ? {
-                    ...item,
-                    [key]: lambdaFunc(value, state),
-                  }
-                : item,
-          );
-
-          const newState = _checkWatch([name]) ? { ...state } : state;
-
-          validateOnChange && _validate(state);
-          getDirty(newState, initialValues.current, dirty).then(setDirty);
-
-          return newState;
-        });
-        _setTouch(`${name}[${index}].${key}`, !!touch);
-      },
-      setFieldBlur: (name, key, index) => {
-        _setTouch(`${name}[${index}].${key}`, true);
-      },
-    }),
-    [_setTouch, _validate, dirty, _checkWatch, validateOnChange],
-  );
-
   const form = useMemo(
     () => ({
       dirty,
@@ -396,7 +297,6 @@ export const useForm = <T extends object>(
       handleBlur,
       setFieldValue,
       setFieldBlur,
-      fieldsHelper,
       handleClearForm,
       validateForm,
     }),
@@ -404,7 +304,6 @@ export const useForm = <T extends object>(
       dirty,
       errors,
       fieldNames,
-      fieldsHelper,
       handleBlur,
       handleClearForm,
       onSetValues,
@@ -461,16 +360,6 @@ export const useForm = <T extends object>(
   return { ...form, handleSubmit };
 };
 
-type TCheckArray<T> = T extends any[] ? T[number] : T;
-type TObjectPartial<T> = T extends object ? Partial<T> : T;
-
-type SubType<Base, Condition> = Pick<
-  Base,
-  {
-    [Key in keyof Base]: Base[Key] extends Condition ? Key : never;
-  }[keyof Base]
->;
-
 interface IValidateCallback<T> {
   (values: T): Partial<Record<keyof T | string, string>>;
 }
@@ -498,33 +387,6 @@ interface IUseForm<T> {
   enableReinitialize?: boolean;
 }
 
-export interface IFieldsHelper<T> {
-  remove: (name: keyof SubType<T, Array<any>>, index: number) => void;
-  append: <K extends keyof SubType<T, Array<any>>>(
-    name: K,
-    value: TObjectPartial<TCheckArray<T[K]>>,
-  ) => void;
-  replace: <K extends keyof SubType<T, Array<any>>>(
-    name: K,
-    index: number,
-    value: TObjectPartial<TCheckArray<T[K]>>,
-  ) => void;
-  setFieldValue: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
-    name: K,
-    key: keyof TCheckArray<A>,
-    value:
-      | ((state: T) => TCheckArray<A>[keyof TCheckArray<A>])
-      | TCheckArray<A>[keyof TCheckArray<A>],
-    index: number,
-    touch?: boolean,
-  ) => void;
-  setFieldBlur: <K extends keyof SubType<T, Array<any>>, A extends T[K]>(
-    name: K,
-    key: keyof TCheckArray<A>,
-    index: number,
-  ) => void;
-}
-
 export interface IForm<T> {
   dirty: boolean;
   valid: boolean;
@@ -541,7 +403,6 @@ export interface IForm<T> {
   ) => void;
   setFieldBlur: (name: keyof T | string) => void;
   handleSubmit: (params: { withoutValidate?: boolean } | unknown) => void;
-  fieldsHelper: IFieldsHelper<T>;
   handleClearForm: (values: T | void) => void;
   validateForm: () => Promise<{
     hasErrors: boolean;

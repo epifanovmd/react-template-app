@@ -11,3 +11,4 @@ export * from "./getInitialData";
 export * from "./arrayToObjectFromKey";
 export * from "./stringHelper";
 export * from "./compound.helper";
+export * from "./typeGuards";

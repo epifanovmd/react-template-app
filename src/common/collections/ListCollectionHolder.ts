@@ -73,7 +73,10 @@ export class ListCollectionHolder<T> implements IListEvents {
   _isEndReached: boolean = false;
   private _state: ListCollectionLoadState =
     ListCollectionLoadState.initializing;
-  private _visibleRange: Range = { index: 0, count: 0 };
+  private _visibleRange: Range = {
+    index: 0,
+    count: 0,
+  };
   private _opts!: IOptions<T>;
   private _lastRefreshArgs?: RefreshArgs;
 
@@ -136,7 +139,10 @@ export class ListCollectionHolder<T> implements IListEvents {
         }
       : undefined;
 
-    return { visibleRange: { ...visibleRange }, page };
+    return {
+      visibleRange: { ...visibleRange },
+      page,
+    };
   }
 
   private get _lastPageSize(): number {
@@ -195,7 +201,10 @@ export class ListCollectionHolder<T> implements IListEvents {
     this.error = undefined;
     this._isEndReached = false;
     this._lastRefreshArgs = undefined;
-    this._visibleRange = { index: 0, count: 0 };
+    this._visibleRange = {
+      index: 0,
+      count: 0,
+    };
     this._setState(ListCollectionLoadState.ready);
   }
 
@@ -233,7 +242,7 @@ export class ListCollectionHolder<T> implements IListEvents {
     return this;
   }
 
-  public keyExtractor = (item: T) => {
+  public keyExtractor(item: T) {
     let cachedKey = (item as any)[ITEM_KEY];
 
     if (!cachedKey) {
@@ -242,26 +251,29 @@ export class ListCollectionHolder<T> implements IListEvents {
     }
 
     return cachedKey;
-  };
+  }
 
-  public performLoadMore = (): void => {
+  public performLoadMore(): void {
     if (this.isLoadingMoreAllowed) {
       this.setLoadingMore();
       this._raiseOnFetchData().then();
     }
-  };
+  }
 
-  public performPullToRefresh = (): void => {
+  public performPullToRefresh(): void {
     if (this.isPullToRefreshAllowed) {
       this.setPullToRefreshing();
       this._raiseOnFetchData().then();
     }
-  };
+  }
 
-  public performChangeVisibleRange = (index: number, count: number): void => {
-    this._visibleRange = { index, count };
+  public performChangeVisibleRange(index: number, count: number): void {
+    this._visibleRange = {
+      index,
+      count,
+    };
     this._raiseOnFetchData().then();
-  };
+  }
 
   public performRefresh() {
     if (this.isLoadingAllowed) {
@@ -311,10 +323,10 @@ export class ListCollectionHolder<T> implements IListEvents {
     return result;
   }
 
-  private _raiseOnFetchData = async () => {
+  private async _raiseOnFetchData() {
     this._lastRefreshArgs = this._refreshArgs;
     const args: RefreshArgs = { ...this._lastRefreshArgs };
 
     await this._opts.onFetchData(args);
-  };
+  }
 }

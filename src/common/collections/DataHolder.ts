@@ -35,6 +35,26 @@ export class DataHolder<T> implements IDataHolderState {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
+  public get isReady() {
+    return this._state === DataHolderState.READY;
+  }
+
+  public get isLoading() {
+    return this._state === DataHolderState.LOADING;
+  }
+
+  public get isError() {
+    return this._state === DataHolderState.ERROR;
+  }
+
+  public get isEmpty() {
+    return this.isReady && isEmpty(this.d);
+  }
+
+  public get isFilled() {
+    return this.isReady && !isEmpty(this.d);
+  }
+
   public setLoading() {
     this._state = DataHolderState.LOADING;
 
@@ -54,25 +74,5 @@ export class DataHolder<T> implements IDataHolderState {
     this._state = DataHolderState.ERROR;
 
     return this;
-  }
-
-  public get isReady() {
-    return this._state === DataHolderState.READY;
-  }
-
-  public get isLoading() {
-    return this._state === DataHolderState.LOADING;
-  }
-
-  public get isError() {
-    return this._state === DataHolderState.ERROR;
-  }
-
-  public get isEmpty() {
-    return this.isReady && isEmpty(this.d);
-  }
-
-  public get isFilled() {
-    return this.isReady && !isEmpty(this.d);
   }
 }

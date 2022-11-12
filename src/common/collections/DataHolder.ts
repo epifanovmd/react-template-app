@@ -22,7 +22,7 @@ export interface IDataHolderState {
 }
 
 export class DataHolder<T> implements IDataHolderState {
-  public d!: T;
+  public d: T | undefined = undefined as any;
   public error?: IDataHolderError;
   private _state!: DataHolderState;
 

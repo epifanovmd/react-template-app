@@ -1,4 +1,4 @@
-import { action, computed, makeAutoObservable, observable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { debounce } from "lodash";
 
 export enum CollectionLoadState {
@@ -28,13 +28,13 @@ type Collection<T> = T[];
 
 export class CollectionHolder<T> {
   public error?: IDataHolderError;
-  @observable.ref public d: Collection<T> = [];
-  @observable private _visibleRange: Range = {
+  public d: Collection<T> = [];
+  private _visibleRange: Range = {
     index: 0,
     count: 0,
   };
-  @observable private _state: CollectionLoadState = CollectionLoadState.ready;
-  @observable private _lastDataLength: number = 0;
+  private _state: CollectionLoadState = CollectionLoadState.ready;
+  private _lastDataLength: number = 0;
   private readonly _pageSize: number;
 
   constructor(data?: Collection<T>, opts?: Options) {
@@ -53,29 +53,24 @@ export class CollectionHolder<T> {
     makeAutoObservable(this, {}, { autoBind: true });
   }
 
-  @observable private _isLoadedFirst: boolean = false;
+  private _isLoadedFirst: boolean = false;
 
-  @computed
   public get isLoadedFirst() {
     return this._isLoadedFirst;
   }
 
-  @computed
   public get offset(): number | undefined {
     return this.isLoadingMore ? this.d.length : this._visibleRange.index;
   }
 
-  @computed
   public get pageCount(): number | undefined {
     return this._visibleRange.count || undefined;
   }
 
-  @computed
   public get pageSize(): number {
     return this._pageSize;
   }
 
-  @computed
   public get isLoadingAllowed(): boolean {
     return (
       this._state === CollectionLoadState.ready ||
@@ -83,14 +78,12 @@ export class CollectionHolder<T> {
     );
   }
 
-  @computed
   public get isLoading() {
     return this._state === CollectionLoadState.loading;
   }
 
   /* loading */
 
-  @computed
   public get isPullToRefreshAllowed(): boolean {
     return (
       this._state === CollectionLoadState.ready ||
@@ -98,12 +91,10 @@ export class CollectionHolder<T> {
     );
   }
 
-  @computed
   public get isPullToRefreshing() {
     return this._state === CollectionLoadState.pullToRefreshing;
   }
 
-  @computed
   public get isLoadingMoreAllowed(): boolean {
     const isEndReached = this._lastDataLength < this._pageSize;
 
@@ -114,31 +105,26 @@ export class CollectionHolder<T> {
     );
   }
 
-  @computed
   public get isLoadingMore() {
     return this._state === CollectionLoadState.loadingMore;
   }
 
   /* PullToRefresh */
 
-  @computed
   public get isReady() {
     return this._state === CollectionLoadState.ready;
   }
 
-  @computed
   public get isError() {
     return this._state === CollectionLoadState.error;
   }
 
-  @computed
   public get isEmpty() {
     return !this.d.length;
   }
 
   /* loadingMore */
 
-  @action
   public setData(data: Collection<T>) {
     switch (this._state) {
       case CollectionLoadState.loadingMore:
@@ -198,18 +184,15 @@ export class CollectionHolder<T> {
     return this;
   }
 
-  @action
   public performChangeVisibleRange(index: number, count: number): void {
     this._visibleRange.index = index;
     this._visibleRange.count = count;
   }
 
-  @action
   private _setState(state: CollectionLoadState) {
     this._state = state;
   }
 
-  @action
   private _setIsLoadedFirst(value: boolean) {
     this._isLoadedFirst = value;
   }

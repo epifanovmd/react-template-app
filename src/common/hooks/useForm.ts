@@ -212,8 +212,8 @@ export const useForm = <T extends object>(
   const onSetValues: IForm<T>["onSetValues"] = useCallback(
     newValues => {
       setValues(newValues);
-      getDirty(newValues, initialValues.current, dirty).then(setDirty);
       _validate(newValues).then();
+      getDirty(newValues, initialValues.current, dirty).then(setDirty);
     },
     [_validate, dirty],
   );
@@ -292,12 +292,13 @@ export const useForm = <T extends object>(
           if (state[name]) {
             const newState = {
               ...state,
-              [name]: ((state[name] as any) || []).filter(
+              [name]: ([...(state[name] as any)] || []).filter(
                 ({}, ind: number) => ind !== index,
               ),
             };
 
             validateOnChange && _validate(newState);
+            getDirty(newState, initialValues.current, dirty).then(setDirty);
 
             return newState;
           }
@@ -383,34 +384,6 @@ export const useForm = <T extends object>(
     [_setTouch, _validate, dirty, _checkWatch, validateOnChange],
   );
 
-  const fieldsIterate: IForm<T>["fieldsIterate"] = useCallback(
-    (name, fields) =>
-      ((values[name] as any) || []).map(
-        (value: any, index: number, array: any[]) => {
-          const touched: any = {};
-          const error: any = {};
-          const fieldNames: any = {};
-
-          Object.keys(value).forEach(item => {
-            fieldNames[item] = item;
-            touched[item] = touchedValues[`${name}[${index}].${item}`];
-            error[item] = errors[`${name}[${index}].${item}`];
-          });
-
-          return fields({
-            fieldsHelper,
-            value,
-            index,
-            touched,
-            error,
-            fieldNames,
-            array,
-          });
-        },
-      ),
-    [values, fieldsHelper, touchedValues, errors],
-  );
-
   const form = useMemo(
     () => ({
       dirty,
@@ -423,7 +396,6 @@ export const useForm = <T extends object>(
       handleBlur,
       setFieldValue,
       setFieldBlur,
-      fieldsIterate,
       fieldsHelper,
       handleClearForm,
       validateForm,
@@ -433,7 +405,6 @@ export const useForm = <T extends object>(
       errors,
       fieldNames,
       fieldsHelper,
-      fieldsIterate,
       handleBlur,
       handleClearForm,
       onSetValues,
@@ -570,21 +541,6 @@ export interface IForm<T> {
   ) => void;
   setFieldBlur: (name: keyof T | string) => void;
   handleSubmit: (params: { withoutValidate?: boolean } | unknown) => void;
-  fieldsIterate: <
-    A extends TCheckArray<T[B]>,
-    B extends keyof SubType<T, Array<any>>,
-  >(
-    name: B,
-    field: (val: {
-      value: A;
-      touched: Partial<{ [key in keyof A]: boolean }>;
-      error: Partial<{ [key in keyof A]: string }>;
-      fieldNames: { [key in keyof A]: string };
-      fieldsHelper: IFieldsHelper<T>;
-      index: number;
-      array: A[];
-    }) => JSX.Element,
-  ) => JSX.Element[];
   fieldsHelper: IFieldsHelper<T>;
   handleClearForm: (values: T | void) => void;
   validateForm: () => Promise<{

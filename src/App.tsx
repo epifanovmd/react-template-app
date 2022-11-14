@@ -2,7 +2,7 @@ import "rc-tooltip/assets/bootstrap.css";
 
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 import { IRoute, routes } from "./routes";
 import { Header } from "./components";
@@ -49,7 +49,10 @@ const App = () => {
       </Helmet>
       <Header />
 
-      <Routes>{renderRoutes(routes)}</Routes>
+      <Routes>
+        {renderRoutes(routes)}
+        <Route path={"*"} element={<Navigate to={"/"} />} />
+      </Routes>
     </Container>
   );
 };

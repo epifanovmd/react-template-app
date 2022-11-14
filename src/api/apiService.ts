@@ -61,6 +61,10 @@ export class ApiService {
       {
         ...config,
         ...(config?.useRaceCondition ? this.raceCondition(endpoint) : {}),
+        headers: {
+          ...axios.defaults.headers.common,
+          ...config?.headers,
+        },
       },
     );
 
@@ -141,9 +145,6 @@ export class ApiService {
 }
 
 export const apiService = new ApiService({
-  headers: {
-    ...axios.defaults.headers.common,
-  },
   baseURL:
     IS_DEVELOPMENT && typeof window === "object" ? "/api" : `${baseUrl}/api/`,
 });

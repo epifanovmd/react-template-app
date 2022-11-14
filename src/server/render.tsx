@@ -17,6 +17,7 @@ import { initLocalization } from "../localization";
 import { enableStaticRendering } from "mobx-react-lite";
 import { flatten } from "lodash";
 import { initialData as _initialData } from "../common";
+import axios from "axios";
 
 export const serverRenderer = () => (req: Request, res: Response) => {
   const acceptLng = req.headers["accept-language"];
@@ -32,6 +33,10 @@ export const serverRenderer = () => (req: Request, res: Response) => {
   });
 
   enableStaticRendering(true);
+
+  axios.defaults.headers.common = {
+    cookie: req.headers.cookie || "",
+  };
 
   const sheet = new ServerStyleSheet();
   const location = req.url;

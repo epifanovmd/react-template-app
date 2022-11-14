@@ -19,6 +19,8 @@ export enum routepaths {
   AUTH = "/auth",
 }
 
+export type RoutePaths = routepaths | string;
+
 export const routes: IRoute[] = [
   {
     path: routepaths.ROOT,

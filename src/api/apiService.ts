@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { stringify } from "query-string";
-import { ApiError, ApiRequestConfig, ApiResponse } from "./types";
+import { ApiError, ApiRequestConfig, ApiResponse, ErrorType } from "./types";
+
+export const baseUrl = "http://auto-sale.force-dev.ru";
 
 export class ApiService {
   private instance: AxiosInstance | null = null;
@@ -8,23 +10,36 @@ export class ApiService {
 
   constructor(config?: AxiosRequestConfig) {
     this.instance = axios.create({
-      timeout: 1000,
+      timeout: 20000,
       withCredentials: true,
+      ...config,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        ...config?.headers,
       },
-      ...config,
     });
 
     this.instance.interceptors.response.use(
       response => ({ data: response }),
       error => {
+        if (IS_DEVELOPMENT) {
+          console.group("AXIOS ERROR INTERCEPT LOG");
+          console.log("ERROR --> ", error);
+          console.log("STRINGIFY ERROR --> ", JSON.stringify(error));
+          console.groupEnd();
+        }
         if (error && error?.message !== "canceled") {
           return Promise.resolve({
             data: {
-              error: (error?.response.data.error ||
-                error?.response.data) as ApiError,
+              error: (error?.message ||
+                error?.response?.data?.error ||
+                error?.response?.data ||
+                new ApiError(
+                  500,
+                  ErrorType.ServerErrorException,
+                  error?.message,
+                )) as ApiError,
             },
           });
         }
@@ -40,6 +55,7 @@ export class ApiService {
     config?: ApiRequestConfig,
   ) {
     const query = params && stringify(params);
+
     const response = await this.instance!.get<ApiResponse<R>>(
       endpoint + (query ? `?${query}` : ""),
       {
@@ -125,8 +141,9 @@ export class ApiService {
 }
 
 export const apiService = new ApiService({
+  headers: {
+    ...axios.defaults.headers.common,
+  },
   baseURL:
-    IS_DEVELOPMENT && typeof window === "object"
-      ? "http://jsonplaceholder.typicode.com/"
-      : "http://jsonplaceholder.typicode.com/",
+    IS_DEVELOPMENT && typeof window === "object" ? "/api" : `${baseUrl}/api/`,
 });

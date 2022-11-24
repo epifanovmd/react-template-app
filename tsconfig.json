@@ -1,48 +1,37 @@
 {
   "compilerOptions": {
-    "plugins": [{ "name": "typescript-plugin-css-modules" }],
-    "target": "es5",
-    "module": "esnext",
+    "target": "es6",
+    "module": "commonjs",
     "lib": [
       "es6",
       "es2015",
       "dom"
     ],
-    "outDir": "build",
-    "checkJs": false,
+    "outDir": "./build",
     "jsx": "react",
     "rootDir": ".",
     "removeComments": true,
-    "noEmit": false,
     "importHelpers": true,
     "downlevelIteration": true,
-    "isolatedModules": false,
+    "isolatedModules": true,
     "strict": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./",
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": false,
     "noImplicitReturns": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "preserveConstEnums": false,
     "allowJs": true,
     "sourceMap": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "alwaysStrict": true,
-    "strictNullChecks": true,
     "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
     "build"
-  ]
+  ],
 }

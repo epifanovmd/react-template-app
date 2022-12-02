@@ -11,7 +11,7 @@ import {
   TransitionChildren,
 } from "react-transition-group/Transition";
 import styled from "styled-components";
-import { useOutsideClick } from "../../common";
+import { useOutsideClick } from "react-frontend-lib";
 
 export interface ICssTransitionProps<
   RefElement extends undefined | HTMLElement = undefined,

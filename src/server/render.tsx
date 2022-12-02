@@ -16,7 +16,7 @@ import { routes } from "../routes";
 import { initLocalization } from "../localization";
 import { enableStaticRendering } from "mobx-react-lite";
 import { flatten } from "lodash";
-import { initialData as _initialData } from "../common";
+import { initialDataSSR as _initialData } from "react-frontend-lib";
 import axios from "axios";
 
 export const serverRenderer = () => (req: Request, res: Response) => {

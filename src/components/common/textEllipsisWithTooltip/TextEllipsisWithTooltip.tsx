@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import styled from "styled-components";
-import { useWindowSize } from "../../../common";
+import { useWindowSize } from "react-frontend-lib";
 
 export interface IProps
   extends Omit<

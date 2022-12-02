@@ -1,15 +1,14 @@
 import { makeAutoObservable } from "mobx";
 
 import { IUser, IUsersService, UsersService } from "../../service";
-import { iocDecorator } from "../../ioc";
-import { CollectionHolder } from "../../common";
+import { CollectionHolder, iocDecorator } from "react-frontend-lib";
 
 export const IUsersDataStore = iocDecorator<UsersDataStore>("IUsersDataStore");
 
 @IUsersDataStore()
 export class UsersDataStore {
   public holder: CollectionHolder<IUser> = new CollectionHolder(
-    IUsersDataStore.getInitialData() || [],
+    IUsersDataStore.getInitialDataSSR() || [],
   );
 
   constructor(@IUsersService() private _usersService: UsersService) {

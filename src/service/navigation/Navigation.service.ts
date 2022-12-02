@@ -1,4 +1,3 @@
-import { iocDecorator } from "../../ioc";
 import { makeAutoObservable } from "mobx";
 import { Location } from "history";
 import { parse } from "query-string";
@@ -6,6 +5,7 @@ import { NavigateFunction } from "react-router";
 import { NavigateOptions } from "react-router/lib/hooks";
 import { RoutePaths } from "../../routes";
 import { INavigationPath } from "./Navigation.types";
+import { iocDecorator } from "react-frontend-lib";
 
 export const INavigationService = iocDecorator<NavigationService>();
 

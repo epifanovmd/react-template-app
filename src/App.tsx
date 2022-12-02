@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 
 import { IRoute, routes } from "./routes";
-import { Header } from "./components";
-import { Container } from "./components/layouts/container";
+import { Header, Container } from "./components";
 import Helmet from "react-helmet";
 
 const App = () => {

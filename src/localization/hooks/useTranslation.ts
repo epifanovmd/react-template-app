@@ -1,7 +1,7 @@
 import { useTranslation as useT } from "react-i18next";
 import { i18n } from "i18next";
 import { ruLocale } from "../locales";
-import { RecursiveObjectType } from "../../common";
+import { RecursiveObjectType } from "react-frontend-lib";
 
 export type II18nPaths = RecursiveObjectType<typeof ruLocale>;
 

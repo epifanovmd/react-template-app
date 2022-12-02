@@ -2,11 +2,11 @@ import React, { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Table, TableHeader, TableRow, TableRowCell } from "../table";
-import { useBooleanState } from "../../common";
 import { Modal } from "../modal";
-import { Button } from "../ui";
+import { Button, Checkbox } from "../ui";
 import { observer } from "mobx-react-lite";
-import { IUser } from "../../service/users";
+import { IUser } from "../../service";
+import { useBooleanState, Playground } from "react-frontend-lib";
 
 interface IProps {
   users: IUser[];
@@ -49,7 +49,11 @@ export const UserList: FC<IProps> = observer(({ users }) => {
           {list}
         </Table>
       </Modal>
+
       <Button onClick={onOpen}>Открыть модальное окно</Button>
+
+      <Checkbox />
+      <Playground />
     </Table>
   );
 });

@@ -2,7 +2,7 @@ import React, { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 import { object, string } from "yup";
 import { Button, Input } from "../ui";
-import { useForm } from "../../common";
+import { useForm } from "react-frontend-lib";
 
 export interface IRegistrationForm {
   firstName: string;
@@ -13,7 +13,7 @@ const initialValues: IRegistrationForm = {
   firstName: "",
   lastName: "",
 };
-const validateSchema = object().shape({
+const validateSchema: any = object().shape({
   firstName: string().required("Имя явялется обязательным полем"),
   lastName: string().required("Фамилия явялется обязательным полем"),
 });

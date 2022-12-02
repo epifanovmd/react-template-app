@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { routes } from "../../../routes";
-import { TextEllipsisWithTooltip } from "../../common/textEllipsisWithTooltip/TextEllipsisWithTooltip";
+import { TextEllipsisWithTooltip } from "../../common";
 
 export const Header: FC = memo(() => {
   const { t, i18n } = useTranslation();
@@ -40,6 +40,7 @@ export const Header: FC = memo(() => {
 const HeaderWrap = styled.div`
   li {
     list-style-type: none;
+
     &:not(:first-of-type):not(:last-of-type) {
       margin: 0 5px 0 5px;
     }

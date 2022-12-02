@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { IUsersDataStore, UsersDataStore } from "../../store";
-import { iocDecorator } from "../../ioc";
+import { iocDecorator } from "react-frontend-lib";
 
 export const IUsersVM = iocDecorator<UsersVM>();
 
